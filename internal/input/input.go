@@ -1,6 +1,8 @@
 package input
 
 import (
+	"fmt"
+
 	"github.com/mmayden/Mortal-Wombat/internal/character"
 	"github.com/veandco/go-sdl2/sdl"
 )
@@ -14,10 +16,12 @@ func Init() {
 func HandleEvents(character *character.Character) {
 	//Poll for events
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
+		fmt.Println("Event received: ") //, event) //debug
 		switch event.(type) {
 
 		// Quit app if user closes window
 		case *sdl.QuitEvent:
+			fmt.Println("Event received: ") //, event) //debug
 			return
 
 		// Handle keyboard events, set key presses to flags that can be used separately

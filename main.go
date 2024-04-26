@@ -70,22 +70,25 @@ func main() {
 
 	// Render loop
 	for {
-		// Handle input events
-		input.HandleEvents(character)
-
 		// Clear renderer
 		renderer.Clear()
 
 		// Copy texture to renderer
 		renderer.Copy(backgroundTex, nil, nil)
 
-		// Render character
+		//Render character
 		renderer.Copy(characterTex, nil, &sdl.Rect{X: character.X, Y: character.Y, W: 50, H: 50})
 
 		// Present the renderer
 		renderer.Present()
-		//Calculate time elapsed since start of frame
 
+		// Handle input events
+		input.HandleEvents(character)
+
+		// Update character position based on input
+		input.UpdateCharacterPosition(character)
+
+		//Calculate time elapsed since start of frame
 		elapsedTime := sdl.GetTicks() - startTime
 
 		//Delay to control frame rate
