@@ -3,10 +3,15 @@ package main
 import (
 	"fmt"
 
+	"github.com/mmayden/Mortal-Wombat/internal/input"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 
 func main() {
+	const frameDelay = 1000 / 60
+	startTime := sdl.GetTicks()
+
 	// Initialize SDL
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		fmt.Println("Failed to initialize SDL: ", err)
@@ -21,6 +26,13 @@ func main() {
 		return
 	}
 	defer window.Destroy()
+
+	//Create character instance
+	character := Character{X: 100, Y: 100}
+	// Initialize input handling
+	input.Init()
+	// Handle input events
+	input.HandleEvents(&character)
 
 	// Create renderer from window
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
@@ -45,23 +57,34 @@ func main() {
 		return
 	}
 
+	// Load character image
+	characterImg, err := sdl.LoadBMP("assets/Frenchy.bmp")
+	if err != nil {
+		fmt.Println("Failed to load character image: ", err)
+		return
+	}
+	defer characterImg.Free()
+
 	// Render loop
 	for {
-		// Handle events
-		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
-			switch event.(type) {
-			case *sdl.QuitEvent:
-				return
-			}
-		}
-
 		// Clear renderer
 		renderer.Clear()
 
 		// Copy texture to renderer
 		renderer.Copy(backgroundTex, nil, nil)
 
+		// Render character
+		renderer.Copy(characterImg, nil, &sdl.Rect{X: character.X, character.Y: 100, W: 50, H: 50})
+
 		// Present the renderer
 		renderer.Present()
+	}
+
+	//Calculate time elapsed since start of frame
+	elapsedTime := sdl.GetTicks() - startTime
+
+	//Delay to control frame rate
+	if elapsedTime < frameDelay {
+		sdl.Delay(frameDelay - elapsedTime)
 	}
 }

@@ -1,4 +1,4 @@
-module MW
+module github.com/mmayden/Mortal-Wombat
 
 go 1.18
 
