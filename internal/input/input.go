@@ -1,6 +1,7 @@
 package input
 
 import (
+	"github.com/mmayden/Mortal-Wombat/internal/character"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -10,16 +11,9 @@ func Init() {
 }
 
 // Handles SDL events
-func HandleEvents() {
-	xdir := 0
-	ydir := 0
-	punch := 0
-	kick := 0
-	counter := 0
-	dig := 0
-	jump := 0
+func HandleEvents(character *character.Character) {
 	//Poll for events
-	for event := sdl.PollEvent(); event != nill; event = sdl.PollEvent() {
+	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch event.(type) {
 
 		// Quit app if user closes window
@@ -29,89 +23,68 @@ func HandleEvents() {
 		// Handle keyboard events, set key presses to flags that can be used separately
 		case *sdl.KeyboardEvent:
 			keyboardEvent := event.(*sdl.KeyboardEvent)
-
-		// KEY DOWN
-		case SDL_KEYDOWN:
-			switch event.Key().Keysym.Sym {
-			case sdl.K_LEFT:
-				// kick
-				break
-			case sdl.K_RIGHT:
-				// punch
-				break
-			case sdl.K_UP:
-				// counter
-				break
-			case sdl.K_DOWN:
-				// dig
-				break
-			case sdl.K_SPACE:
-				// jump
-				break
-			case sdl.K_A:
-				// left
-				break
-			case sdl.K_D:
-				// right
-				break
-			case sdl.K_W:
-				// up
-				break
-			case sdl.K_S:
-				// down
-				break
-			}
-		// KEY UP, zero the values, but don't when shouldn't
-		case SDL_KEYUP:
-			switch event.Key().Keysym.Sym {
-			case sdl.K_LEFT:
-				if xvel < 0 {
-					xvel = 0
-					break
-				}
-			case sdl.K_RIGHT:
-				if xvel > 0 {
-					xvel = 0
-					break
-				}
-			case sdl.K_UP:
-				if xvel < 0 {
-					xvel = 0
-					break
-				}
-			case sdl.K_DOWN:
-				if xvel > 0 {
-					xvel = 0
-					break
-				}
-			case sdl.K_SPACE:
-				if xvel < 0 {
-					jump = 0
-					break
-				}
-			case sdl.K_A:
-				if xdir < 0 {
-					xdir = 0
-					break
-				}
-			case sdl.K_D:
-				if xdir > 0 {
-					xdir = 0
-					break
-				}
-			case sdl.K_W:
-				if ydir < 0 {
-					ydir = 0
-					break
-				}
-			case sdl.K_S:
-				if ydir > 0 {
-					ydir = 0
-					break
-				}
-			}
+			handleKeyboardEvent(keyboardEvent, character)
 		}
-		break
+	}
+}
 
+// Set flags based on key presses
+func handleKeyboardEvent(event *sdl.KeyboardEvent, character *character.Character) {
+	// Key Down
+	if event.Type == sdl.KEYDOWN {
+		switch event.Keysym.Sym {
+		case sdl.K_LEFT:
+			character.Kick = true
+		case sdl.K_RIGHT:
+			character.Punch = true
+		case sdl.K_UP:
+			character.Counter = true
+		case sdl.K_DOWN:
+			character.Dig = true
+		case sdl.K_SPACE:
+			character.Jump = true
+		case sdl.K_a:
+			character.Left = true
+		case sdl.K_d:
+			character.Right = true
+		case sdl.K_w:
+			character.AimUp = true
+		case sdl.K_s:
+			character.AimDown = true
+		}
+	}
+	// KEY UP, zero the values, but don't when shouldn't
+	if event.Type == sdl.KEYUP {
+		switch event.Keysym.Sym {
+		case sdl.K_LEFT:
+			character.Kick = false
+		case sdl.K_RIGHT:
+			character.Punch = false
+		case sdl.K_UP:
+			character.Counter = false
+		case sdl.K_DOWN:
+			character.Dig = false
+		case sdl.K_SPACE:
+			character.Jump = false
+		case sdl.K_a:
+			character.Left = false
+		case sdl.K_d:
+			character.Right = false
+		case sdl.K_w:
+			character.AimUp = false
+		case sdl.K_s:
+			character.AimDown = false
+		}
+	}
+}
+
+// Updates character's position based on set flags
+func UpdateCharacterPosition(character *character.Character) {
+	// Update character position based on flags
+	if character.Left {
+		character.X -= character.Speed
+	}
+	if character.Right {
+		character.X += character.Speed
 	}
 }

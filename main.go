@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/mmayden/Mortal-Wombat/internal/character"
 	"github.com/mmayden/Mortal-Wombat/internal/input"
-
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -26,13 +26,6 @@ func main() {
 		return
 	}
 	defer window.Destroy()
-
-	//Create character instance
-	character := Character{X: 100, Y: 100}
-	// Initialize input handling
-	input.Init()
-	// Handle input events
-	input.HandleEvents(&character)
 
 	// Create renderer from window
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
@@ -65,8 +58,21 @@ func main() {
 	}
 	defer characterImg.Free()
 
+	// Create texture from character image
+	characterTex, err := renderer.CreateTextureFromSurface(characterImg)
+	if err != nil {
+		fmt.Println("Failed to create texture from character image: ", err)
+		return
+	}
+
+	//  Create character instance
+	character := character.NewCharacter()
+
 	// Render loop
 	for {
+		// Handle input events
+		input.HandleEvents(character)
+
 		// Clear renderer
 		renderer.Clear()
 
@@ -74,17 +80,17 @@ func main() {
 		renderer.Copy(backgroundTex, nil, nil)
 
 		// Render character
-		renderer.Copy(characterImg, nil, &sdl.Rect{X: character.X, character.Y: 100, W: 50, H: 50})
+		renderer.Copy(characterTex, nil, &sdl.Rect{X: character.X, Y: character.Y, W: 50, H: 50})
 
 		// Present the renderer
 		renderer.Present()
-	}
+		//Calculate time elapsed since start of frame
 
-	//Calculate time elapsed since start of frame
-	elapsedTime := sdl.GetTicks() - startTime
+		elapsedTime := sdl.GetTicks() - startTime
 
-	//Delay to control frame rate
-	if elapsedTime < frameDelay {
-		sdl.Delay(frameDelay - elapsedTime)
+		//Delay to control frame rate
+		if elapsedTime < frameDelay {
+			sdl.Delay(frameDelay - elapsedTime)
+		}
 	}
 }
