@@ -21,7 +21,7 @@
 #include "sim/state.h"
 
 #include "data/framedata_loader.h"
-#include "log.h"
+#include "mw_log.h"
 
 namespace {
 

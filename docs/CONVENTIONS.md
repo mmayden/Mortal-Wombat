@@ -77,7 +77,7 @@ Everything is in namespace `mw`. The sim is in `mw::sim`.
    `static_assert` beat a runtime check.
 2. **Return a status.** `enum class LoadResult { Ok, FileMissing, BadSchema };`
    Callers must handle every case — no `default:` that swallows.
-3. **Assert.** `MW_ASSERT(cond, "message")` from `src/assert.h`, for invariants
+3. **Assert.** `MW_ASSERT(cond, "message")` from `src/mw_assert.h`, for invariants
    whose violation means a programming error — not for anything a user or a data
    file can cause, which gets a status instead. Active in debug, compiled out
    entirely in release, so **the condition must have no side effects**.
@@ -100,7 +100,7 @@ failure is reportable and recoverable.
 
 ## 4. Logging
 
-`MW_LOG_INFO` / `MW_LOG_WARN` / `MW_LOG_ERROR`, defined in `src/log.h`.
+`MW_LOG_INFO` / `MW_LOG_WARN` / `MW_LOG_ERROR`, defined in `src/mw_log.h`.
 
 **No logging inside `src/sim/`.** It is I/O, and under rollback the same frame
 logs up to eight times. To observe the sim, use the training-mode overlay or

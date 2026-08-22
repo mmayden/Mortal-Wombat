@@ -12,6 +12,16 @@
 // checkable at compile time, and fixed-size arrays with compile-time bounds so
 // the failure cannot be expressed. tests/check_sim_boundary.py enforces that
 // separation by rejecting I/O below the line.
+//
+// NAMED mw_assert.h, NOT assert.h. src/ is on the include path for every target
+// and every dependency compiled through it, so a header here named assert.h
+// shadows the C standard <assert.h> -- toml++ includes it and got this file
+// instead, and the build broke with "'assert': identifier not found" in
+// somebody else's code. The same hazard applies to any standard C header name:
+// math.h, time.h, string.h, stdio.h. Prefix anything at this level.
+//
+// It surfaced only on a clean build, because an incremental build had no reason
+// to recompile the file that included it.
 #pragma once
 
 #include <cstdio>

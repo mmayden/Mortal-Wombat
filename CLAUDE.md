@@ -101,6 +101,15 @@ contains `\n` through a bash heredoc has repeatedly produced a literal newline
 inside a string literal. Use the Write tool for such content, or build the
 escape from character codes (`chr(92)`).
 
+**Never name a header after a standard C header.** `src/` is on the include
+path for every target and every dependency built through it, so `src/assert.h`
+shadowed the C standard `<assert.h>` — toml++ included it, got ours, and the
+build failed inside somebody else's code. Same hazard for `math.h`, `time.h`,
+`string.h`, `stdio.h`. Everything at that level takes the `mw_` prefix.
+
+It surfaced only on a **clean** build: an incremental build had no reason to
+recompile the file that included it, so local testing was green.
+
 **Scripted edits skip the formatter.** Files edited with `sed`/Python are just
 as easy to forget as they are to change. Run clang-format over the whole branch
 before pushing.
