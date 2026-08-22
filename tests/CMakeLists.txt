@@ -8,6 +8,15 @@
 # Unlike the sim, tests build WITH exceptions and RTTI: doctest reports
 # failures by throwing, and a test binary cannot desync anything.
 
+# Scratch directory for tests that need to write a file.
+#
+# Inside the build tree, never the source tree. Tests were writing probe files
+# into data/characters/, which pollutes the repo, races if ctest runs in
+# parallel, and leaves droppings behind when a test aborts. A test that dirties
+# the working copy is a test people learn to run less often.
+set(MW_TEST_SCRATCH_DIR "${CMAKE_CURRENT_BINARY_DIR}/scratch")
+file(MAKE_DIRECTORY "${MW_TEST_SCRATCH_DIR}")
+
 add_library(mw_test_main STATIC doctest_main.cpp)
 # mw_exceptions is PUBLIC: doctest reports failures by throwing, so every
 # test tier that links this needs exceptions on. The sim itself is built
@@ -21,6 +30,7 @@ function(mw_add_test_tier tier)
     set(target "mw_test_${tier}")
     add_executable(${target} ${ARGN})
     target_link_libraries(${target} PRIVATE mw_test_main mw_sim mw_data mw_warnings)
+    target_compile_definitions(${target} PRIVATE MW_TEST_SCRATCH_DIR="${MW_TEST_SCRATCH_DIR}")
 
     add_test(NAME ${tier} COMMAND ${target})
     set_tests_properties(${tier} PROPERTIES LABELS "${tier}")
@@ -79,7 +89,7 @@ target_compile_definitions(mw_desync_probe PRIVATE
 
 # The sim boundary check. Every rule it enforces is a desync that compiles and
 # passes every other test — see tests/check_sim_boundary.py.
-find_package(Python3 COMPONENTS Interpreter)
+# Python3 is located at top level so the configuration summary can report it.
 if(Python3_FOUND)
     add_test(NAME sim_boundary
         COMMAND ${Python3_EXECUTABLE}

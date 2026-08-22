@@ -4,7 +4,7 @@
 
 #include "sim/constants.h"
 
-#include "log.h"
+#include "mw_log.h"
 
 namespace mw::platform {
 namespace {

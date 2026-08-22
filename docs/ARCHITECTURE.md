@@ -59,7 +59,7 @@ class of problem structurally by keeping them out of `GameState`.
 | `src/sim/framedata.h` | `MoveData`, `CharacterData`, `MatchData` — POD, read-only | sim |
 | `src/sim/sim.h` `.cpp` | `advance_frame()` — the whole game, one function | sim |
 | `src/data/framedata_loader.*` | Parses character TOML. I/O and `std::string` live here | data |
-| `src/log.h` | `MW_LOG_*`. **Never included below the sim boundary** | app |
+| `src/mw_log.h` | `MW_LOG_*`. **Never included below the sim boundary** | app |
 | `src/platform/` | SDL3 window, event pump, gamepad, timing | platform |
 | `src/render/` | Draws `GameState`. Interpolation lives here. | render |
 | `src/audio/` | miniaudio playback, driven by observed state change | render |

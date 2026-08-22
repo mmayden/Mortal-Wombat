@@ -32,8 +32,8 @@
     {
       "name": "profile",
       "inherits": "base",
-      "displayName": "Profile (Tracy)",
-      "description": "Release codegen with Tracy instrumentation. ADR 0012.",
+      "displayName": "Profile (Tracy — NOT YET INTEGRATED)",
+      "description": "Release codegen with MW_ENABLE_TRACY set. ADR 0012 plans Tracy here, but it is not a dependency yet, so today this only differs from release by the flag. Do not treat a profile build as instrumented.",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "MW_ENABLE_TRACY": "ON"
