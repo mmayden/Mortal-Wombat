@@ -28,8 +28,13 @@ does that for you; every command below is run through it.
 | Headless boot (N sim frames) | `mortal_wombat.exe --frames 600` |
 | Capture a frame | `mortal_wombat.exe --frames 200 --screenshot out.bmp` |
 
-Controls: P1 `WASD` + `F G C V` + `B` to block. P2 arrows + numpad `4 5 1 2`
-+ `0` to block. `ESC` quits, `F1` toggles the debug overlay.
+Controls, keyboard: P1 `WASD` + `F G C V` + `B` to block. P2 arrows + numpad
+`4 5 1 2` + `0` to block. `ESC` quits, `F1` toggles the debug overlay.
+
+Gamepads are supported and hot-pluggable; the first pad connected becomes
+player one. Punches on the left face pair (X/Y), kicks on the right (A/B),
+block on either shoulder or trigger. Pad input is OR-ed with the keyboard, so
+one player can be on a pad and the other on keys with no mode to select.
 
 On Linux/macOS (and in CI) drop the wrapper: `cmake --preset debug`,
 `cmake --build --preset debug`, `ctest --preset debug`.
