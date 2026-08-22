@@ -39,9 +39,14 @@ possible because it has no platform dependency at all. `--frames` exists so CI
 can boot the real binary too: set `SDL_VIDEODRIVER=dummy` and it runs on a
 machine with no display.
 
-**Not built yet:** attacks, hitboxes, jumping, and the character/frame-data
-loader. Fighters currently walk, crouch, block, turn to face each other, and
-rounds resolve on KO or timeout. Nothing can deal damage.
+**Not built yet:** jumping and the airborne states, the special-move input
+parser, and throws. Fighters walk, crouch, block, attack with all eight ground
+normals, take damage, and suffer hitstun and blockstun; rounds resolve on KO or
+timeout.
+
+`F1` toggles the hitbox overlay — blue hurtboxes, red hitboxes (filled while
+active), yellow pushboxes. It is the fastest way to answer "why did that
+miss?".
 
 **The full suite must stay under 5 minutes and a full rebuild under 60s
 (ADR 0010). If you exceed either, that is a bug — report it, do not absorb it.**

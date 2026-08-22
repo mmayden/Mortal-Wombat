@@ -16,17 +16,17 @@ frames 300
 input 0 0x0000 0x0000
 
 # Full state hash at intervals, so a divergence reports its first frame.
-checkpoint 30 0x499360A648FAB6A0
-checkpoint 60 0x35E738B8D72909E4
-checkpoint 90 0x78A296121387F789
-checkpoint 120 0xA75094B3FE8B24D6
-checkpoint 150 0xD06D3226447720DE
-checkpoint 180 0x5982285FC33DBC3E
-checkpoint 210 0xC022E0E2F8EE1946
-checkpoint 240 0x42B4754E303EB0A6
-checkpoint 270 0xFB6FF7E175428301
-checkpoint 300 0x9FA471A1B65DBF7D
+checkpoint 30 0xF59E9C9B1BF07700
+checkpoint 60 0xBEA4B0305A6219C4
+checkpoint 90 0x8740B721FEE584F9
+checkpoint 120 0x54A2AF19F6FAD746
+checkpoint 150 0x77B217127099080E
+checkpoint 180 0x8E7358E04AAA202E
+checkpoint 210 0x37EDFA11852C5016
+checkpoint 240 0xBE28D5D26E746AB6
+checkpoint 270 0xF450FD0E7097B771
+checkpoint 300 0x494205774397C16D
 
 # Visible-state hash after the final frame. Excludes RNG position
 # so that a render-side effect drawing a number cannot fail this.
-final 0x18878C0BA4987F00
+final 0x836869592B293890

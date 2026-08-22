@@ -13,6 +13,8 @@
 #include "sim/hash.h"
 #include "sim/sim.h"
 
+#include "match_data.h"
+
 namespace mw::test {
 
 struct RunResult {
@@ -35,7 +37,8 @@ inline RunResult run_scenario(uint64_t seed, int32_t frame_count,
 
     for (int32_t frame = 0; frame < frame_count; ++frame) {
         const mw::sim::InputPair current = script(frame);
-        mw::sim::advance_frame(result.final_state, current, previous);
+        mw::sim::advance_frame(result.final_state, mw::test::shipped_match_data(), current,
+                               previous);
         previous = current;
 
         if ((frame + 1) % CHECKPOINT_INTERVAL == 0) {
@@ -59,7 +62,8 @@ inline RunResult run_replay(const Replay& replay) {
 
     for (int32_t frame = 0; frame < replay.frame_count; ++frame) {
         const mw::sim::InputPair current = input_at_frame(replay, frame);
-        mw::sim::advance_frame(result.final_state, current, previous);
+        mw::sim::advance_frame(result.final_state, mw::test::shipped_match_data(), current,
+                               previous);
         previous = current;
 
         if ((frame + 1) % CHECKPOINT_INTERVAL == 0) {

@@ -3,11 +3,13 @@
 #include <SDL3/SDL.h>
 
 #include "sim/constants.h"
+#include "sim/sim.h"
 
 namespace mw::render {
 namespace {
 
 using mw::sim::Fighter;
+using mw::sim::FighterState;
 using mw::sim::GameState;
 
 // DESIGN.md 5.3: period-appropriate UI — chunky bars, heavy shapes.
@@ -21,6 +23,10 @@ constexpr Color HEALTH_FRAME{0xEC, 0xE8, 0xE0, 0xFF};
 constexpr Color ROUND_PIP{0xE8, 0xC0, 0x4A, 0xFF};
 constexpr Color TIMER_BAR{0xEC, 0xE8, 0xE0, 0xFF};
 constexpr Color DEBUG_ORIGIN{0x50, 0xE0, 0x70, 0xFF};
+constexpr Color DEBUG_HURTBOX{0x4A, 0x9C, 0xFF, 0xFF};      // blue
+constexpr Color DEBUG_HITBOX{0xFF, 0x3A, 0x3A, 0xFF};       // red
+constexpr Color DEBUG_HITBOX_IDLE{0x8A, 0x2A, 0x2A, 0xFF};  // red, dimmed
+constexpr Color DEBUG_PUSHBOX{0xE8, 0xD0, 0x4A, 0xFF};      // yellow
 
 // DESIGN.md 5.5 has not settled the stage yet and says not to invent one, so
 // this is a flat backdrop and a ground line — the minimum that makes position
@@ -139,6 +145,80 @@ void draw_fighter(SDL_Renderer* renderer, const SpriteManifest& manifest, const 
     }
 }
 
+// The debug box overlay. DESIGN.md 5.1 gives the colours:
+//
+//   Hurtbox  blue outline
+//   Hitbox   red outline, filled while active
+//   Pushbox  yellow outline
+//
+// The stack decision calls the hitbox viewer the project's debugging
+// environment, and it doubles as a shipped training-mode feature. It is how
+// "why did that miss?" stops needing a debugger.
+//
+// Boxes are drawn from the CURRENT frame without interpolation, deliberately.
+// An interpolated hitbox is a lie: it would show the box somewhere it never
+// was on any simulation frame, which is precisely the question this overlay
+// exists to answer.
+void draw_debug_boxes(SDL_Renderer* renderer, const mw::sim::MatchData& data,
+                      const GameState& state, float camera) {
+    for (int32_t i = 0; i < 2; ++i) {
+        const Fighter& fighter = state.fighters[i];
+        const mw::sim::CharacterData& character = data.characters[i];
+
+        auto draw_box = [&](const mw::sim::Box& local, Color color, bool filled) {
+            const mw::sim::Box box = mw::sim::world_box(fighter, local);
+            const float x = static_cast<float>(box.x) - camera;
+            const float y = static_cast<float>(box.y);
+            const float w = static_cast<float>(box.w);
+            const float h = static_cast<float>(box.h);
+
+            if (filled) {
+                set_color(renderer, Color{color.r, color.g, color.b, 0x80});
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+                const SDL_FRect rect{x, y, w, h};
+                SDL_RenderFillRect(renderer, &rect);
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+            }
+            outline(renderer, x, y, w, h, color);
+        };
+
+        draw_box(character.pushbox, DEBUG_PUSHBOX, false);
+
+        // The hurtbox actually presented this frame, including any per-move
+        // override -- not the character default, which would mislead on exactly
+        // the frames that matter.
+        mw::sim::Box hurtbox = character.standing_hurtbox;
+        if (fighter.state == FighterState::Crouch) {
+            hurtbox = character.crouching_hurtbox;
+        }
+        if (fighter.state == FighterState::Attack && fighter.move_id >= 0) {
+            const mw::sim::MoveData& move =
+                mw::sim::move_of(character, static_cast<mw::sim::MoveId>(fighter.move_id));
+            if (!mw::sim::box_is_empty(move.hurtbox_override)) {
+                hurtbox = move.hurtbox_override;
+            }
+        }
+        draw_box(hurtbox, DEBUG_HURTBOX, false);
+
+        if (fighter.state != FighterState::Attack || fighter.move_id < 0) {
+            continue;
+        }
+
+        const mw::sim::MoveData& move =
+            mw::sim::move_of(character, static_cast<mw::sim::MoveId>(fighter.move_id));
+
+        for (int32_t h = 0; h < move.hitbox_count; ++h) {
+            const mw::sim::HitboxSpan& span = move.hitboxes[h];
+            const bool live =
+                fighter.move_frame >= span.first_frame && fighter.move_frame <= span.last_frame;
+
+            // Inactive hitboxes are drawn too, dimmed. Seeing where a move WILL
+            // hit during its startup is most of what makes frame data legible.
+            draw_box(span.box, live ? DEBUG_HITBOX : DEBUG_HITBOX_IDLE, live);
+        }
+    }
+}
+
 // DESIGN.md 5.3: chunky health bars, large centered timer.
 //
 // The timer is a shrinking bar rather than digits: there is no font path yet
@@ -189,8 +269,9 @@ void draw_hud(SDL_Renderer* renderer, const GameState& state) {
 
 }  // namespace
 
-void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest, const GameState& previous,
-                const GameState& current, float alpha, bool show_debug) {
+void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
+                const mw::sim::MatchData& data, const GameState& previous, const GameState& current,
+                float alpha, bool show_debug) {
     const float camera = camera_x(previous, current, alpha);
 
     draw_stage(renderer, camera);
@@ -198,6 +279,10 @@ void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest, const Ga
     for (int32_t i = 0; i < 2; ++i) {
         draw_fighter(renderer, manifest, previous.fighters[i], current.fighters[i], i, alpha,
                      camera, show_debug);
+    }
+
+    if (show_debug) {
+        draw_debug_boxes(renderer, data, current, camera);
     }
 
     draw_hud(renderer, current);

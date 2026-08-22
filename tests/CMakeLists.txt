@@ -20,7 +20,7 @@ target_include_directories(mw_test_main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 function(mw_add_test_tier tier)
     set(target "mw_test_${tier}")
     add_executable(${target} ${ARGN})
-    target_link_libraries(${target} PRIVATE mw_test_main mw_sim mw_warnings)
+    target_link_libraries(${target} PRIVATE mw_test_main mw_sim mw_data mw_warnings)
 
     add_test(NAME ${tier} COMMAND ${target})
     set_tests_properties(${tier} PROPERTIES LABELS "${tier}")
@@ -33,11 +33,8 @@ mw_add_test_tier(unit
     unit/test_input.cpp
     unit/test_state.cpp
     unit/test_hash.cpp
-    unit/test_framedata.cpp)
-
-# The frame-data tests read the shipped character files, so the unit tier needs
-# the loader. MW_DATA_DIR comes with it as a PUBLIC definition.
-target_link_libraries(mw_test_unit PRIVATE mw_data)
+    unit/test_framedata.cpp
+    unit/test_combat.cpp)
 
 # Tier 3 — smoke: boot, run 600 ticks, assert no crash and no runaway state.
 mw_add_test_tier(smoke
@@ -61,7 +58,7 @@ target_compile_definitions(mw_test_replay PRIVATE
 add_executable(mw_replay_record
     replay/record_replay.cpp
     replay/replay_file.cpp)
-target_link_libraries(mw_replay_record PRIVATE mw_sim mw_warnings mw_exceptions)
+target_link_libraries(mw_replay_record PRIVATE mw_sim mw_data mw_warnings mw_exceptions)
 target_include_directories(mw_replay_record PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(mw_replay_record PRIVATE
     MW_REPLAY_DIR="${CMAKE_CURRENT_SOURCE_DIR}/replays")
@@ -75,7 +72,7 @@ target_compile_definitions(mw_replay_record PRIVATE
 add_executable(mw_desync_probe
     replay/desync_probe.cpp
     replay/replay_file.cpp)
-target_link_libraries(mw_desync_probe PRIVATE mw_sim mw_warnings mw_exceptions)
+target_link_libraries(mw_desync_probe PRIVATE mw_sim mw_data mw_warnings mw_exceptions)
 target_include_directories(mw_desync_probe PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(mw_desync_probe PRIVATE
     MW_REPLAY_DIR="${CMAKE_CURRENT_SOURCE_DIR}/replays")

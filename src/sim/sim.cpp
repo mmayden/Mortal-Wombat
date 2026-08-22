@@ -34,31 +34,106 @@ void resolve_facing(GameState& state) {
     state.fighters[1].facing = p0_is_left ? Facing::Left : Facing::Right;
 }
 
+// Which move a button press produces, given whether the fighter is crouching.
+//
+// Returns MoveId::Count when no attack button was newly pressed. Edges rather
+// than held state: holding punch must produce one punch, not one per frame.
+MoveId requested_move(InputFrame current, InputFrame previous, bool crouching) {
+    struct Binding {
+        Button button;
+        MoveId standing;
+        MoveId crouching;
+    };
+
+    // Order is the priority order when two buttons are pressed on the same
+    // frame. Fixed rather than "whichever the loop happens to find first", so
+    // that two machines resolve a simultaneous press identically. Punches
+    // before kicks and light before heavy, because the lighter option is the
+    // one a player mashing both is more likely to be able to react out of.
+    constexpr Binding BINDINGS[] = {
+        {Button::LowPunch, MoveId::StandLowPunch, MoveId::CrouchLowPunch},
+        {Button::HighPunch, MoveId::StandHighPunch, MoveId::CrouchHighPunch},
+        {Button::LowKick, MoveId::StandLowKick, MoveId::CrouchLowKick},
+        {Button::HighKick, MoveId::StandHighKick, MoveId::CrouchHighKick},
+    };
+
+    for (const Binding& binding : BINDINGS) {
+        if (input_pressed(current, previous, binding.button)) {
+            return crouching ? binding.crouching : binding.standing;
+        }
+    }
+    return MoveId::Count;
+}
+
+void begin_move(Fighter& fighter, MoveId move) {
+    fighter.state = FighterState::Attack;
+    fighter.move_id = static_cast<int32_t>(move);
+
+    // The frame the move starts IS frame 1 of the move, matching how
+    // docs/framedata_schema.md asks hitbox frame ranges to be written. Starting
+    // at 0 and incrementing next frame would give every move one extra frame of
+    // startup that appears nowhere in its data.
+    fighter.move_frame = 1;
+
+    fighter.velocity_x = Fixed();
+    fighter.hit_already_landed = 0;
+}
+
 // Steps 3 and 4. The v1 state set is closed (DESIGN.md 4.2); this handles the
-// ground-movement subset that exists before frame data lands. Jump, attack,
-// and stun transitions arrive with the character loader.
-void tick_ground_movement(Fighter& fighter, InputFrame input) {
-    if (fighter.hitstun_remaining > 0 || fighter.blockstun_remaining > 0) {
+// ground subset. Jumping arrives with the airborne states.
+void tick_fighter_state(Fighter& fighter, const CharacterData& character, InputFrame current,
+                        InputFrame previous) {
+    // An attack in progress owns the fighter until it finishes.
+    if (fighter.state == FighterState::Attack) {
+        ++fighter.move_frame;
+        fighter.velocity_x = Fixed();
+
+        const MoveData& move = move_of(character, static_cast<MoveId>(fighter.move_id));
+        if (fighter.move_frame > move_total_frames(move)) {
+            fighter.state = FighterState::Idle;
+            fighter.move_id = -1;
+            fighter.move_frame = 0;
+        }
+        return;
+    }
+
+    // Losing your turn is the entire point of these two states, and it is what
+    // makes landing a hit worth anything.
+    if (fighter.hitstun_remaining > 0) {
+        fighter.state = FighterState::Hitstun;
+        fighter.velocity_x = Fixed();
+        return;
+    }
+    if (fighter.blockstun_remaining > 0) {
+        fighter.state = FighterState::Blockstun;
         fighter.velocity_x = Fixed();
         return;
     }
 
-    // Block is a button, not hold-back (DESIGN.md 4.1), so blocking and
-    // walking backward are never ambiguous and never need disentangling.
-    if (input_held(input, Button::Block)) {
+    const bool crouching = input_vertical(current) > 0;
+
+    const MoveId move = requested_move(current, previous, crouching);
+    if (move != MoveId::Count) {
+        begin_move(fighter, move);
+        return;
+    }
+
+    // Block is a button, not hold-back (DESIGN.md 4.1), so blocking and walking
+    // backward are never ambiguous and never need disentangling.
+    if (input_held(current, Button::Block)) {
         fighter.state = FighterState::Blocking;
         fighter.velocity_x = Fixed();
         return;
     }
 
-    if (input_vertical(input) > 0) {
+    if (crouching) {
         fighter.state = FighterState::Crouch;
         fighter.velocity_x = Fixed();
         return;
     }
 
     // Input is in world space; forward depends on which way the fighter faces.
-    const int32_t horizontal = input_horizontal(input);
+    const int32_t horizontal = input_horizontal(current);
     const int32_t facing_sign = static_cast<int32_t>(fighter.facing);
 
     if (horizontal == 0) {
@@ -70,8 +145,138 @@ void tick_ground_movement(Fighter& fighter, InputFrame input) {
     const bool moving_forward = (horizontal == facing_sign);
     fighter.state = moving_forward ? FighterState::WalkForward : FighterState::WalkBackward;
 
-    const Fixed speed = moving_forward ? WALK_FORWARD_SPEED : WALK_BACKWARD_SPEED;
+    const Fixed speed =
+        moving_forward ? character.walk_forward_speed : character.walk_backward_speed;
     fighter.velocity_x = speed * horizontal;
+}
+
+// The hurtbox a fighter presents right now.
+Box active_hurtbox(const Fighter& fighter, const CharacterData& character) {
+    if (fighter.state == FighterState::Attack) {
+        const MoveData& move = move_of(character, static_cast<MoveId>(fighter.move_id));
+        if (!box_is_empty(move.hurtbox_override)) {
+            return move.hurtbox_override;
+        }
+    }
+    if (fighter.state == FighterState::Crouch) {
+        return character.crouching_hurtbox;
+    }
+    return character.standing_hurtbox;
+}
+
+// Step 5. Fighters have bodies and cannot occupy the same space.
+//
+// Both are pushed half the overlap, which keeps the resolution symmetric --
+// order-independent, and therefore identical on two machines. At a stage wall
+// the clamp in step 7 can reintroduce a small overlap; that is accepted for v1
+// rather than solved with an iterative solver, which would be the beginning of
+// the physics engine ADR 0006 declines to have.
+void resolve_pushboxes(GameState& state, const MatchData& data) {
+    const Box a = world_box(state.fighters[0], data.characters[0].pushbox);
+    const Box b = world_box(state.fighters[1], data.characters[1].pushbox);
+
+    if (!boxes_overlap(a, b)) {
+        return;
+    }
+
+    const int32_t left_index = (state.fighters[0].x <= state.fighters[1].x) ? 0 : 1;
+    const int32_t right_index = 1 - left_index;
+
+    const Box& left_box = (left_index == 0) ? a : b;
+    const Box& right_box = (left_index == 0) ? b : a;
+
+    const int32_t overlap = (left_box.x + left_box.w) - right_box.x;
+    if (overlap <= 0) {
+        return;
+    }
+
+    const Fixed push = Fixed::from_int(overlap) / 2;
+    state.fighters[left_index].x -= push;
+    state.fighters[right_index].x += push;
+}
+
+// Step 6. The step where a fighting game becomes a fighting game.
+//
+// Both attackers are evaluated against the state as it stands BEFORE any hit is
+// applied, and the results are applied afterwards. Resolving one fighter fully
+// and then the other would let player one hit put player two into hitstun
+// before player two simultaneous hit was tested, silently making player one win
+// every trade, on every machine, forever.
+void resolve_hits(GameState& state, const MatchData& data) {
+    struct Outcome {
+        bool connected;
+        bool blocked;
+        int32_t damage;
+        int32_t stun;
+    };
+    Outcome outcomes[2] = {};
+
+    for (int32_t attacker = 0; attacker < 2; ++attacker) {
+        const int32_t defender = 1 - attacker;
+        const Fighter& attacking = state.fighters[attacker];
+        const Fighter& defending = state.fighters[defender];
+
+        if (attacking.state != FighterState::Attack || attacking.hit_already_landed != 0) {
+            continue;
+        }
+
+        const MoveData& move =
+            move_of(data.characters[attacker], static_cast<MoveId>(attacking.move_id));
+        if (!move_is_active_on(move, attacking.move_frame)) {
+            continue;
+        }
+
+        const Box hurtbox =
+            world_box(defending, active_hurtbox(defending, data.characters[defender]));
+
+        for (int32_t i = 0; i < move.hitbox_count; ++i) {
+            const HitboxSpan& span = move.hitboxes[i];
+            if (attacking.move_frame < span.first_frame || attacking.move_frame > span.last_frame) {
+                continue;
+            }
+            if (!boxes_overlap(world_box(attacking, span.box), hurtbox)) {
+                continue;
+            }
+
+            // DESIGN.md 4.6 cuts chip damage, so a blocked hit deals none. It
+            // still costs the defender their turn, which is what keeps
+            // attacking into a block a real decision rather than a free one.
+            const bool blocked = defending.state == FighterState::Blocking;
+            outcomes[attacker] = Outcome{true, blocked, blocked ? 0 : move.damage,
+                                         blocked ? move.blockstun : move.hitstun};
+            break;
+        }
+    }
+
+    for (int32_t attacker = 0; attacker < 2; ++attacker) {
+        if (!outcomes[attacker].connected) {
+            continue;
+        }
+        const int32_t defender = 1 - attacker;
+
+        state.fighters[attacker].hit_already_landed = 1;
+        state.fighters[attacker].hit_confirm_frame = state.frame;
+
+        Fighter& hurt = state.fighters[defender];
+        if (outcomes[attacker].blocked) {
+            hurt.blockstun_remaining = outcomes[attacker].stun;
+            hurt.state = FighterState::Blockstun;
+        } else {
+            hurt.health -= outcomes[attacker].damage;
+            if (hurt.health < 0) {
+                hurt.health = 0;
+            }
+            hurt.hitstun_remaining = outcomes[attacker].stun;
+            hurt.state = FighterState::Hitstun;
+
+            // Being hit interrupts whatever the defender was doing. Without
+            // this, a fighter struck during startup would resume the attack the
+            // moment hitstun ended, from the frame they left off.
+            hurt.move_id = -1;
+            hurt.move_frame = 0;
+        }
+        hurt.velocity_x = Fixed();
+    }
 }
 
 // Step 7. Clamping every frame is what keeps position bounded, which is in turn
@@ -210,7 +415,26 @@ void init_state(GameState& state, uint64_t seed) {
     begin_round(state);
 }
 
-void advance_frame(GameState& state, InputPair current, InputPair previous) {
+bool boxes_overlap(const Box& a, const Box& b) {
+    // Strict inequalities: touching edges do not overlap. A hitbox whose right
+    // edge exactly meets a hurtbox left edge has not reached it, and counting
+    // that as contact would make every move one unit longer than its data says.
+    return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+}
+
+Box world_box(const Fighter& fighter, const Box& local) {
+    // Authored facing right (docs/framedata_schema.md), so a left-facing
+    // fighter mirrors x about the origin. Mirroring the far edge rather than
+    // the near one is what keeps the box the same width either way.
+    const int32_t origin_x = fighter.x.to_int();
+    const int32_t origin_y = fighter.y.to_int();
+    const int32_t x =
+        (fighter.facing == Facing::Right) ? origin_x + local.x : origin_x - (local.x + local.w);
+
+    return Box{x, origin_y + local.y, local.w, local.h};
+}
+
+void advance_frame(GameState& state, const MatchData& data, InputPair current, InputPair previous) {
     // Reserved bits must not reach the sim: a device setting one would change
     // the state hash without changing behavior, which reads as a desync.
     for (int32_t i = 0; i < 2; ++i) {
@@ -221,6 +445,9 @@ void advance_frame(GameState& state, InputPair current, InputPair previous) {
     // Players have no control during the round-start freeze or after a KO.
     const bool players_active = state.round_phase == RoundPhase::Fighting;
 
+    // Step 1 is input decoding, which happens inside step 3 where the decision
+    // it feeds is made.
+
     // Step 2.
     resolve_facing(state);
 
@@ -230,7 +457,8 @@ void advance_frame(GameState& state, InputPair current, InputPair previous) {
         fighter.hit_confirm_frame = -1;
 
         if (players_active) {
-            tick_ground_movement(fighter, current.players[i]);
+            tick_fighter_state(fighter, data.characters[i], current.players[i],
+                               previous.players[i]);
         } else {
             fighter.velocity_x = Fixed();
         }
@@ -239,16 +467,26 @@ void advance_frame(GameState& state, InputPair current, InputPair previous) {
         fighter.y += fighter.velocity_y;
     }
 
-    // Steps 5 and 6 — pushbox separation and hit resolution — land with the
-    // character loader. They are absent rather than stubbed, so that a reader
-    // is not misled into thinking hits already resolve.
+    // Step 5.
+    resolve_pushboxes(state, data);
+
+    // Step 6. Hits resolve after movement, so a hitbox is tested at the
+    // position it actually occupies this frame -- the ordering that makes frame
+    // data mean what the frame-data table says it means.
+    if (players_active) {
+        resolve_hits(state, data);
+    }
 
     // Step 7.
     for (int32_t i = 0; i < 2; ++i) {
         clamp_to_stage(state.fighters[i]);
     }
 
-    // Step 8.
+    // Step 8. Runs after hit resolution, so stun applied this frame is
+    // decremented once here: the frame a hit lands is the FIRST frame of the
+    // defender's stun, not a free frame before it starts. A move with 18
+    // hitstun therefore holds the defender for exactly 18 frames counting the
+    // one they were hit on, which is what the DESIGN.md 4.5 number means.
     for (int32_t i = 0; i < 2; ++i) {
         tick_timers(state.fighters[i]);
     }

@@ -26,6 +26,8 @@
 #include "sim/hash.h"
 #include "sim/sim.h"
 
+#include "match_data.h"
+
 using namespace mw::test;
 
 namespace {
@@ -49,7 +51,7 @@ int probe_one(const Replay& replay) {
 
     for (int32_t frame = 0; frame < replay.frame_count; ++frame) {
         const mw::sim::InputPair current = input_at_frame(replay, frame);
-        mw::sim::advance_frame(state, current, previous);
+        mw::sim::advance_frame(state, mw::test::shipped_match_data(), current, previous);
         previous = current;
 
         std::printf("%d %016llX\n", frame + 1,
