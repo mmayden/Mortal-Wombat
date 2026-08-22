@@ -205,14 +205,41 @@ cleanup is brutal).
 - Period-appropriate UI: chunky health bars, a large centered timer, heavy
   drop-shadowed text.
 
-### 5.4 TODO — the cast
+### 5.4 The cast — PARTIALLY DECIDED
 
-**Undecided. Do not invent.**
+**Names are settled. Everything else is still undecided — do not invent it.**
 
-Two characters needed for v1. Required per character before art begins:
-name, silhouette concept, one special move that fits the character, and a
-one-line personality note. Until this is filled in, use `WOMBAT_A` and
-`WOMBAT_B` in all code and data.
+The two v1 characters are **Frenchy** and **Wisdom**. Character ids in code and
+data are `frenchy` and `wisdom`, replacing the former `WOMBAT_A`/`WOMBAT_B`
+placeholders.
+
+Source: these are the names from the 2024 prototype, whose README read
+*"Frenchy faces off against Wisdom and its gang of evil Wombatants."* Only the
+names carry over. Nothing about that prototype's mechanics, tone, or
+implementation is inherited — it was a different codebase in a different
+language and this document supersedes it entirely.
+
+§5.4 asks for four things per character before art begins. One is filled in:
+
+| | Frenchy | Wisdom |
+|---|---|---|
+| Name | **Frenchy** | **Wisdom** |
+| Silhouette concept | **TODO** | **TODO** |
+| One special move | **TODO** | **TODO** |
+| Personality, one line | **TODO** | **TODO** |
+
+The three TODO rows still bind: **do not invent them.** They are needed before
+art begins, not before code — the frame-data loader and the character TOML
+files can be built against the names alone, since every mechanical property
+comes from `docs/framedata_schema.md` rather than from characterisation.
+
+The prototype README hints that Wisdom leads "a gang of evil Wombatants",
+which would make Wisdom the antagonist. That is a hint, not a decision, and it
+is recorded here so nobody re-derives it as fact.
+
+One open question the names raise: DESIGN §4.5 gives both characters an
+identical twelve-move set, which is correct for v1 scope. Whether Frenchy and
+Wisdom eventually differ mechanically is a post-v1 question (§7), not a v1 one.
 
 ### 5.5 TODO — stage design
 

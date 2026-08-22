@@ -129,7 +129,7 @@ fix(render): correct facing flip on cross-up
 refactor(input): extract bitfield decode from event pump
 docs(adr): record fixed-point math decision
 chore(ci): cache CPM downloads between runs
-data(wombat_a): tune HP recovery from 16 to 14 frames
+data(frenchy): tune HP recovery from 16 to 14 frames
 ```
 
 Scopes: `sim`, `render`, `audio`, `ui`, `platform`, `input`, `net`, `tools`,
@@ -154,7 +154,7 @@ fix/<scope>-<desc>        fix/render-facing-flip
 test/<scope>              test/sim-coverage
 docs/<topic>              docs/framedata-schema
 chore/<topic>             chore/ci-caching
-data/<character>          data/wombat-a-tuning
+data/<character>          data/frenchy-tuning
 ```
 
 Never commit directly to `main`. Never merge red CI. Delete branches after

@@ -30,8 +30,7 @@ data/characters/<character_id>.toml
 ```
 
 `character_id` is lowercase snake_case and matches the `id` field inside the
-file. Until `DESIGN.md` §5.4 names the cast, the two v1 characters are
-`wombat_a` and `wombat_b`.
+file. The two v1 characters are `frenchy` and `wisdom` (`DESIGN.md` §5.4).
 
 ---
 
@@ -58,8 +57,8 @@ ADR 0002 makes that a desync.
 schema_version = 1
 
 [character]
-id           = "wombat_a"
-display_name = "WOMBAT_A"        # DESIGN.md §5.4 — placeholder until cast is named
+id           = "frenchy"
+display_name = "Frenchy"         # DESIGN.md §5.4
 
 [character.physics]
 walk_forward_speed  = 78643      # 1.2 units/frame  (DESIGN.md §4.4)
