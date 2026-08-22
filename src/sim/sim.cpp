@@ -5,11 +5,10 @@
 namespace mw::sim {
 namespace {
 
-// Frames of the pre-round freeze before players gain control.
-constexpr int32_t ROUND_START_FREEZE_FRAMES = 90;
-
-// Frames the KO pose holds before the next round begins.
-constexpr int32_t ROUND_END_FREEZE_FRAMES = 120;
+// ROUND_START_FREEZE_FRAMES and ROUND_END_FREEZE_FRAMES live in constants.h,
+// in the provisional block — no design document specifies round pacing, and
+// keeping every unspecified value in one place is what makes the list of open
+// decisions readable. See ADR 0015.
 
 constexpr Fixed STAGE_LEFT = Fixed::from_int(STAGE_LEFT_BOUND);
 constexpr Fixed STAGE_RIGHT = Fixed::from_int(STAGE_RIGHT_BOUND);

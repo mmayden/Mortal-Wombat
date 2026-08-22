@@ -133,17 +133,23 @@ TEST_CASE("The sim survives a full match played to its conclusion") {
     CHECK(tick < limit);
 }
 
-TEST_CASE("600 ticks stay well inside the frame budget") {
-    // BLUEPRINT.md 1.3, step 5. The sim gets 16.67ms per frame minus whatever
-    // rendering needs, and rollback may re-simulate up to 8 frames within one
-    // of those. The assertion is deliberately loose — it is a guard against a
-    // catastrophic regression, not a benchmark. Profiling belongs in Tracy
-    // under the profile preset (ADR 0012).
+TEST_CASE("600 ticks run fast enough to be worth measuring") {
+    // Reports timing; deliberately does NOT assert on it.
+    //
+    // BLUEPRINT.md 1.3 step 5 suggests the smoke test assert a frame budget.
+    // The stack decision's "Explicitly cut from Medium" list overrides that for
+    // this project: "No CI perf gates yet. Tracy in the profile preset suffices
+    // until there is a game to profile." That doc is project-specific and was
+    // written later, so it wins (ADR 0015).
+    //
+    // A wall-clock assertion on a shared CI runner is also a flake generator,
+    // and a test that fails for reasons unrelated to the code trains people to
+    // ignore red. Printing keeps the visibility without the gate.
     GameState state;
     init_state(state, 1u);
 
-    // Timing a wall clock here is fine: this is a test, which lives above the
-    // sim boundary. Nothing inside src/sim/ may do this (ADR 0002).
+    // Reading a clock here is fine: this is a test, which lives above the sim
+    // boundary. Nothing inside src/sim/ may do this (ADR 0002).
     const auto start = std::chrono::steady_clock::now();
     for (int32_t tick = 0; tick < SMOKE_TICKS; ++tick) {
         advance_frame(state, scripted_input(tick), scripted_input(tick - 1));
@@ -157,7 +163,6 @@ TEST_CASE("600 ticks stay well inside the frame budget") {
     std::printf("smoke: %d ticks in %lld us (%.2f us/frame)\n", SMOKE_TICKS,
                 static_cast<long long>(micros), per_frame_micros);
 
-    // 1ms per frame is roughly 16x the sim's share of a 60Hz budget. Crossing
-    // it means something is very wrong, not that a machine was busy.
-    CHECK(per_frame_micros < 1000.0);
+    // The only assertion is that the loop ran. Timing is information, not a gate.
+    CHECK(state.frame == SMOKE_TICKS);
 }

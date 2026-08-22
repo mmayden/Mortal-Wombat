@@ -91,6 +91,19 @@ every recorded replay and must be called out.
 - Does it build something `DESIGN.md` §4.6 explicitly cut from v1 — juggles,
   cancels, chip damage, throws, run, fatalities?
 
+### Invented values
+
+- Does the diff add a constant that no design document specifies, outside the
+  `PROVISIONAL` block in `src/sim/constants.h`? `DESIGN.md` §10 and §5.5 forbid
+  inventing around undecided things; ADR 0015 quarantines what could not be
+  avoided. A guessed number that reads as a specified one is how a design
+  decision gets made by accident.
+- If it adds one to `PROVISIONAL`, does it say what still needs deciding and
+  why? That block is the project's list of open engine decisions and it should
+  shrink, never grow.
+- Does a comment cite a design section that does not actually say what the
+  comment claims? Check the citation, do not trust it.
+
 ### Frame-data schema
 
 - If `docs/framedata_schema.md` changed, did `schema_version` get bumped, and

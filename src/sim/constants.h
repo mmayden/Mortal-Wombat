@@ -1,13 +1,20 @@
-// Global simulation constants. Values come from DESIGN.md 4.4 and are
-// deliberately duplicated nowhere else.
+// Global simulation constants.
 //
-// Per-character values (walk speeds, move frame data) do NOT belong here —
-// those live in data/characters/*.toml, per ADR 0009, so that balance changes
-// are data commits rather than code commits. This file holds only what is
-// global to every match.
+// This file has two halves and the split matters.
 //
-// DESIGN.md 4.4 calls these "starting points to tune, not constants". Changing
-// one is a behavior change: re-record the affected replays in the same commit.
+// The first half is transcribed from DESIGN.md 4.4. Each value cites its
+// source and must not be changed here without changing the design doc.
+//
+// The second half is PROVISIONAL: values the design docs do not specify, which
+// the engine needed in order to run at all. They are engineering placeholders,
+// not design decisions, and DESIGN.md 10 is explicit that undecided things must
+// not be invented around. They are isolated here so that nobody mistakes one
+// for a settled number, and so that the list of what still needs deciding is
+// exactly this block rather than a grep through the sim. See ADR 0015.
+//
+// Per-character values (walk speeds once characters exist, move frame data, box
+// dimensions) belong in neither half — those live in data/characters/*.toml per
+// ADR 0009, so that balance changes are data commits rather than code commits.
 #pragma once
 
 #include <cstdint>
@@ -15,6 +22,14 @@
 #include "sim/fixed.h"
 
 namespace mw::sim {
+
+// ---------------------------------------------------------------------------
+// From DESIGN.md 4.4
+//
+// That section calls these "starting points to tune, not constants" — expect
+// them to change. When one does, re-record the affected replays in the same
+// commit (AGENTS.md rule 8).
+// ---------------------------------------------------------------------------
 
 // The simulation runs at a fixed 60Hz and has no dt. Every duration in the
 // game is an integer count of these frames. ADR 0002.
@@ -28,30 +43,68 @@ inline constexpr int32_t SCREEN_HEIGHT = 270;
 inline constexpr int32_t STAGE_WIDTH = 960;
 inline constexpr int32_t GROUND_Y = 240;
 
-// Fighters cannot walk into the wall. Half a pushbox width of margin keeps the
-// body on screen rather than the origin point.
-inline constexpr int32_t STAGE_LEFT_BOUND = 16;
-inline constexpr int32_t STAGE_RIGHT_BOUND = STAGE_WIDTH - 16;
-
 inline constexpr int32_t STARTING_HEALTH = 100;
 inline constexpr int32_t ROUND_TIMER_FRAMES = 5400;  // 90 seconds
 inline constexpr int32_t ROUNDS_TO_WIN = 2;
 
-// Where the two fighters stand when a round begins, measured from stage left.
-inline constexpr int32_t ROUND_START_X_P1 = 380;
-inline constexpr int32_t ROUND_START_X_P2 = 580;
-
-// DESIGN.md 4.4 gives these as 1.2 and 1.0 units per frame. They are written
-// as ratios rather than decimals because a float literal below the sim
-// boundary is a desync (ADR 0002), and from_ratio is exact and constexpr.
+// DESIGN.md 4.4 gives these as 1.2 and 1.0 units per frame. They are written as
+// ratios rather than decimals because a float literal below the sim boundary is
+// a desync (ADR 0002), and from_ratio is exact and constexpr.
 //
-// These are placeholders until the character TOML loader lands; at that point
-// they move into data/characters/*.toml and this pair is deleted.
+// These are global only until the character loader lands; ADR 0009 puts walk
+// speed in each character's TOML, at which point this pair is deleted.
 inline constexpr Fixed WALK_FORWARD_SPEED = Fixed::from_ratio(12, 10);
 inline constexpr Fixed WALK_BACKWARD_SPEED = Fixed::from_ratio(10, 10);
 
-// Capacity, not a target. Fixed-size because GameState must stay trivially
+// ---------------------------------------------------------------------------
+// PROVISIONAL — not specified by any design document
+//
+// Every value below was chosen to make the engine runnable, not because a
+// design decision produced it. Each is already baked into the committed replay
+// checkpoint hashes, so changing one means re-recording — which is the intended
+// workflow, not a problem.
+//
+// Before v1 feel work begins, each of these needs a real answer.
+// ---------------------------------------------------------------------------
+
+// How far apart the fighters stand at the opening of a round, centered on the
+// stage. Derived from STAGE_WIDTH rather than written as two magic positions,
+// so that the single invented number is the separation itself.
+//
+// NEEDS A DECISION: this is a feel value. It sets how long the opening approach
+// takes, which is the first thing a player experiences every round. At the walk
+// speeds above, 200 units is roughly 83 frames of forward walk to close.
+inline constexpr int32_t ROUND_START_SEPARATION = 200;
+
+inline constexpr int32_t ROUND_START_X_P1 = (STAGE_WIDTH - ROUND_START_SEPARATION) / 2;
+inline constexpr int32_t ROUND_START_X_P2 = (STAGE_WIDTH + ROUND_START_SEPARATION) / 2;
+
+// How close a fighter's origin may come to each stage edge.
+//
+// NEEDS A DECISION: this should not be a constant at all. The correct bound
+// derives from the fighter's pushbox half-width, which is per-character data
+// (docs/framedata_schema.md, character.boxes.pushbox) and is not loaded yet.
+// When the character loader lands, delete this and compute it per fighter.
+inline constexpr int32_t STAGE_EDGE_MARGIN = 16;
+
+inline constexpr int32_t STAGE_LEFT_BOUND = STAGE_EDGE_MARGIN;
+inline constexpr int32_t STAGE_RIGHT_BOUND = STAGE_WIDTH - STAGE_EDGE_MARGIN;
+
+// The pre-round freeze, and how long the KO pose holds before the next round.
+//
+// NEEDS A DECISION: both are pure pacing. DESIGN.md 2 specifies that rounds
+// exist and how they are won, but says nothing about their rhythm. 90 and 120
+// frames are 1.5 and 2 seconds.
+inline constexpr int32_t ROUND_START_FREEZE_FRAMES = 90;
+inline constexpr int32_t ROUND_END_FREEZE_FRAMES = 120;
+
+// Capacity, not a target — a bound chosen so that GameState stays trivially
 // copyable and small enough that rollback's memcpy is free (ADR 0005).
+//
+// NEEDS CONFIRMATION: DESIGN.md 4.5 leaves the v1 special's "active" column
+// blank, which reads like a projectile, but 4.6 does not say either way. If the
+// special turns out not to spawn one, this array and the Projectile type come
+// out of GameState entirely.
 inline constexpr int32_t MAX_PROJECTILES = 8;
 
 }  // namespace mw::sim
