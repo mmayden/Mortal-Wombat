@@ -48,6 +48,37 @@ CPMAddPackage(
     OPTIONS "DOCTEST_WITH_TESTS OFF"
 )
 
+# SDL3 — window, event pump, gamepad, audio device. ADR 0003.
+#
+# Chosen over raylib because a fighting game is judged on latency as a
+# competitive property, and SDL3 gives direct control over event polling and
+# main-loop timing where higher-level libraries impose a per-frame model.
+#
+# Statically linked so the game is one file with no DLL to ship beside it.
+# SDL is zlib-licensed, which permits static linking without attribution
+# obligations that would complicate distribution.
+#
+# The subsystems disabled below are ones this project will not use. Each one
+# removed is compile time we get back on every clean build and every CI runner,
+# and ADR 0010 treats the build budget as a hard requirement.
+#
+# NOTE: nothing links this yet. It lands alone, ahead of the code that needs
+# it, because CMakeLists.txt is the shared-config hotspot (BLUEPRINT.md 5.5) —
+# two branches each adding a dependency conflict here no matter how well
+# isolated their other work is.
+CPMAddPackage(
+    NAME SDL3
+    GITHUB_REPOSITORY libsdl-org/SDL
+    GIT_TAG release-3.4.14
+    OPTIONS
+        "SDL_SHARED OFF"
+        "SDL_STATIC ON"
+        "SDL_TEST_LIBRARY OFF"
+        "SDL_EXAMPLES OFF"
+        "SDL_INSTALL OFF"
+        "SDL_DISABLE_INSTALL ON"
+)
+
 # ---------------------------------------------------------------------------
 # Warning and language-subset flags
 #
