@@ -51,6 +51,16 @@ persistent directory to avoid re-downloading across build trees.
 | `ctest --preset debug -L replay` | Recorded inputs → state hash | < 10s |
 | `ctest --preset debug` | All of the above | < 5 min |
 
+There is no game binary yet: the harness is complete and green, and the
+bootstrap (window, render loop, input, one fighter on screen) comes next.
+Everything above runs headless, because the sim has no platform dependency.
+
+Two extra binaries come out of the build. `mw_replay_record` regenerates the
+committed recordings — run it when a deliberate behavior change invalidates
+the replay tier, and commit its output in the same commit as the change.
+`mw_desync_probe` prints per-frame state hashes and is what the CI desync job
+diffs across platforms.
+
 The **desync** tier runs in CI only: the same replays across Linux, Windows,
 and macOS runners, asserting bit-identical per-frame state hashes. It is the
 most important test in the project — cross-platform divergence is the failure

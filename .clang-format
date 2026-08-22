@@ -1,0 +1,33 @@
+# Formatting is a settled question so that no diff spends review attention on
+# it. docs/CONVENTIONS.md section 9.
+---
+Language: Cpp
+BasedOnStyle: Google
+
+ColumnLimit: 100
+IndentWidth: 4
+AccessModifierOffset: -4
+TabWidth: 4
+UseTab: Never
+
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+BreakBeforeBraces: Attach
+DerivePointerAlignment: false
+PointerAlignment: Left
+SpaceAfterCStyleCast: true
+
+# Include order mirrors the dependency direction in ARCHITECTURE.md section 1:
+# standard library, then third-party, then our own headers. Seeing a
+# render/ include inside a sim file becomes visually obvious.
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:    '^<[a-z_]+>$'
+    Priority: 1
+  - Regex:    '^<.*>$'
+    Priority: 2
+  - Regex:    '^"(sim|render|audio|ui|platform|replay)/'
+    Priority: 3
+  - Regex:    '.*'
+    Priority: 4

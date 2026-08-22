@@ -1,0 +1,158 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push supersedes an in-flight run on the same branch. Agent branches
+# push often, and a queue of stale runs is a queue nobody reads.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CPM_SOURCE_CACHE: ${{ github.workspace }}/.cpm-cache
+
+jobs:
+  # -------------------------------------------------------------------------
+  # Build and test on all three platforms.
+  #
+  # The whole suite has to stay under five minutes (ADR 0010). Past that,
+  # people start skipping it, and a skipped gate is not a gate.
+  # -------------------------------------------------------------------------
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false          # a Windows-only failure is exactly the signal
+      matrix:                   # this project most needs to see
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v5
+
+      - name: Set up MSVC environment
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Cache CPM packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CPM_SOURCE_CACHE }}
+          key: cpm-${{ runner.os }}-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: cpm-${{ runner.os }}-
+
+      - name: Configure
+        run: cmake --preset debug
+
+      - name: Build
+        run: cmake --build --preset debug
+
+      - name: Test
+        run: ctest --preset debug --output-on-failure
+
+      # Uploaded so a desync failure below can be inspected without a rerun.
+      - name: Record state hash trace
+        run: ./build/debug/bin/mw_desync_probe > desync-${{ runner.os }}.txt
+        shell: bash
+
+      - name: Upload state hash trace
+        uses: actions/upload-artifact@v4
+        with:
+          name: desync-${{ runner.os }}
+          path: desync-${{ runner.os }}.txt
+          retention-days: 7
+
+  # -------------------------------------------------------------------------
+  # The desync check. ADR 0011 calls this the most important test in the
+  # project, and it is the reason this repo runs a three-platform matrix at
+  # all rather than building on Linux alone.
+  #
+  # Cross-platform divergence is the failure that ships broken: it cannot be
+  # reproduced on the developer's machine, it cannot be debugged from a bug
+  # report, and by the time two real players see it the commit that caused it
+  # is months old. The only workable place to catch it is the commit itself.
+  # -------------------------------------------------------------------------
+  desync:
+    name: desync (cross-platform state hashes)
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: desync-*
+          merge-multiple: true
+
+      - name: Compare per-frame state hashes across platforms
+        shell: bash
+        run: |
+          set -uo pipefail
+
+          for f in desync-Linux.txt desync-Windows.txt desync-macOS.txt; do
+            if [ ! -s "$f" ]; then
+              echo "::error::$f is missing or empty -- the probe produced no"
+              echo "::error::output, so this check would otherwise pass vacuously."
+              exit 1
+            fi
+          done
+
+          status=0
+          for other in desync-Windows.txt desync-macOS.txt; do
+            if diff -q desync-Linux.txt "$other" > /dev/null; then
+              echo "OK: $other matches Linux"
+              continue
+            fi
+
+            status=1
+            echo "::error::DESYNC -- $other diverges from Linux."
+            echo ""
+            echo "First differing lines (frame number, then state hash):"
+            diff desync-Linux.txt "$other" | head -20
+            echo ""
+            echo "Each line is one simulation frame. The first differing frame is"
+            echo "where the two platforms stopped agreeing -- look at what that"
+            echo "frame does. The usual causes, in order: a float below the sim"
+            echo "boundary, iteration over an unordered container, uninitialized"
+            echo "padding in GameState, or a struct laid out differently by the"
+            echo "two compilers (compare the sizeof line at the top of each file)."
+            echo ""
+            echo "See docs/ARCHITECTURE.md section 1 and ADR 0002."
+          done
+
+          exit $status
+
+  # -------------------------------------------------------------------------
+  # The sim boundary check, run once. It is also a ctest case, but running it
+  # standalone means a boundary violation reports as its own failed job rather
+  # than as one line inside a test log.
+  # -------------------------------------------------------------------------
+  boundary:
+    name: sim boundary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python tests/check_sim_boundary.py src/sim
+
+  # -------------------------------------------------------------------------
+  # Formatting. Advisory rather than blocking: a failed format check that
+  # blocks a merge trains people to run the formatter, but a *noisy* one
+  # trains them to ignore CI. This one reports and does not gate.
+  # -------------------------------------------------------------------------
+  format:
+    name: clang-format
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check formatting
+        run: |
+          find src tests -name '*.h' -o -name '*.cpp' \
+            | xargs clang-format --dry-run --Werror
