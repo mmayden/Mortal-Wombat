@@ -49,6 +49,7 @@ persistent directory to avoid re-downloading across build trees.
 | `ctest --preset debug -L unit` | Pure logic — fixed-point, RNG, boxes | < 1s |
 | `ctest --preset debug -L smoke` | Boot, 600 ticks, no crash | < 5s |
 | `ctest --preset debug -L replay` | Recorded inputs → state hash | < 10s |
+| `ctest --preset debug -L boundary` | No forbidden construct in `src/sim/` | < 1s |
 | `ctest --preset debug` | All of the above | < 5 min |
 
 The game runs: `build/debug/bin/mortal_wombat`. Two fighters walk, crouch,
@@ -80,11 +81,12 @@ that ships broken and cannot be debugged after release.
 
 ```
 src/sim/        The simulation. Deterministic, fixed-point, POD state.
+src/data/       Loads character TOML. I/O lives here, above the sim boundary.
 src/render/     Draws GameState. Never writes it.
-src/platform/   SDL3 window, input, timing.
+src/platform/   SDL3 window, input, gamepads, timing.
 data/           Frame data and character definitions, in TOML.
-tools/          Separate binaries: frame-data editor, replay inspector.
-tests/          unit / smoke / replay
+tools/          Separate binaries (planned): frame-data editor, replay inspector.
+tests/          unit / smoke / replay, plus the sim-boundary check
 docs/           Design, architecture, conventions, ADRs.
 ```
 
@@ -105,7 +107,7 @@ The one rule everything follows from:
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | How the code is shaped |
 | [docs/CONVENTIONS.md](docs/CONVENTIONS.md) | The C++ subset, naming, commits |
 | [docs/framedata_schema.md](docs/framedata_schema.md) | The TOML contract |
-| [docs/decisions/](docs/decisions/) | ADRs — settled, not relitigated |
+| [docs/decisions/](docs/decisions/README.md) | ADRs — settled, not relitigated. Start with the index |
 | [docs/BLUEPRINT.md](docs/BLUEPRINT.md) | The development process this repo follows |
 
 ---

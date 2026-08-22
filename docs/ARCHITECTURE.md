@@ -19,7 +19,7 @@ Everything in this project is organized around one line:
 │  fixed-point only · no float · no allocation · no I/O      │
 │  no clock · no rand() · no std:: containers · POD state    │
 │                                                            │
-│  pure function:  advance_frame(GameState, Inputs) -> void  │
+│  pure fn: advance_frame(GameState, MatchData, Inputs)      │
 ├──────────────────────── one-way ───────────────────────────┤
 │  src/render/  src/audio/  src/ui/  src/platform/  tools/   │
 │                                                            │
@@ -56,7 +56,10 @@ class of problem structurally by keeping them out of `GameState`.
 | `src/sim/input.h` | `InputFrame` — per-player button bitfield | sim |
 | `src/sim/state.h` | `GameState`, `Fighter`, `Projectile` — flat POD | sim |
 | `src/sim/hash.h` | FNV-1a over `GameState` bytes — the desync check | sim |
+| `src/sim/framedata.h` | `MoveData`, `CharacterData`, `MatchData` — POD, read-only | sim |
 | `src/sim/sim.h` `.cpp` | `advance_frame()` — the whole game, one function | sim |
+| `src/data/framedata_loader.*` | Parses character TOML. I/O and `std::string` live here | data |
+| `src/log.h` | `MW_LOG_*`. **Never included below the sim boundary** | app |
 | `src/platform/` | SDL3 window, event pump, gamepad, timing | platform |
 | `src/render/` | Draws `GameState`. Interpolation lives here. | render |
 | `src/audio/` | miniaudio playback, driven by observed state change | render |
@@ -86,14 +89,28 @@ struct GameState {
     int32_t    round_timer;
     int32_t    round_number;
     int32_t    rounds_won[2];
+    RoundPhase round_phase;
+    int32_t    phase_frames_remaining;
+    int32_t    reserved;          // explicit padding — see below
     RngState   rng;
 };
-static_assert(std::is_trivially_copyable_v<GameState>);
+static_assert(std::is_trivial_v<GameState>);
 ```
 
-The `static_assert` is load-bearing. It is what makes rollback's `save_state` /
-`load_state` a `memcpy` rather than a serialization pass, and it fails the
-build the moment someone puts a `std::string` or a pointer in.
+The assertions are load-bearing, and there are three kinds:
+
+- **`is_trivially_copyable_v`** is what makes rollback's `save_state` /
+  `load_state` a `memcpy` rather than a serialization pass.
+- **`is_trivial_v`** additionally requires trivial default construction. That
+  one exists because its absence let a real bug through: a member with a
+  user-provided default constructor left the struct trivially *copyable* but
+  not trivially *default-constructible*, which GCC rejects `memset` on while
+  MSVC accepts it. Green on Windows, red on Linux. See ADR 0014.
+- **Size assertions proving no implicit padding.** The desync check hashes this
+  struct byte by byte across three platforms, and padding bytes are
+  uninitialized — they would differ between machines and report a desync on a
+  frame where behaviour matched exactly. `reserved` is explicit padding, not a
+  spare field: it must stay zero.
 
 **Everything else is derived.** Frame data loaded from TOML is *immutable
 config*, read-only during a match, and lives outside `GameState`. Render
@@ -113,14 +130,20 @@ main.cpp
   ├─ platform: poll SDL events -> InputFrame[2]      (data, not polled state)
   ├─ accumulate real time
   └─ while (accumulator >= FRAME_DURATION):
-        advance_frame(state, inputs)                 ← the only sim call
+        advance_frame(state, match_data, inputs)     ← the only sim call
         accumulator -= FRAME_DURATION
      render(state, prev_state, alpha)                ← interpolates, read-only
 ```
 
+`match_data` is the loaded frame data for both fighters. It is immutable for
+the match and is **not** part of `GameState`: rollback copies that struct up to
+8x per frame, and copying data that cannot change is waste. `advance_frame`
+stays a pure function of (state, config, inputs), so a match is still exactly
+reproducible from a seed plus an input stream.
+
 **The sim has no `dt`.** Every duration in the game is an integer frame count
-at 60Hz. `advance_frame` takes state and inputs and nothing else — no time, no
-delta, no clock. This is what makes it replayable.
+at 60Hz. `advance_frame` takes state, immutable config, and inputs — no time,
+no delta, no clock. This is what makes it replayable.
 
 `alpha` — the fractional position between the previous and current sim frame —
 exists only in the render call signature. It never crosses the boundary.
@@ -149,6 +172,21 @@ Hit resolution comes after movement so that a hitbox is tested at the position
 it actually occupies this frame — the ordering that makes frame data mean what
 the frame-data table says it means.
 
+Step 1 has no code of its own: input decoding happens inside step 3, at the
+point the decision it feeds is made.
+
+**Timers tick after hits (step 8 after step 6), and that is load-bearing.** Stun
+applied on a frame is decremented once in that same frame, so the frame a hit
+lands is the *first* frame of the defender's stun rather than a free frame
+before it starts. A move with 18 hitstun holds the defender for exactly 18
+frames counting the one they were hit on, which is what the `DESIGN.md` §4.5
+number means.
+
+**Both attackers are resolved against the state before either hit applies.**
+Resolving one fighter fully and then the other would let player one's hit put
+player two into hitstun before player two's simultaneous hit was tested —
+silently making player one win every trade, on every machine, forever.
+
 ---
 
 ## 6. Extension points
@@ -157,9 +195,14 @@ the frame-data table says it means.
 
 1. `data/characters/<name>.toml` — add the `[moves.<name>]` block. Schema is
    `docs/framedata_schema.md`.
-2. `src/sim/moves.h` — add the enum entry, if the move needs a distinct
-   identity in the state machine.
-3. `tests/unit/test_moves.cpp` — assert startup/active/recovery match the TOML.
+2. `src/sim/framedata.h` — add the `MoveId` enum entry.
+3. `src/data/framedata_loader.cpp` — add the matching key to `MOVE_KEYS`. The
+   loader rejects a file that is missing any move or names an unknown one, so
+   these two must move together.
+4. `docs/framedata_schema.md` — add it to the move-key table. That file is the
+   contract `tools/framedata_editor/` is written against.
+5. `tests/unit/test_framedata.cpp` — assert startup/active/recovery match the
+   TOML, and `tests/unit/test_combat.cpp` if it introduces new behaviour.
 4. Record a replay exercising it into `tests/replays/`.
 
 **No other file.** If adding a move requires changing the state machine's
@@ -188,13 +231,30 @@ sim's build flags — tools build with exceptions and RTTI enabled.
 
 | Tier | Location | What it proves |
 |---|---|---|
-| Unit | `tests/unit/` | Fixed-point, RNG, input decode, box overlap, damage |
-| Smoke | `tests/smoke/` | Boot, 600 ticks, no crash, frame budget held |
-| Replay | `tests/replay/` + `tests/replays/*.replay` | Behavior did not change |
+| Unit | `tests/unit/` | Fixed-point, RNG, input, hashing, frame data, combat |
+| Smoke | `tests/smoke/` | Boot, 600 ticks, no crash, invariants hold every frame |
+| Replay | `tests/replay/` + `tests/replays/*.replay` | Behaviour did not change |
 | Desync | CI matrix, same replays | Bit-identical across Linux/Win/macOS |
+| Boundary | `tests/check_sim_boundary.py` | No forbidden construct entered `src/sim/` |
+| Game boot | CI, `mortal_wombat --frames 600` | The real binary starts and runs headless |
 
 Tests link the sim directly and never boot SDL. That is only possible because
-the sim has no platform dependency, which is the practical payoff of §1.
+the sim has no platform dependency, which is the practical payoff of §1. The
+game-boot job exists because of that same property: the sim tiers cannot catch
+a broken window, renderer, or main loop, since none of them touch one.
+
+Sim tests run against the **shipped** `data/characters/*.toml` rather than
+invented fixtures (`tests/match_data.h`). Frame data is the behaviour of a
+fighting game: a test against made-up timings proves the code works on data
+that will never ship.
+
+Two tests guard the guards themselves, and both exist because the failure they
+catch is silent:
+
+- the replay tier asserts the combat recordings **actually deal damage**, since
+  a scenario whose attacks whiff reproduces perfectly and proves nothing;
+- the loader rejects a replay file carrying no expected hashes, since such a
+  file passes regardless of what the sim does.
 
 ---
 
