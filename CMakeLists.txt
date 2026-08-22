@@ -168,5 +168,29 @@ if(NOT MSVC)
     endif()
 endif()
 
+# ---------------------------------------------------------------------------
+# The game binary
+#
+# Everything here is ABOVE the sim boundary: platform, render, and the loop.
+# It links mw_sim and reads its state; nothing in src/sim/ knows these files
+# exist (ARCHITECTURE.md 1).
+#
+# Built with exceptions and RTTI disabled, same as the sim -- this is shipped
+# code, and ADR 0001 restricts it to the documented C++ subset. Only tests and
+# tools get the full language.
+# ---------------------------------------------------------------------------
+add_executable(mortal_wombat
+    src/main.cpp
+    src/platform/platform.cpp
+    src/render/renderer.cpp
+    src/render/sprite.cpp)
+
+target_link_libraries(mortal_wombat
+    PRIVATE mw_sim mw_warnings mw_no_exceptions SDL3::SDL3)
+
+# WIN32_EXECUTABLE is deliberately OFF: the game logs to stdout and a console
+# is wanted during development. Flip it when there is something to ship.
+set_target_properties(mortal_wombat PROPERTIES WIN32_EXECUTABLE OFF)
+
 enable_testing()
 add_subdirectory(tests)

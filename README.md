@@ -51,9 +51,14 @@ persistent directory to avoid re-downloading across build trees.
 | `ctest --preset debug -L replay` | Recorded inputs → state hash | < 10s |
 | `ctest --preset debug` | All of the above | < 5 min |
 
-There is no game binary yet: the harness is complete and green, and the
-bootstrap (window, render loop, input, one fighter on screen) comes next.
-Everything above runs headless, because the sim has no platform dependency.
+The game runs: `build/debug/bin/mortal_wombat`. Two fighters walk, crouch,
+block, turn to face each other, and rounds resolve on KO or timeout. Attacks,
+hitboxes, jumping, and the frame-data loader are not built yet — nothing can
+deal damage.
+
+`--frames N` runs N simulation frames and exits, so CI can boot the real binary
+headless via `SDL_VIDEODRIVER=dummy`; `--screenshot PATH` captures the final
+frame.
 
 Two extra binaries come out of the build. `mw_replay_record` regenerates the
 committed recordings — run it when a deliberate behavior change invalidates
