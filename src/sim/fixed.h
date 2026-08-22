@@ -28,7 +28,18 @@ inline constexpr int32_t FIXED_ONE = 1 << FIXED_SHIFT;
 struct Fixed {
     int32_t raw;
 
-    constexpr Fixed() : raw(0) {}
+    // Defaulted, not user-provided. A hand-written `Fixed() : raw(0) {}` would
+    // make Fixed non-trivially-default-constructible, and that property is
+    // contagious: every struct holding one -- Fighter, Projectile, GameState --
+    // stops being trivial too, and memset on a non-trivial type is a GCC
+    // diagnostic (-Wclass-memaccess) even though it is well-defined for a
+    // trivially copyable type.
+    //
+    // Value-initialization still zeroes: `Fixed()` and `Fixed{}` zero-initialize
+    // because the default constructor is not user-provided. Only default
+    // -initialization (`Fixed x;`) leaves raw indeterminate, and the sim never
+    // does that -- init_state memsets the whole struct before anything reads it.
+    Fixed() = default;
     constexpr explicit Fixed(int32_t raw_value) : raw(raw_value) {}
 
     // Construct from a whole number of units. from_int(3) is exactly 3.0.
