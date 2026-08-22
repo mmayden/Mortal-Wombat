@@ -55,6 +55,24 @@ jobs:
       - name: Test
         run: ctest --preset debug --output-on-failure
 
+      # Boots the actual game binary -- window, renderer, event pump, and the
+      # fixed-timestep loop -- not just the simulation.
+      #
+      # BLUEPRINT.md 1.3 asks the smoke test to boot the game headless and run
+      # 600 ticks. The ctest smoke tier covers the sim, which has no platform
+      # dependency at all, so until this step existed nothing verified that the
+      # binary could start. SDL's dummy video driver makes that possible on a
+      # runner with no display.
+      #
+      # 600 sim frames is 10 seconds of game time, and the loop paces itself in
+      # real time, so expect this step to take about that long.
+      - name: Headless game boot
+        run: ./build/debug/bin/mortal_wombat --frames 600
+        shell: bash
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+
       # Uploaded so a desync failure below can be inspected without a rerun.
       - name: Record state hash trace
         run: ./build/debug/bin/mw_desync_probe > desync-${{ runner.os }}.txt

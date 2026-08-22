@@ -24,14 +24,24 @@ does that for you; every command below is run through it.
 | Replay | `powershell -File tools/dev.ps1 ctest --preset debug -L replay` |
 | Re-record replays | `build/debug/bin/mw_replay_record.exe` |
 | Per-frame state hashes | `build/debug/bin/mw_desync_probe.exe` |
+| **Run the game** | `build/debug/bin/mortal_wombat.exe` |
+| Headless boot (N sim frames) | `mortal_wombat.exe --frames 600` |
+| Capture a frame | `mortal_wombat.exe --frames 200 --screenshot out.bmp` |
+
+Controls: P1 `WASD` + `F G C V` + `B` to block. P2 arrows + numpad `4 5 1 2`
++ `0` to block. `ESC` quits, `F1` toggles the debug overlay.
 
 On Linux/macOS (and in CI) drop the wrapper: `cmake --preset debug`,
 `cmake --build --preset debug`, `ctest --preset debug`.
 
-**There is no game binary yet.** The harness is complete and green; the
-bootstrap (window, render loop, input, one fighter on screen) is the next
-phase. Until then the sim is exercised entirely headless through the test
-tiers — which is possible because the sim has no platform dependency at all.
+The sim is also exercised entirely headless through the test tiers, which is
+possible because it has no platform dependency at all. `--frames` exists so CI
+can boot the real binary too: set `SDL_VIDEODRIVER=dummy` and it runs on a
+machine with no display.
+
+**Not built yet:** attacks, hitboxes, jumping, and the character/frame-data
+loader. Fighters currently walk, crouch, block, turn to face each other, and
+rounds resolve on KO or timeout. Nothing can deal damage.
 
 **The full suite must stay under 5 minutes and a full rebuild under 60s
 (ADR 0010). If you exceed either, that is a bug — report it, do not absorb it.**
