@@ -1,0 +1,22 @@
+* text=auto eol=lf
+
+# Source and data — always text, always diffable
+*.cpp   text
+*.h     text
+*.hpp   text
+*.toml  text
+*.md    text
+*.cmake text
+*.yml   text
+*.json  text
+
+# Replay recordings are text (seed + input stream + hash) by design.
+# See docs/decisions/0001-0013-stack.md ADR 0011.
+*.replay text
+
+# Binary — human-only zone, unmergeable (AGENTS.md hard rule 1)
+*.png   binary
+*.blend binary
+*.wav   binary
+*.ogg   binary
+*.psd   binary

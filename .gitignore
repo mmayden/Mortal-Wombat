@@ -1,0 +1,35 @@
+# Build output
+build/
+out/
+cmake-build-*/
+_deps/
+*.obj
+*.o
+*.exe
+*.pdb
+*.ilk
+*.lib
+*.dll
+*.so
+*.dylib
+
+# CPM package cache (regenerable)
+.cpm-cache/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+CMakeUserPresets.json
+compile_commands.json
+
+# Generated asset output — regenerable, never commit (BLUEPRINT §2.3)
+assets/generated/
+data/generated/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Tracy captures, profiling output
+*.tracy
