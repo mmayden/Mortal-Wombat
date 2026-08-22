@@ -35,19 +35,32 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@v5
 
-      # SDL3 refuses to configure on Linux without X11 or Wayland development
-      # headers, and the GitHub runner image ships neither.
+      # SDL3 refuses to configure on Linux without the X11/Wayland development
+      # headers, and the runner image ships none of them.
       #
-      # Installing them rather than setting SDL_UNIX_CONSOLE_BUILD: the console
-      # build would configure and would let CI go green, but it produces an SDL
-      # that cannot open a window at all. The Linux job would then be testing a
-      # configuration no player will ever run, which is worse than not testing
-      # Linux -- a green check that means less than it appears to.
+      # This is SDL3's documented build-dependency set rather than the minimum
+      # that makes configure pass. Trimming it turns into whack-a-mole -- the
+      # first attempt here installed X11 and then failed on XTEST -- and every
+      # round trip is a CI run. The packages cost seconds; the iterations do
+      # not.
+      #
+      # Installed rather than setting SDL_UNIX_CONSOLE_BUILD, which would
+      # configure and go green while producing an SDL that cannot open a
+      # window. The Linux job is one of the three the desync comparison
+      # depends on (ADR 0011), and that comparison only means something if
+      # each platform built the same game.
       - name: Install SDL3 build dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends             libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev             libxfixes-dev libxss-dev libxkbcommon-dev             libwayland-dev wayland-protocols             libegl1-mesa-dev libgl1-mesa-dev libasound2-dev
+          sudo apt-get install -y --no-install-recommends \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev \
+            libxfixes-dev libxss-dev libxtst-dev libxkbcommon-dev \
+            libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev \
+            libgl1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev \
+            libasound2-dev libpulse-dev \
+            libdbus-1-dev libudev-dev libibus-1.0-dev
 
       - name: Set up MSVC environment
         if: runner.os == 'Windows'
