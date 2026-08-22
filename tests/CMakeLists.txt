@@ -44,7 +44,8 @@ mw_add_test_tier(unit
     unit/test_state.cpp
     unit/test_hash.cpp
     unit/test_framedata.cpp
-    unit/test_combat.cpp)
+    unit/test_combat.cpp
+    unit/test_jump.cpp)
 
 # Tier 3 — smoke: boot, run 600 ticks, assert no crash and no runaway state.
 mw_add_test_tier(smoke

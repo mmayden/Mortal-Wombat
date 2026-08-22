@@ -150,6 +150,24 @@ inline InputPair mutual_pressure(int32_t frame) {
     return InputPair{{p1, p2}};
 }
 
+// Player one jumps in and attacks from the air; player two stands still. Pins
+// down the fixed arc, the jump attack, and landing recovery together.
+//
+// A jump is the one action whose whole value is that it cannot be changed once
+// started (DESIGN.md 4.3), so this recording is what would catch air control
+// creeping in -- the fighter would land somewhere else and the hash would move.
+inline InputPair jump_in_and_attack(int32_t frame) {
+    InputFrame p1 = NEUTRAL;
+    if (frame < FREEZE_FRAMES + 60) {
+        p1 = input_with(p1, Button::Right);
+    } else if (frame % 70 == 0) {
+        p1 = input_with(input_with(p1, Button::Up), Button::Right);
+    } else if (frame % 70 == 20) {
+        p1 = input_with(p1, Button::HighPunch);
+    }
+    return InputPair{{p1, NEUTRAL}};
+}
+
 }  // namespace scripts
 
 // The frame count on each scenario clears the 90-frame round-start freeze, so
@@ -171,6 +189,8 @@ inline constexpr Scenario SCENARIOS[] = {
      &scripts::attack_into_block},
     {"mutual_pressure", "Both fighters punch from close range. Trades.", 8642u, 420,
      &scripts::mutual_pressure},
+    {"jump_attack", "Player 1 jumps in and attacks from the air. Fixed arcs.", 13579u, 480,
+     &scripts::jump_in_and_attack},
 };
 
 inline constexpr int32_t SCENARIO_COUNT =

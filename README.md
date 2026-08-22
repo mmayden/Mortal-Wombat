@@ -57,8 +57,8 @@ block, and attack with all eight ground normals; hits connect, deal damage, and
 apply hitstun and blockstun; rounds resolve on KO or timeout. `F1` shows the
 hitbox overlay.
 
-Not built yet: jumping and the airborne states, the special-move input parser,
-and throws.
+Not built yet: the special-move input parser, knockdown and wakeup, and
+throws.
 
 `--frames N` runs N simulation frames and exits, so CI can boot the real binary
 headless via `SDL_VIDEODRIVER=dummy`; `--screenshot PATH` captures the final

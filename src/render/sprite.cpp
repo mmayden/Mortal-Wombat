@@ -125,9 +125,20 @@ void PlaceholderManifest::fighter_sprites(const mw::sim::Fighter& fighter, int32
     // produced no visible change whatsoever, so the game read as ignoring the
     // input. Feel cannot be judged through a display that shows nothing
     // happening, and DESIGN.md 3 makes feel the anti-drift anchor.
+    // An attacking fighter is not always in FighterState::Attack: a jump attack
+    // happens while the state is Airborne, because the jump owns the state and
+    // the move rides along. Keying purely off the state left jump attacks with
+    // no visual indication at all -- the same invisibility that made blocking
+    // look broken.
+    const bool attacking = fighter.state == FighterState::Attack ||
+                           (fighter.state == FighterState::Airborne && fighter.move_id >= 0);
+
+    if (attacking) {
+        body = brighten(body, 40);
+    }
+
     switch (fighter.state) {
         case FighterState::Attack:
-            body = brighten(body, 40);
             break;
         case FighterState::Blocking:
             body = blend(body, GUARD, 0.45f);
@@ -158,7 +169,7 @@ void PlaceholderManifest::fighter_sprites(const mw::sim::Fighter& fighter, int32
     // placeholder telling you an attack is happening, and the F1 overlay is
     // where the real hitbox lives. Anything more here would be inventing
     // animation the design has not specified.
-    if (fighter.state == FighterState::Attack) {
+    if (attacking) {
         const float facing = static_cast<float>(static_cast<int32_t>(fighter.facing));
         const float limb_y = is_kick(fighter.move_id) ? -height * 0.35f : -height * 0.72f;
         const float limb_x = facing > 0.0f ? BODY_WIDTH * 0.5f : -BODY_WIDTH * 0.5f - LIMB_LENGTH;
