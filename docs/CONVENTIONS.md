@@ -11,7 +11,12 @@
 structs, operator overloading (fixed-point types only), templates for
 containers only.
 
-**Forbidden project-wide:**
+**Forbidden in shipped code** — the game binary and every library it links
+(`mw_sim`, `mw_data`). Tests and the `tools/` binaries are exempt from the first
+two rows and only those: doctest reports failures by throwing, and neither ships
+or can desync anything. The exemption is expressed in the build as the
+`mw_no_exceptions` / `mw_exceptions` interface targets, not as a convention
+anyone has to remember.
 
 | Forbidden | Instead |
 |---|---|
@@ -29,8 +34,15 @@ containers only.
 `GameState`.
 
 Compilers are configured to reject the first two categories. The sim-boundary
-rules are enforced by `static_assert`, by the sim target's compile flags, and
-by the reviewer checklist — the last of which is why they are written here.
+rules are enforced three ways, none of which rely on anyone remembering them:
+`static_assert` in `state.h`, the sim target's compile flags, and
+`tests/check_sim_boundary.py`, which greps every file under `src/sim/` for each
+forbidden construct and runs both as a ctest case and as its own CI job.
+
+They are still written here because the reviewer sees a diff before CI runs, and
+catching it there is cheaper. See ADR 0014 for why these are mechanical rather
+than review items: every rule in the list is a desync that compiles, passes
+every local test, and fails only in a real match between two machines.
 
 ---
 
@@ -111,8 +123,13 @@ No commented-out code. Git remembers.
 - `SUBCASE` for variations of the same behavior.
 - Test the behavior, not the implementation. If a refactor that preserves
   behavior breaks the test, the test was wrong.
-- **Every test tier gets a CTest label:** `unit`, `smoke`, `replay`. This is
-  what makes `ctest -L unit` work, and CI depends on it.
+- **Every test tier gets a CTest label:** `unit`, `smoke`, `replay`, plus
+  `boundary` on the sim-boundary check. This is what makes `ctest -L unit`
+  work, and CI depends on it.
+- **Sim tests use the shipped `data/characters/*.toml`**, via
+  `tests/match_data.h` — not invented fixtures. Frame data is the behaviour of
+  a fighting game, so a test against made-up timings proves the code works on
+  data that will never ship.
 - Boundary cases are not optional in sim tests: zero, negative, min, max,
   overflow, first frame, last frame.
 

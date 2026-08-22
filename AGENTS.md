@@ -22,6 +22,7 @@ does that for you; every command below is run through it.
 | Unit only | `powershell -File tools/dev.ps1 ctest --preset debug -L unit` |
 | Smoke | `powershell -File tools/dev.ps1 ctest --preset debug -L smoke` |
 | Replay | `powershell -File tools/dev.ps1 ctest --preset debug -L replay` |
+| Sim boundary | `python tests/check_sim_boundary.py src/sim` |
 | Re-record replays | `build/debug/bin/mw_replay_record.exe` |
 | Per-frame state hashes | `build/debug/bin/mw_desync_probe.exe` |
 | **Run the game** | `build/debug/bin/mortal_wombat.exe` |
@@ -52,6 +53,16 @@ timeout.
 `F1` toggles the hitbox overlay — blue hurtboxes, red hitboxes (filled while
 active), yellow pushboxes. It is the fastest way to answer "why did that
 miss?".
+
+**Format before pushing.** clang-format is pinned at 22.1.8 and its check
+blocks merges:
+
+```
+clang-format -i $(find src tests -name '*.h' -o -name '*.cpp')
+```
+
+Run it over everything the branch touched, not just what you edited by hand —
+scripted edits skip the formatter as easily as they skip review.
 
 **The full suite must stay under 5 minutes and a full rebuild under 60s
 (ADR 0010). If you exceed either, that is a bug — report it, do not absorb it.**
@@ -108,7 +119,8 @@ Below the boundary, these are build-breaking errors, not style preferences:
 
 - `docs/DESIGN.md` — what the game is, how it must feel, what is cut from v1.
   §3 is the anti-drift anchor for any judgment call about feel.
-- `docs/decisions/` — settled questions. **These do not get relitigated.**
+- `docs/decisions/README.md` — the ADR index. Settled questions;
+  **these do not get relitigated.**
   ADRs 0001–0013 cover language, determinism, platform, rendering, entity
   model, physics, netcode, transport, data format, build, testing, support
   libraries, and art pipeline.

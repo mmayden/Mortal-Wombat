@@ -112,7 +112,7 @@ before pushing.
 | Need | Place |
 |---|---|
 | What the game is, how it must feel | `docs/DESIGN.md` (§3 is the anti-drift anchor) |
-| Settled technical decisions | `docs/decisions/` — **do not relitigate** |
+| Settled technical decisions | `docs/decisions/README.md` (index) — **do not relitigate** |
 | Module map, the sim boundary, `advance_frame` step order | `docs/ARCHITECTURE.md` |
 | The C++ subset, naming, commit format | `docs/CONVENTIONS.md` |
 | The TOML contract (versioned) | `docs/framedata_schema.md` |
@@ -129,14 +129,22 @@ The single rule everything resolves against:
 ## State of the build
 
 **Working:** fixed-point sim at 60Hz, seeded RNG, input-as-data, fixed-timestep
-loop with interpolation, SDL3 window and rendering, TOML frame data for Frenchy
-and Wisdom, walking, crouching, blocking, all eight ground normals, hit
-detection, damage, hitstun, blockstun, pushbox separation, round flow, and the
-`F1` hitbox overlay.
+loop with interpolation, SDL3 window and rendering, keyboard and gamepad input,
+TOML frame data for Frenchy and Wisdom, walking, crouching, blocking, all eight
+ground normals, hit detection, damage, hitstun, blockstun, pushbox separation,
+round flow, the `F1` hitbox overlay, and per-state fighter tinting.
 
 **Not built:** jumping and the airborne states (so `W` / `Up` does nothing), the
 special-move input parser (`B,F+HP`), throws, audio, netcode, and every tool
 under `tools/`.
+
+**Unvalidated:** the gamepad path compiles and detects zero pads correctly, but
+no pad has ever been connected to this machine. Do not describe it as working.
+
+**Nothing is animated.** Fighter state is shown by tint, an extended limb while
+attacking, and a guard plate while blocking. DESIGN.md §5.1 asks for a debug
+text label instead; there is no font path yet (ADR 0012 puts Dear ImGui in the
+debug UI), so the tinting substitutes for that line rather than replacing it.
 
 ---
 

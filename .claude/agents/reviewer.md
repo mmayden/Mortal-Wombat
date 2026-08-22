@@ -49,9 +49,38 @@ For every file under `src/sim/`, grep the diff for each of these. Any hit is
 compiles, passes local tests, and only fails in a real match between two
 machines. Mechanical to check, catastrophic to miss.
 
-Also verify: does `GameState` still satisfy `is_trivially_copyable_v`, and did
-its size change? A size change is not necessarily wrong, but it invalidates
-every recorded replay and must be called out.
+Also verify, when `GameState`, `Fighter`, or `Projectile` changed:
+
+- Does it still satisfy **`is_trivial_v`**, not merely `is_trivially_copyable_v`?
+  A member with a user-provided default constructor leaves it copyable but not
+  trivially default-constructible, which GCC rejects `memset` on and MSVC
+  accepts — green on Windows, red on Linux. This has happened.
+- Do the **no-implicit-padding size assertions** still hold, and were they
+  adjusted rather than raised? The desync check hashes the struct byte by byte;
+  padding is uninitialized and would differ between machines.
+- Did the size change? That invalidates every recorded replay, so the diff must
+  also re-record them.
+
+### Combat and ordering
+
+Read this section whenever the diff touches `advance_frame` or anything it
+calls. Each item is a bug that is invisible in single-player testing and
+decides matches.
+
+- **Are both attackers resolved against the state before either hit applies?**
+  Resolving one fighter fully and then the other lets player one's hit stun
+  player two before player two's simultaneous hit is tested, silently making
+  player one win every trade forever.
+- **Is pushbox separation symmetric?** An asymmetric push depends on processing
+  order, which is a desync.
+- **Does a move still hit exactly once?** `hit_already_landed` is what stops a
+  three-frame active window dealing its damage three times.
+- **Does the diff move step 8 (tick timers) relative to step 6 (resolve hits)?**
+  The current order makes the frame a hit lands the first frame of the
+  defender's stun. Reordering silently changes every stun duration in the game
+  by one frame.
+- **Does new sim code read `MatchData`, never write it?** Frame data is
+  immutable config and is not rolled back.
 
 ### Determinism, beyond the boundary check
 
@@ -117,6 +146,20 @@ every recorded replay and must be called out.
 - Does it allocate in the hot loop?
 - Does the change plausibly push a full rebuild past 60s or the suite past
   5 minutes? (ADR 0010 treats both as hard requirements)
+
+### Tests that prove nothing
+
+The failure mode to look for is a test that passes regardless of behaviour.
+
+- A new replay scenario: does anything **assert on what it exercises**? A combat
+  recording whose attacks whiff reproduces perfectly and proves nothing. This
+  has happened — input is ignored for the first 90 frames of a round, so a
+  scenario that walks in from frame 0 never closes the distance.
+- A test using invented frame data rather than the shipped
+  `data/characters/*.toml` — it proves the code works on data that will never
+  ship.
+- A skipped-rather-than-failed path: missing fixture, missing recording, empty
+  file list. Each turns a tier green while testing nothing.
 
 ---
 
