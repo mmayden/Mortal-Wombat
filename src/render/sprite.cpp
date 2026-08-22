@@ -9,8 +9,8 @@ namespace {
 // Colour keys off player_index, never off facing: facing flips whenever the
 // fighters cross up, so keying on it would swap the two players' colours
 // mid-match.
-constexpr Color P1_BODY{0x4A, 0x90, 0xD9, 0xFF};   // blue
-constexpr Color P2_BODY{0xD9, 0x5F, 0x4A, 0xFF};   // rust
+constexpr Color P1_BODY{0x4A, 0x90, 0xD9, 0xFF};  // blue
+constexpr Color P2_BODY{0xD9, 0x5F, 0x4A, 0xFF};  // rust
 constexpr Color FACING_NOTCH{0xFF, 0xFF, 0xFF, 0xFF};
 
 // DESIGN.md 4.4 gives fighter standing height as ~140 units.
@@ -54,8 +54,8 @@ SpriteQuad untextured(float x, float y, float w, float h, Color tint) {
 
 }  // namespace
 
-void PlaceholderManifest::fighter_sprites(const mw::sim::Fighter& fighter,
-                                          int32_t player_index, SpriteList& out) const {
+void PlaceholderManifest::fighter_sprites(const mw::sim::Fighter& fighter, int32_t player_index,
+                                          SpriteList& out) const {
     out.count = 0;
 
     const float height = body_height_for(fighter);
@@ -72,8 +72,8 @@ void PlaceholderManifest::fighter_sprites(const mw::sim::Fighter& fighter,
     const float facing = static_cast<float>(static_cast<int32_t>(fighter.facing));
     const float notch_x = facing > 0.0f ? (BODY_WIDTH * 0.5f - NOTCH_WIDTH) : -BODY_WIDTH * 0.5f;
 
-    sprite_list_push(out, untextured(notch_x, -height * 0.75f, NOTCH_WIDTH, NOTCH_HEIGHT,
-                                     FACING_NOTCH));
+    sprite_list_push(out,
+                     untextured(notch_x, -height * 0.75f, NOTCH_WIDTH, NOTCH_HEIGHT, FACING_NOTCH));
 }
 
 }  // namespace mw::render

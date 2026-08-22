@@ -27,7 +27,7 @@ namespace mw::render {
 // `alpha` appears in this signature and nowhere below the boundary
 // (ARCHITECTURE.md 4). The sim has no dt.
 void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
-                const mw::sim::GameState& previous, const mw::sim::GameState& current,
-                float alpha, bool show_debug);
+                const mw::sim::GameState& previous, const mw::sim::GameState& current, float alpha,
+                bool show_debug);
 
 }  // namespace mw::render

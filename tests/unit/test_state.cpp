@@ -19,9 +19,13 @@ namespace {
 constexpr InputFrame NEUTRAL{0u};
 constexpr InputPair NO_INPUT{{NEUTRAL, NEUTRAL}};
 
-InputPair pair_with(InputFrame p1, InputFrame p2) { return InputPair{{p1, p2}}; }
+InputPair pair_with(InputFrame p1, InputFrame p2) {
+    return InputPair{{p1, p2}};
+}
 
-InputFrame held(Button button) { return input_with(NEUTRAL, button); }
+InputFrame held(Button button) {
+    return input_with(NEUTRAL, button);
+}
 
 // Runs the state past the round-start freeze so that player input is live.
 void skip_to_fighting(GameState& state) {
@@ -159,8 +163,7 @@ TEST_CASE("Block is a button, not hold-back") {
     skip_to_fighting(state);
 
     const Fixed before = state.fighters[0].x;
-    const InputFrame back_and_block =
-        input_with(held(Button::Left), Button::Block);
+    const InputFrame back_and_block = input_with(held(Button::Left), Button::Block);
     advance_frame(state, pair_with(back_and_block, NEUTRAL), NO_INPUT);
 
     CHECK(state.fighters[0].state == FighterState::Blocking);

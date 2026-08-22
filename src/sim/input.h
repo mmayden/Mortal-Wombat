@@ -58,8 +58,8 @@ constexpr InputFrame input_with(InputFrame input, Button button) {
 }
 
 constexpr InputFrame input_without(InputFrame input, Button button) {
-    return InputFrame{
-        static_cast<uint16_t>(input.buttons & static_cast<uint16_t>(~static_cast<uint16_t>(button)))};
+    return InputFrame{static_cast<uint16_t>(input.buttons &
+                                            static_cast<uint16_t>(~static_cast<uint16_t>(button)))};
 }
 
 // Strips reserved bits. The platform layer calls this before handing input to

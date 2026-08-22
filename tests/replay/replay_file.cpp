@@ -84,7 +84,8 @@ ReplayIoStatus load_replay(const std::string& path, Replay& out, std::string& er
         stream >> keyword;
 
         auto fail = [&](const char* what) {
-            error = path + ":" + std::to_string(line_number) + ": " + what + " -- '" + trimmed + "'";
+            error =
+                path + ":" + std::to_string(line_number) + ": " + what + " -- '" + trimmed + "'";
         };
 
         if (keyword == "version") {

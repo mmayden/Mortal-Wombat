@@ -40,8 +40,7 @@ TEST_CASE("Every scenario has a committed recording that still reproduces") {
         // A missing recording must fail rather than skip. A replay tier that
         // silently tests nothing is worse than no replay tier, because it is
         // trusted. Run mw_replay_record to generate them.
-        REQUIRE_MESSAGE(status == ReplayIoStatus::Ok,
-                        replay_io_status_name(status), ": ", error);
+        REQUIRE_MESSAGE(status == ReplayIoStatus::Ok, replay_io_status_name(status), ": ", error);
 
         CHECK(replay.seed == scenario.seed);
         CHECK(replay.frame_count == scenario.frame_count);
@@ -161,8 +160,7 @@ TEST_CASE("The loader rejects a recording that asserts nothing") {
 TEST_CASE("The loader reports a missing file rather than passing") {
     Replay replay;
     std::string error;
-    const ReplayIoStatus status =
-        load_replay(replay_path("__does_not_exist"), replay, error);
+    const ReplayIoStatus status = load_replay(replay_path("__does_not_exist"), replay, error);
 
     CHECK(status == ReplayIoStatus::FileMissing);
     CHECK_FALSE(error.empty());
@@ -172,8 +170,7 @@ TEST_CASE("A recording round-trips through save and load") {
     const std::string path = replay_path("__roundtrip_probe");
 
     const Scenario& scenario = SCENARIOS[1];
-    const RunResult result =
-        run_scenario(scenario.seed, scenario.frame_count, scenario.script);
+    const RunResult result = run_scenario(scenario.seed, scenario.frame_count, scenario.script);
 
     Replay original;
     original.name = scenario.name;

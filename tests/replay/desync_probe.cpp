@@ -72,8 +72,7 @@ int main(int argc, char** argv) {
     // behavior, and printing the sizes turns that from a mystery into the
     // first line of the diff.
     std::printf("# sizeof(GameState)=%zu sizeof(Fighter)=%zu sizeof(Projectile)=%zu\n",
-                sizeof(mw::sim::GameState), sizeof(mw::sim::Fighter),
-                sizeof(mw::sim::Projectile));
+                sizeof(mw::sim::GameState), sizeof(mw::sim::Fighter), sizeof(mw::sim::Projectile));
 
     int failures = 0;
 

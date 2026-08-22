@@ -2,8 +2,9 @@
 
 #include <SDL3/SDL.h>
 
-#include "log.h"
 #include "sim/constants.h"
+
+#include "log.h"
 
 namespace mw::platform {
 namespace {
@@ -25,18 +26,18 @@ struct Binding {
 };
 
 constexpr Binding P1_BINDINGS[] = {
-    {SDL_SCANCODE_W, Button::Up},         {SDL_SCANCODE_S, Button::Down},
-    {SDL_SCANCODE_A, Button::Left},       {SDL_SCANCODE_D, Button::Right},
-    {SDL_SCANCODE_F, Button::LowPunch},   {SDL_SCANCODE_G, Button::HighPunch},
-    {SDL_SCANCODE_C, Button::LowKick},    {SDL_SCANCODE_V, Button::HighKick},
+    {SDL_SCANCODE_W, Button::Up},       {SDL_SCANCODE_S, Button::Down},
+    {SDL_SCANCODE_A, Button::Left},     {SDL_SCANCODE_D, Button::Right},
+    {SDL_SCANCODE_F, Button::LowPunch}, {SDL_SCANCODE_G, Button::HighPunch},
+    {SDL_SCANCODE_C, Button::LowKick},  {SDL_SCANCODE_V, Button::HighKick},
     {SDL_SCANCODE_B, Button::Block},
 };
 
 constexpr Binding P2_BINDINGS[] = {
-    {SDL_SCANCODE_UP, Button::Up},           {SDL_SCANCODE_DOWN, Button::Down},
-    {SDL_SCANCODE_LEFT, Button::Left},       {SDL_SCANCODE_RIGHT, Button::Right},
-    {SDL_SCANCODE_KP_4, Button::LowPunch},   {SDL_SCANCODE_KP_5, Button::HighPunch},
-    {SDL_SCANCODE_KP_1, Button::LowKick},    {SDL_SCANCODE_KP_2, Button::HighKick},
+    {SDL_SCANCODE_UP, Button::Up},         {SDL_SCANCODE_DOWN, Button::Down},
+    {SDL_SCANCODE_LEFT, Button::Left},     {SDL_SCANCODE_RIGHT, Button::Right},
+    {SDL_SCANCODE_KP_4, Button::LowPunch}, {SDL_SCANCODE_KP_5, Button::HighPunch},
+    {SDL_SCANCODE_KP_1, Button::LowKick},  {SDL_SCANCODE_KP_2, Button::HighKick},
     {SDL_SCANCODE_KP_0, Button::Block},
 };
 
@@ -146,7 +147,9 @@ void poll(Platform& platform) {
         read_bindings(keys, P2_BINDINGS, static_cast<int32_t>(SDL_arraysize(P2_BINDINGS)));
 }
 
-void present(Platform& platform) { SDL_RenderPresent(platform.renderer); }
+void present(Platform& platform) {
+    SDL_RenderPresent(platform.renderer);
+}
 
 bool save_screenshot(Platform& platform, const char* path) {
     SDL_Surface* surface = SDL_RenderReadPixels(platform.renderer, nullptr);
@@ -170,6 +173,8 @@ mw::sim::InputPair current_input(const Platform& platform) {
     return sanitized;
 }
 
-uint64_t now_ns() { return SDL_GetTicksNS(); }
+uint64_t now_ns() {
+    return SDL_GetTicksNS();
+}
 
 }  // namespace mw::platform

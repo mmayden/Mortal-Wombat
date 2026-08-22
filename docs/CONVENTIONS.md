@@ -167,5 +167,15 @@ merge.
 `.clang-format` is the authority; run it before committing. Four spaces, no
 tabs, 100 column limit, braces on the same line.
 
+**Use the pinned version**, because clang-format changes its output between
+releases and a different one will fight CI:
+
+```
+pip install clang-format==22.1.8
+clang-format -i $(find src tests -name '*.h' -o -name '*.cpp')
+```
+
+CI runs the same version and the check blocks merges.
+
 Do not reformat code you are not otherwise changing. Formatting noise in a
 diff costs review attention, and review attention is the scarce resource.

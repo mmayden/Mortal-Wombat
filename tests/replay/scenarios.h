@@ -32,7 +32,9 @@ using mw::sim::InputPair;
 
 constexpr InputFrame NEUTRAL{0u};
 
-inline InputPair idle(int32_t) { return InputPair{{NEUTRAL, NEUTRAL}}; }
+inline InputPair idle(int32_t) {
+    return InputPair{{NEUTRAL, NEUTRAL}};
+}
 
 // Both fighters walk toward each other, then away. Pins down walk speeds, the
 // forward/backward asymmetry, and pushback-free approach.

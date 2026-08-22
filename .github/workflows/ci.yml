@@ -160,17 +160,27 @@ jobs:
       - run: python tests/check_sim_boundary.py src/sim
 
   # -------------------------------------------------------------------------
-  # Formatting. Advisory rather than blocking: a failed format check that
-  # blocks a merge trains people to run the formatter, but a *noisy* one
-  # trains them to ignore CI. This one reports and does not gate.
+  # Formatting. Blocking, because it is now deterministic.
+  #
+  # The version is pinned. clang-format changes its output between releases,
+  # so an unpinned check goes red the day a runner image updates, for reasons
+  # nobody caused -- and that is precisely how people learn to ignore CI.
+  # Pinned, the only way this fails is an unrun formatter: a ten-second fix.
+  #
+  # Keep in step with CONVENTIONS.md section 9, which tells developers to
+  # install this same version locally.
   # -------------------------------------------------------------------------
   format:
     name: clang-format
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install pinned clang-format
+        run: pip install clang-format==22.1.8
       - name: Check formatting
         run: |
-          find src tests -name '*.h' -o -name '*.cpp' \
-            | xargs clang-format --dry-run --Werror
+          find src tests \( -name '*.h' -o -name '*.cpp' \) -print0 \
+            | xargs -0 clang-format --dry-run --Werror

@@ -41,14 +41,13 @@ TEST_CASE("All five buttons occupy distinct bits") {
     // DESIGN.md 4.1. A collision here would make two buttons the same button,
     // which is the sort of thing that is obvious in a test and invisible in
     // a bitfield.
-    const Button all[] = {Button::LowPunch, Button::HighPunch, Button::LowKick,
-                          Button::HighKick, Button::Block};
+    const Button all[] = {Button::LowPunch, Button::HighPunch, Button::LowKick, Button::HighKick,
+                          Button::Block};
 
     for (Button a : all) {
         for (Button b : all) {
             const bool same = static_cast<uint16_t>(a) == static_cast<uint16_t>(b);
-            const bool overlap =
-                (static_cast<uint16_t>(a) & static_cast<uint16_t>(b)) != 0u;
+            const bool overlap = (static_cast<uint16_t>(a) & static_cast<uint16_t>(b)) != 0u;
             CHECK(overlap == same);
         }
     }

@@ -135,8 +135,8 @@ void tick_round_flow(GameState& state) {
                 state.fighters[1 - winner].state = FighterState::Lose;
             }
 
-            const bool match_over = state.rounds_won[0] >= ROUNDS_TO_WIN ||
-                                    state.rounds_won[1] >= ROUNDS_TO_WIN;
+            const bool match_over =
+                state.rounds_won[0] >= ROUNDS_TO_WIN || state.rounds_won[1] >= ROUNDS_TO_WIN;
             state.round_phase = match_over ? RoundPhase::MatchEnded : RoundPhase::Ended;
             state.phase_frames_remaining = ROUND_END_FREEZE_FRAMES;
             break;

@@ -41,10 +41,18 @@ option(MW_ENABLE_SANITIZERS "Build Debug with AddressSanitizer and UBSan"
 # ---------------------------------------------------------------------------
 include(CPM)
 
+# doctest, chosen for compile speed over Catch2 and GoogleTest (ADR 0011).
+#
+# 2.5.3 and not 2.4.11: the older release declares
+# cmake_minimum_required(VERSION 3.0), and CMake 4.x removed compatibility with
+# anything below 3.5, so it fails to configure outright on a current toolchain.
+# Locally that only warned, because VS bundles CMake 3.30 -- CI on newer runners
+# is what turned it into an error. Pin forward rather than papering over it with
+# CMAKE_POLICY_VERSION_MINIMUM, which would keep the dead declaration alive.
 CPMAddPackage(
     NAME doctest
     GITHUB_REPOSITORY doctest/doctest
-    GIT_TAG v2.4.11
+    GIT_TAG v2.5.3
     OPTIONS "DOCTEST_WITH_TESTS OFF"
 )
 

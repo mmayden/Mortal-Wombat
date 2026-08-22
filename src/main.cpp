@@ -12,13 +12,14 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "log.h"
 #include "platform/platform.h"
 #include "render/renderer.h"
 #include "render/sprite.h"
 #include "sim/constants.h"
 #include "sim/sim.h"
 #include "sim/state.h"
+
+#include "log.h"
 
 namespace {
 
@@ -56,7 +57,7 @@ struct Options {
     // machine, which is exactly the property this project does not want.
     //
     // 600 sim frames is 10 seconds of game time, matching BLUEPRINT.md 1.3.
-    int32_t frames = -1;             // -1 means run until the player quits
+    int32_t frames = -1;  // -1 means run until the player quits
     const char* screenshot = nullptr;
 };
 
@@ -97,8 +98,7 @@ int main(int argc, char** argv) {
     mw::sim::InputPair current_input{};
     mw::sim::InputPair previous_input{};
 
-    MW_LOG_INFO("running at a fixed %d Hz; ESC quits, F1 toggles debug",
-                mw::sim::FRAME_RATE);
+    MW_LOG_INFO("running at a fixed %d Hz; ESC quits, F1 toggles debug", mw::sim::FRAME_RATE);
 
     uint64_t last_time = mw::platform::now_ns();
     uint64_t accumulator = 0;
@@ -133,8 +133,7 @@ int main(int argc, char** argv) {
         // How far between the last two simulation steps we are, in [0, 1).
         // This is the only place a fractional notion of time exists, and it
         // never crosses the boundary (ARCHITECTURE.md 4).
-        const float alpha =
-            static_cast<float>(accumulator) / static_cast<float>(FRAME_NS);
+        const float alpha = static_cast<float>(accumulator) / static_cast<float>(FRAME_NS);
 
         mw::render::draw_frame(platform.renderer, manifest, previous_state, state, alpha,
                                platform.show_debug);

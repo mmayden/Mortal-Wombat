@@ -11,25 +11,25 @@
 
 namespace mw {
 
-#define MW_LOG_INFO(...)                       \
-    do {                                       \
-        std::fprintf(stdout, "[info] ");       \
-        std::fprintf(stdout, __VA_ARGS__);     \
-        std::fprintf(stdout, "\n");            \
+#define MW_LOG_INFO(...)                   \
+    do {                                   \
+        std::fprintf(stdout, "[info] ");   \
+        std::fprintf(stdout, __VA_ARGS__); \
+        std::fprintf(stdout, "\n");        \
     } while (0)
 
-#define MW_LOG_WARN(...)                       \
-    do {                                       \
-        std::fprintf(stderr, "[warn] ");       \
-        std::fprintf(stderr, __VA_ARGS__);     \
-        std::fprintf(stderr, "\n");            \
+#define MW_LOG_WARN(...)                   \
+    do {                                   \
+        std::fprintf(stderr, "[warn] ");   \
+        std::fprintf(stderr, __VA_ARGS__); \
+        std::fprintf(stderr, "\n");        \
     } while (0)
 
-#define MW_LOG_ERROR(...)                      \
-    do {                                       \
-        std::fprintf(stderr, "[error] ");      \
-        std::fprintf(stderr, __VA_ARGS__);     \
-        std::fprintf(stderr, "\n");            \
+#define MW_LOG_ERROR(...)                  \
+    do {                                   \
+        std::fprintf(stderr, "[error] ");  \
+        std::fprintf(stderr, __VA_ARGS__); \
+        std::fprintf(stderr, "\n");        \
     } while (0)
 
 }  // namespace mw
