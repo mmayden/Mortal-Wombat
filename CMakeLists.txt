@@ -196,6 +196,42 @@ if(NOT MSVC)
 endif()
 
 # ---------------------------------------------------------------------------
+# Frame data loading (ADR 0009)
+#
+# ABOVE the sim boundary. It does file I/O, allocates, and uses std::string --
+# all forbidden below the line. The sim receives finished CharacterData and
+# never learns a file was involved, which is what CONVENTIONS.md 3 means by
+# "the sim never fails": every failure mode is discovered here, at load time,
+# where there is somewhere to report it.
+# ---------------------------------------------------------------------------
+add_library(mw_data STATIC
+    src/data/framedata_loader.cpp)
+
+target_include_directories(mw_data PUBLIC src)
+target_link_libraries(mw_data
+    PUBLIC mw_sim
+    PRIVATE mw_warnings mw_no_exceptions tomlplusplus::tomlplusplus)
+
+# Where the shipped character files live, so the game and the tests agree on
+# one answer. Passed as a definition rather than resolved relative to the
+# working directory, which differs between running from the build tree, from
+# an IDE, and from CI.
+target_compile_definitions(mw_data PUBLIC
+    MW_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+
+# MSVC warns (C4530) that standard headers contain exception handlers while
+# this target is built without unwind semantics. That is the whole point of
+# /EHs-c-, and it is the same situation as -fno-exceptions on GCC and Clang,
+# which say nothing about it. Nothing here throws: toml++ is configured with
+# TOML_EXCEPTIONS=0 and the loader reports failure by return value.
+#
+# Scoped to this target rather than added globally, so the warning still fires
+# if a future target enables it by accident.
+if(MSVC)
+    target_compile_options(mw_data PRIVATE /wd4530)
+endif()
+
+# ---------------------------------------------------------------------------
 # The game binary
 #
 # Everything here is ABOVE the sim boundary: platform, render, and the loop.
@@ -213,7 +249,7 @@ add_executable(mortal_wombat
     src/render/sprite.cpp)
 
 target_link_libraries(mortal_wombat
-    PRIVATE mw_sim mw_warnings mw_no_exceptions SDL3::SDL3)
+    PRIVATE mw_sim mw_data mw_warnings mw_no_exceptions SDL3::SDL3)
 
 # WIN32_EXECUTABLE is deliberately OFF: the game logs to stdout and a console
 # is wanted during development. Flip it when there is something to ship.

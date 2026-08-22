@@ -82,8 +82,32 @@ left-facing fighter, so authored data is always written facing right.
 
 ## Moves
 
-One `[moves.<move_id>]` table per move. `move_id` is snake_case and must match
-an entry in the `MoveId` enum in `src/sim/moves.h`.
+One `[moves.<move_id>]` table per move. `move_id` must be one of the keys
+below, which correspond one-to-one with the `MoveId` enum in
+`src/sim/framedata.h`. An unrecognised key is a load-time error, not a warning:
+a typo would otherwise leave a character silently missing a move.
+
+| Key | DESIGN.md §4.5 row |
+|---|---|
+| `low_punch` | LP |
+| `high_punch` | HP |
+| `low_kick` | LK |
+| `high_kick` | HK |
+| `crouch_low_punch` | Crouching variant of LP |
+| `crouch_high_punch` | Crouching variant of HP |
+| `crouch_low_kick` | Crouching variant of LK |
+| `crouch_high_kick` | Crouching variant of HK |
+| `jump_attack` | Jump attack |
+| `special` | Special |
+
+**All ten are required.** A file missing one fails to load.
+
+> **Open design question.** DESIGN.md §4.5 says "Twelve moves total" while its
+> table enumerates the ten above. The table is treated as the specification,
+> because it is the part carrying actual numbers. The candidate readings —
+> per-button jump attacks (thirteen) or split jump punch and kick (eleven) —
+> match the prose no better, so this is left for a design decision rather than
+> guessed at.
 
 ```toml
 [moves.high_punch]
@@ -165,7 +189,13 @@ time, outside the sim, where failure is recoverable.
 
 `tests/unit/test_framedata.cpp` asserts that both shipped character files pass
 every rule, so a hand-edit that breaks the schema fails CI rather than the
-game.
+game. It also pins the shipped timings to the DESIGN.md §4.5 table: frame data
+is the entire feel of a fighting game, so a silent edit to a startup value is a
+design change disguised as a data commit, and changing one now requires
+changing both.
+
+Each rule additionally has a test that feeds the loader a file violating only
+that rule, so the rules are known to reject rather than merely to exist.
 
 ---
 

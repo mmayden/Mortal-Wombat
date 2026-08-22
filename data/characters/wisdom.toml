@@ -1,0 +1,250 @@
+#  Wisdom — player two's fighter.
+#
+#  Schema: docs/framedata_schema.md (version 1). Read the Units section before
+#  editing: every value here is an integer. Durations are frames at 60Hz and
+#  speeds are 1/65536ths. A decimal anywhere in this file is rejected at load
+#  time, because a float in the data is a float in the sim and ADR 0002 makes
+#  that a cross-platform desync.
+#
+#  TIMINGS are transcribed from DESIGN.md 4.5 and must not be changed here
+#  without changing that table. They are described there as "starting points to
+#  tune, not constants" -- so when one does change, re-record the affected
+#  replays in the same commit (AGENTS.md rule 8).
+#
+#  BOX GEOMETRY is PROVISIONAL. DESIGN.md specifies fighter height (~140 units,
+#  4.4) and nothing else about shape. Every x/y/w/h below is an engineering
+#  guess that makes the move connect at a plausible range; none of it is a
+#  design decision, and it has not been played.
+#
+#  The stack decision says to build tools/framedata_editor/ BEFORE authoring
+#  content, precisely because hand-writing this is miserable and inexact. These
+#  numbers exist to reach the first hit that connects, which is the last step of
+#  the bootstrap. Tune them in the editor, not here.
+#
+#  Wisdom is mechanically identical to Frenchy in v1: DESIGN.md 4.5 gives one
+#  frame-data table "per character", and 4.6 cuts per-character variation. The
+#  two are separate files because that is where the difference will go once
+#  DESIGN.md 5.4 gives each character a special move that fits them.
+#
+#  DESIGN.md 5.4 leaves silhouette, special move, and personality TODO for both
+#  fighters and says not to invent them. The prototype README implies Wisdom is
+#  the antagonist; that is a hint, not a decision, and nothing here depends on
+#  it.
+
+schema_version = 1
+
+[character]
+id           = "wisdom"
+display_name = "Wisdom"
+
+[character.physics]
+walk_forward_speed  = 78643      # 1.2 units/frame  (DESIGN.md 4.4)
+walk_backward_speed = 65536      # 1.0 units/frame  (DESIGN.md 4.4)
+jump_duration       = 44         # frames, total    (DESIGN.md 4.4)
+jump_apex           = 90         # units            (DESIGN.md 4.4)
+starting_health     = 100        #                  (DESIGN.md 4.4)
+
+[character.boxes]
+# PROVISIONAL. Height 140 is from DESIGN.md 4.4; width is not specified
+# anywhere. See the note in src/render/sprite.cpp -- 32 wide reads as a narrow
+# pillar and sits badly against DESIGN.md 5.3's "round, heavy, short-limbed"
+# silhouette. Deliberately left matching the renderer rather than quietly
+# widened, so the two disagree with the design doc in the same visible way.
+standing_hurtbox  = { x = -16, y = -140, w = 32, h = 140 }
+crouching_hurtbox = { x = -18, y =  -80, w = 36, h =  80 }
+pushbox           = { x = -14, y = -130, w = 28, h = 130 }
+
+# ---------------------------------------------------------------------------
+#  Standing normals — DESIGN.md 4.5
+# ---------------------------------------------------------------------------
+
+[moves.low_punch]
+input     = "LP"
+startup   = 4
+active    = 2
+recovery  = 8
+damage    = 3
+hitstun   = 12
+blockstun = 8
+
+[[moves.low_punch.hitboxes]]
+frames = [5, 6]                  # startup 4, so active frames are 5 and 6
+x = 16
+y = -110
+w = 30
+h = 20
+
+[moves.high_punch]
+input     = "HP"
+startup   = 7
+active    = 3
+recovery  = 16
+damage    = 8
+hitstun   = 18
+blockstun = 12
+
+[[moves.high_punch.hitboxes]]
+frames = [8, 10]
+x = 18
+y = -120
+w = 38
+h = 24
+
+[moves.low_kick]
+input     = "LK"
+startup   = 5
+active    = 3
+recovery  = 10
+damage    = 4
+hitstun   = 13
+blockstun = 9
+
+[[moves.low_kick.hitboxes]]
+frames = [6, 8]
+x = 16
+y = -46
+w = 34
+h = 22
+
+[moves.high_kick]
+input     = "HK"
+startup   = 9
+active    = 4
+recovery  = 20
+damage    = 9
+hitstun   = 20
+blockstun = 14
+
+[[moves.high_kick.hitboxes]]
+frames = [10, 13]
+x = 18
+y = -116
+w = 44
+h = 26
+
+# ---------------------------------------------------------------------------
+#  Crouching variants — DESIGN.md 4.5: "inherit, adjusted boxes"
+#
+#  Timings are identical to the standing versions by that instruction. Only the
+#  boxes move: lower, and shorter in reach for the punches.
+# ---------------------------------------------------------------------------
+
+[moves.crouch_low_punch]
+input            = "D+LP"
+startup          = 4
+active           = 2
+recovery         = 8
+damage           = 3
+hitstun          = 12
+blockstun        = 8
+hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
+
+[[moves.crouch_low_punch.hitboxes]]
+frames = [5, 6]
+x = 16
+y = -62
+w = 28
+h = 18
+
+[moves.crouch_high_punch]
+input            = "D+HP"
+startup          = 7
+active           = 3
+recovery         = 16
+damage           = 8
+hitstun          = 18
+blockstun        = 12
+hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
+
+[[moves.crouch_high_punch.hitboxes]]
+frames = [8, 10]
+x = 18
+y = -74
+w = 34
+h = 22
+
+[moves.crouch_low_kick]
+input            = "D+LK"
+startup          = 5
+active           = 3
+recovery         = 10
+damage           = 4
+hitstun          = 13
+blockstun        = 9
+hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
+
+[[moves.crouch_low_kick.hitboxes]]
+frames = [6, 8]
+x = 16
+y = -22
+w = 38
+h = 20
+
+[moves.crouch_high_kick]
+input            = "D+HK"
+startup          = 9
+active           = 4
+recovery         = 20
+damage           = 9
+hitstun          = 20
+blockstun        = 14
+hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
+
+[[moves.crouch_high_kick.hitboxes]]
+frames = [10, 13]
+x = 18
+y = -34
+w = 46
+h = 24
+
+# ---------------------------------------------------------------------------
+#  Jump attack — DESIGN.md 4.5
+#
+#  The table gives active as "until landing" and recovery as "4 (landing)".
+#  The schema has no way to express "until landing" -- durations are integers --
+#  so active is written as the airborne remainder of a 44-frame jump after 6
+#  frames of startup. When jumping is implemented, the sim will need to end the
+#  active window on ground contact regardless of this number; that is a sim
+#  rule, not a data one.
+# ---------------------------------------------------------------------------
+
+[moves.jump_attack]
+input     = "U+HP"
+startup   = 6
+active    = 34
+recovery  = 4
+damage    = 7
+hitstun   = 16
+blockstun = 11
+
+[[moves.jump_attack.hitboxes]]
+frames = [7, 40]
+x = 14
+y = -96
+w = 36
+h = 34
+
+# ---------------------------------------------------------------------------
+#  Special — DESIGN.md 4.5, input B,F+HP (4.5, chosen over a quarter-circle)
+#
+#  The table leaves active blank, which reads like a projectile. DESIGN.md 4.6
+#  does not settle it either way, and MAX_PROJECTILES in constants.h carries the
+#  same open question. Written here as a long-reaching strike, which is the
+#  reading that requires no system that does not exist yet.
+# ---------------------------------------------------------------------------
+
+[moves.special]
+input     = "B,F+HP"
+startup   = 12
+active    = 4
+recovery  = 24
+damage    = 6
+hitstun   = 18
+blockstun = 12
+
+[[moves.special.hitboxes]]
+frames = [13, 16]
+x = 20
+y = -104
+w = 60
+h = 30

@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
+#include <string>
 
 #include "platform/platform.h"
 #include "render/renderer.h"
@@ -19,6 +20,7 @@
 #include "sim/sim.h"
 #include "sim/state.h"
 
+#include "data/framedata_loader.h"
 #include "log.h"
 
 namespace {
@@ -83,6 +85,26 @@ int main(int argc, char** argv) {
     mw::platform::Platform platform{};
     if (!mw::platform::init(platform, "Mortal Wombat")) {
         return 1;
+    }
+
+    // Frame data first: a bad character file should fail before a window
+    // appears, not after. Everything the sim needs is validated here, at load
+    // time, which is what lets advance_frame have no error path at all
+    // (CONVENTIONS.md 3).
+    mw::sim::MatchData match_data{};
+    {
+        const std::string data_dir = std::string(MW_DATA_DIR) + "/characters/";
+        std::string error;
+        const mw::data::LoadResult result = mw::data::load_match(
+            data_dir + "frenchy.toml", data_dir + "wisdom.toml", match_data, error);
+        if (result != mw::data::LoadResult::Ok) {
+            MW_LOG_ERROR("could not load frame data (%s): %s", mw::data::load_result_name(result),
+                         error.c_str());
+            mw::platform::shutdown(platform);
+            return 1;
+        }
+        MW_LOG_INFO("loaded %s vs %s", match_data.characters[0].display_name,
+                    match_data.characters[1].display_name);
     }
 
     const mw::render::PlaceholderManifest manifest;

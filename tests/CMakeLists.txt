@@ -32,7 +32,12 @@ mw_add_test_tier(unit
     unit/test_rng.cpp
     unit/test_input.cpp
     unit/test_state.cpp
-    unit/test_hash.cpp)
+    unit/test_hash.cpp
+    unit/test_framedata.cpp)
+
+# The frame-data tests read the shipped character files, so the unit tier needs
+# the loader. MW_DATA_DIR comes with it as a PUBLIC definition.
+target_link_libraries(mw_test_unit PRIVATE mw_data)
 
 # Tier 3 — smoke: boot, run 600 ticks, assert no crash and no runaway state.
 mw_add_test_tier(smoke
