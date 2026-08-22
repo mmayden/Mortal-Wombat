@@ -12,6 +12,8 @@
 #include "sim/sim.h"
 #include "sim/state.h"
 
+#include "match_data.h"
+
 using namespace mw::sim;
 
 namespace {
@@ -30,7 +32,7 @@ InputFrame held(Button button) {
 // Runs the state past the round-start freeze so that player input is live.
 void skip_to_fighting(GameState& state) {
     while (state.round_phase != RoundPhase::Fighting) {
-        advance_frame(state, NO_INPUT, NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
     }
 }
 
@@ -48,7 +50,7 @@ TEST_CASE("GameState has no implicit padding") {
     // The desync test hashes this struct byte by byte across three platforms.
     // Padding bytes are uninitialized, so any implicit padding would differ
     // between machines and report a desync where behavior actually matched.
-    CHECK(sizeof(Fighter) == 13 * sizeof(int32_t));
+    CHECK(sizeof(Fighter) == 14 * sizeof(int32_t));
     CHECK(sizeof(Projectile) == 8 * sizeof(int32_t));
     CHECK(sizeof(GameState) == 2 * sizeof(Fighter) + MAX_PROJECTILES * sizeof(Projectile) +
                                    8 * sizeof(int32_t) + sizeof(RngState));
@@ -113,7 +115,7 @@ TEST_CASE("Players have no control during the round-start freeze") {
     init_state(state, 1u);
     const Fixed start_x = state.fighters[0].x;
 
-    advance_frame(state, pair_with(held(Button::Right), NEUTRAL), NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Right), NEUTRAL), NO_INPUT);
 
     CHECK(state.round_phase == RoundPhase::Starting);
     CHECK(state.fighters[0].x == start_x);
@@ -138,7 +140,7 @@ TEST_CASE("Walking forward and backward use different speeds") {
 
     SUBCASE("player 1 faces right, so Right is forward") {
         const Fixed before = state.fighters[0].x;
-        advance_frame(state, pair_with(held(Button::Right), NEUTRAL), NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Right), NEUTRAL), NO_INPUT);
 
         CHECK(state.fighters[0].state == FighterState::WalkForward);
         CHECK(state.fighters[0].x - before == WALK_FORWARD_SPEED);
@@ -146,7 +148,7 @@ TEST_CASE("Walking forward and backward use different speeds") {
 
     SUBCASE("and Left is backward, which is slower") {
         const Fixed before = state.fighters[0].x;
-        advance_frame(state, pair_with(held(Button::Left), NEUTRAL), NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Left), NEUTRAL), NO_INPUT);
 
         CHECK(state.fighters[0].state == FighterState::WalkBackward);
         CHECK(before - state.fighters[0].x == WALK_BACKWARD_SPEED);
@@ -164,7 +166,7 @@ TEST_CASE("Block is a button, not hold-back") {
 
     const Fixed before = state.fighters[0].x;
     const InputFrame back_and_block = input_with(held(Button::Left), Button::Block);
-    advance_frame(state, pair_with(back_and_block, NEUTRAL), NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), pair_with(back_and_block, NEUTRAL), NO_INPUT);
 
     CHECK(state.fighters[0].state == FighterState::Blocking);
     CHECK(state.fighters[0].x == before);
@@ -182,17 +184,17 @@ TEST_CASE("Fighters always face each other") {
     // Teleport player 1 past player 2. Reaching across like this is a test
     // affordance; the sim itself only ever moves fighters by velocity.
     state.fighters[0].x = state.fighters[1].x + Fixed::from_int(50);
-    advance_frame(state, NO_INPUT, NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
 
     CHECK(state.fighters[0].facing == Facing::Left);
     CHECK(state.fighters[1].facing == Facing::Right);
 
     SUBCASE("exactly equal positions resolve without oscillating") {
         state.fighters[0].x = state.fighters[1].x;
-        advance_frame(state, NO_INPUT, NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
         const Facing first = state.fighters[0].facing;
 
-        advance_frame(state, NO_INPUT, NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
         CHECK(state.fighters[0].facing == first);
     }
 }
@@ -204,7 +206,7 @@ TEST_CASE("Fighters cannot walk out of the stage") {
 
     // Long enough to cross the whole stage several times over.
     for (int32_t i = 0; i < 2000; ++i) {
-        advance_frame(state, pair_with(held(Button::Left), held(Button::Right)), NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Left), held(Button::Right)), NO_INPUT);
     }
 
     CHECK(state.fighters[0].x >= Fixed::from_int(STAGE_LEFT_BOUND));
@@ -218,12 +220,12 @@ TEST_CASE("The round timer counts down only while fighting") {
     init_state(state, 1u);
 
     CHECK(state.round_timer == ROUND_TIMER_FRAMES);
-    advance_frame(state, NO_INPUT, NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
     CHECK(state.round_timer == ROUND_TIMER_FRAMES);
 
     skip_to_fighting(state);
     const int32_t at_start = state.round_timer;
-    advance_frame(state, NO_INPUT, NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
     CHECK(state.round_timer == at_start - 1);
 }
 
@@ -233,7 +235,7 @@ TEST_CASE("A KO ends the round and awards it to the survivor") {
     skip_to_fighting(state);
 
     state.fighters[1].health = 0;
-    advance_frame(state, NO_INPUT, NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
 
     CHECK(state.rounds_won[0] == 1);
     CHECK(state.rounds_won[1] == 0);
@@ -250,7 +252,7 @@ TEST_CASE("A double KO awards the round to neither player") {
 
     state.fighters[0].health = 0;
     state.fighters[1].health = 0;
-    advance_frame(state, NO_INPUT, NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
 
     CHECK(state.rounds_won[0] == 0);
     CHECK(state.rounds_won[1] == 0);
@@ -266,7 +268,7 @@ TEST_CASE("Timeout awards the round to whoever has more health") {
     state.round_timer = 1;
     state.fighters[0].health = 40;
     state.fighters[1].health = 60;
-    advance_frame(state, NO_INPUT, NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
 
     CHECK(state.round_timer == 0);
     CHECK(state.rounds_won[1] == 1);
@@ -279,11 +281,11 @@ TEST_CASE("A new round resets health but preserves the score") {
     skip_to_fighting(state);
 
     state.fighters[1].health = 0;
-    advance_frame(state, NO_INPUT, NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
     REQUIRE(state.round_phase == RoundPhase::Ended);
 
     while (state.round_phase == RoundPhase::Ended) {
-        advance_frame(state, NO_INPUT, NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
     }
 
     CHECK(state.round_number == 2);
@@ -302,11 +304,11 @@ TEST_CASE("Winning two rounds ends the match") {
     for (int32_t round = 0; round < ROUNDS_TO_WIN; ++round) {
         skip_to_fighting(state);
         state.fighters[1].health = 0;
-        advance_frame(state, NO_INPUT, NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
 
         if (round + 1 < ROUNDS_TO_WIN) {
             while (state.round_phase == RoundPhase::Ended) {
-                advance_frame(state, NO_INPUT, NO_INPUT);
+                advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
             }
         }
     }
@@ -316,7 +318,7 @@ TEST_CASE("Winning two rounds ends the match") {
 
     SUBCASE("and the match state is terminal") {
         for (int32_t i = 0; i < 600; ++i) {
-            advance_frame(state, NO_INPUT, NO_INPUT);
+            advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
         }
         CHECK(state.round_phase == RoundPhase::MatchEnded);
         CHECK(state.round_number == ROUNDS_TO_WIN);
@@ -329,7 +331,7 @@ TEST_CASE("The frame counter advances exactly once per call") {
 
     for (int32_t i = 0; i < 100; ++i) {
         CHECK(state.frame == i);
-        advance_frame(state, NO_INPUT, NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
     }
 }
 
@@ -340,7 +342,7 @@ TEST_CASE("Reserved padding stays zero") {
     init_state(state, 1u);
 
     for (int32_t i = 0; i < 200; ++i) {
-        advance_frame(state, pair_with(held(Button::Right), held(Button::Left)), NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Right), held(Button::Left)), NO_INPUT);
     }
     CHECK(state.reserved == 0);
 }

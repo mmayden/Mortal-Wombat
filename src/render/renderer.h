@@ -11,6 +11,7 @@
 #pragma once
 
 #include "render/sprite.h"
+#include "sim/framedata.h"
 #include "sim/state.h"
 
 struct SDL_Renderer;
@@ -26,8 +27,14 @@ namespace mw::render {
 //
 // `alpha` appears in this signature and nowhere below the boundary
 // (ARCHITECTURE.md 4). The sim has no dt.
+// `data` is needed only for the debug box overlay: hurtboxes, hitboxes, and
+// pushboxes all come from frame data rather than from GameState.
+//
+// DESIGN.md 5.1 specifies the colours, and the stack decision calls the hitbox
+// viewer the project's debugging environment -- it is how "why did that miss?"
+// becomes answerable without attaching a debugger.
 void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
-                const mw::sim::GameState& previous, const mw::sim::GameState& current, float alpha,
-                bool show_debug);
+                const mw::sim::MatchData& data, const mw::sim::GameState& previous,
+                const mw::sim::GameState& current, float alpha, bool show_debug);
 
 }  // namespace mw::render

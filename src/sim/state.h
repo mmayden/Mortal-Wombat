@@ -82,6 +82,16 @@ struct Fighter {
     // side effect inside the sim fires again on every rollback re-simulation
     // (ARCHITECTURE.md 1).
     int32_t hit_confirm_frame;
+
+    // Whether the current move has already connected. A move's hitbox is live
+    // for several frames, so without this a single punch would deal its damage
+    // once per active frame -- an 8-damage HP would take 24 health over its
+    // three active frames.
+    //
+    // DESIGN.md 4.6 cuts multi-hit moves from v1, so one hit per move is the
+    // whole rule. Cleared when a new move starts, not when the move ends,
+    // because the fighter can be interrupted out of a move at any point.
+    int32_t hit_already_landed;
 };
 
 struct Projectile {
@@ -169,7 +179,7 @@ static_assert(sizeof(GameState) < 4096,
 // prove there is none: each struct's size must be exactly the sum of its
 // members. If one of these fails after you added a field, add or remove
 // explicit padding to restore it — do not raise the number.
-static_assert(sizeof(Fighter) == 13 * sizeof(int32_t), "Fighter has implicit padding");
+static_assert(sizeof(Fighter) == 14 * sizeof(int32_t), "Fighter has implicit padding");
 static_assert(sizeof(Projectile) == 8 * sizeof(int32_t), "Projectile has implicit padding");
 static_assert(sizeof(RngState) == 2 * sizeof(uint64_t), "RngState has implicit padding");
 static_assert(sizeof(GameState) == 2 * sizeof(Fighter) + MAX_PROJECTILES * sizeof(Projectile) +

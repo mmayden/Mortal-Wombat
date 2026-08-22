@@ -147,7 +147,7 @@ int main(int argc, char** argv) {
             previous_input = current_input;
             current_input = mw::platform::current_input(platform);
 
-            mw::sim::advance_frame(state, current_input, previous_input);
+            mw::sim::advance_frame(state, match_data, current_input, previous_input);
 
             accumulator -= FRAME_NS;
         }
@@ -157,8 +157,8 @@ int main(int argc, char** argv) {
         // never crosses the boundary (ARCHITECTURE.md 4).
         const float alpha = static_cast<float>(accumulator) / static_cast<float>(FRAME_NS);
 
-        mw::render::draw_frame(platform.renderer, manifest, previous_state, state, alpha,
-                               platform.show_debug);
+        mw::render::draw_frame(platform.renderer, manifest, match_data, previous_state, state,
+                               alpha, platform.show_debug);
         mw::platform::present(platform);
         ++frames_rendered;
 
@@ -167,9 +167,16 @@ int main(int argc, char** argv) {
         }
     }
 
-    // Captured after the loop so the screenshot shows the final frame, which is
-    // the one --frames was asked to reach.
     if (options.screenshot != nullptr) {
+        // Redraw before capturing. SDL_RenderReadPixels reads the back buffer,
+        // whose contents are undefined after SDL_RenderPresent -- so capturing
+        // straight after the loop returned the PREVIOUS frame. That is a
+        // particularly bad failure for a debugging tool: the image looked
+        // plausible and was one frame stale, which is exactly enough to make a
+        // hitbox look inactive on the frame it connected.
+        mw::render::draw_frame(platform.renderer, manifest, match_data, previous_state, state, 0.0f,
+                               platform.show_debug);
+
         if (!mw::platform::save_screenshot(platform, options.screenshot)) {
             mw::platform::shutdown(platform);
             return 1;

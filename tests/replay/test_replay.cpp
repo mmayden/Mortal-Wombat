@@ -96,6 +96,69 @@ TEST_CASE("A recording reproduces from its file, not from its script") {
     }
 }
 
+TEST_CASE("The combat recordings actually connect") {
+    // Without this, the combat replays could silently degrade into whiffs --
+    // an agent shifts a hitbox by a few units, the moves stop reaching, and the
+    // recordings still reproduce perfectly because they reproduce the NEW
+    // behaviour once re-recorded. A replay only guards behaviour it exercises.
+    struct Expectation {
+        const char* scenario;
+        bool expect_damage;
+    };
+
+    const Expectation expectations[] = {
+        {"punch_connects", true},
+        {"mutual_pressure", true},
+        // Blocked hits deal no damage (DESIGN.md 4.6 cuts chip damage), so this
+        // one asserts the opposite: the attacks land on a block and take
+        // nothing off.
+        {"attack_into_block", false},
+    };
+
+    for (const Expectation& expectation : expectations) {
+        CAPTURE(expectation.scenario);
+
+        Replay replay;
+        std::string error;
+        REQUIRE(load_replay(replay_path(expectation.scenario), replay, error) ==
+                ReplayIoStatus::Ok);
+
+        const RunResult result = run_replay(replay);
+        const int32_t p2_health = result.final_state.fighters[1].health;
+
+        if (expectation.expect_damage) {
+            CHECK(p2_health < mw::sim::STARTING_HEALTH);
+        } else {
+            CHECK(p2_health == mw::sim::STARTING_HEALTH);
+        }
+    }
+}
+
+TEST_CASE("Blocking in a recording still costs the defender their turn") {
+    // The other half of the blocked-hit contract. No damage, but the defender
+    // spent time in blockstun -- otherwise "attack into block" would be
+    // indistinguishable from "attack into nothing".
+    Replay replay;
+    std::string error;
+    REQUIRE(load_replay(replay_path("attack_into_block"), replay, error) == ReplayIoStatus::Ok);
+
+    mw::sim::GameState state{};
+    mw::sim::init_state(state, replay.seed);
+    mw::sim::InputPair previous{{mw::sim::InputFrame{0u}, mw::sim::InputFrame{0u}}};
+
+    int32_t blockstun_frames = 0;
+    for (int32_t frame = 0; frame < replay.frame_count; ++frame) {
+        const mw::sim::InputPair current = input_at_frame(replay, frame);
+        mw::sim::advance_frame(state, mw::test::shipped_match_data(), current, previous);
+        previous = current;
+        if (state.fighters[1].blockstun_remaining > 0) {
+            ++blockstun_frames;
+        }
+    }
+
+    CHECK(blockstun_frames > 0);
+}
+
 TEST_CASE("Replaying the same recording twice gives the same result") {
     // If this fails, the sim depends on something outside GameState -- static
     // storage, uninitialized memory, or address-dependent behavior. That is a

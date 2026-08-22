@@ -52,9 +52,12 @@ persistent directory to avoid re-downloading across build trees.
 | `ctest --preset debug` | All of the above | < 5 min |
 
 The game runs: `build/debug/bin/mortal_wombat`. Two fighters walk, crouch,
-block, turn to face each other, and rounds resolve on KO or timeout. Attacks,
-hitboxes, jumping, and the frame-data loader are not built yet — nothing can
-deal damage.
+block, and attack with all eight ground normals; hits connect, deal damage, and
+apply hitstun and blockstun; rounds resolve on KO or timeout. `F1` shows the
+hitbox overlay.
+
+Not built yet: jumping and the airborne states, the special-move input parser,
+and throws.
 
 `--frames N` runs N simulation frames and exits, so CI can boot the real binary
 headless via `SDL_VIDEODRIVER=dummy`; `--screenshot PATH` captures the final
