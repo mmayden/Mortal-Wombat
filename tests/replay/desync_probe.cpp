@@ -22,10 +22,11 @@
 #endif
 
 #include "replay/replay_file.h"
-#include "match_data.h"
 #include "replay/scenarios.h"
 #include "sim/hash.h"
 #include "sim/sim.h"
+
+#include "match_data.h"
 
 using namespace mw::test;
 

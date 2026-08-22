@@ -115,7 +115,8 @@ TEST_CASE("Players have no control during the round-start freeze") {
     init_state(state, 1u);
     const Fixed start_x = state.fighters[0].x;
 
-    advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Right), NEUTRAL), NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Right), NEUTRAL),
+                  NO_INPUT);
 
     CHECK(state.round_phase == RoundPhase::Starting);
     CHECK(state.fighters[0].x == start_x);
@@ -140,7 +141,8 @@ TEST_CASE("Walking forward and backward use different speeds") {
 
     SUBCASE("player 1 faces right, so Right is forward") {
         const Fixed before = state.fighters[0].x;
-        advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Right), NEUTRAL), NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(),
+                      pair_with(held(Button::Right), NEUTRAL), NO_INPUT);
 
         CHECK(state.fighters[0].state == FighterState::WalkForward);
         CHECK(state.fighters[0].x - before == WALK_FORWARD_SPEED);
@@ -148,7 +150,8 @@ TEST_CASE("Walking forward and backward use different speeds") {
 
     SUBCASE("and Left is backward, which is slower") {
         const Fixed before = state.fighters[0].x;
-        advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Left), NEUTRAL), NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Left), NEUTRAL),
+                      NO_INPUT);
 
         CHECK(state.fighters[0].state == FighterState::WalkBackward);
         CHECK(before - state.fighters[0].x == WALK_BACKWARD_SPEED);
@@ -166,7 +169,8 @@ TEST_CASE("Block is a button, not hold-back") {
 
     const Fixed before = state.fighters[0].x;
     const InputFrame back_and_block = input_with(held(Button::Left), Button::Block);
-    advance_frame(state, mw::test::shipped_match_data(), pair_with(back_and_block, NEUTRAL), NO_INPUT);
+    advance_frame(state, mw::test::shipped_match_data(), pair_with(back_and_block, NEUTRAL),
+                  NO_INPUT);
 
     CHECK(state.fighters[0].state == FighterState::Blocking);
     CHECK(state.fighters[0].x == before);
@@ -206,7 +210,8 @@ TEST_CASE("Fighters cannot walk out of the stage") {
 
     // Long enough to cross the whole stage several times over.
     for (int32_t i = 0; i < 2000; ++i) {
-        advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Left), held(Button::Right)), NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(),
+                      pair_with(held(Button::Left), held(Button::Right)), NO_INPUT);
     }
 
     CHECK(state.fighters[0].x >= Fixed::from_int(STAGE_LEFT_BOUND));
@@ -342,7 +347,8 @@ TEST_CASE("Reserved padding stays zero") {
     init_state(state, 1u);
 
     for (int32_t i = 0; i < 200; ++i) {
-        advance_frame(state, mw::test::shipped_match_data(), pair_with(held(Button::Right), held(Button::Left)), NO_INPUT);
+        advance_frame(state, mw::test::shipped_match_data(),
+                      pair_with(held(Button::Right), held(Button::Left)), NO_INPUT);
     }
     CHECK(state.reserved == 0);
 }
