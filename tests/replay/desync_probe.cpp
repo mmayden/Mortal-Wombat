@@ -16,6 +16,11 @@
 #include <cstring>
 #include <string>
 
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
+
 #include "replay/replay_file.h"
 #include "replay/scenarios.h"
 #include "sim/hash.h"
@@ -57,6 +62,21 @@ int probe_one(const Replay& replay) {
 }  // namespace
 
 int main(int argc, char** argv) {
+    // Write LF, not CRLF, on Windows.
+    //
+    // CI diffs this output across three platforms byte for byte. In text mode
+    // the Windows CRT rewrites every newline in the stream as a carriage
+    // return plus a newline. Every one of the 1971 lines then differed from
+    // Linux and macOS by a single trailing byte, and the desync check reported
+    // a divergence on frame 0 -- of a simulation that was in fact identical.
+    //
+    // A test that cries wolf is worse than no test: the natural response to a
+    // desync failure is to distrust the checker, and that instinct has to stay
+    // wrong for this check to be worth having.
+#ifdef _WIN32
+    _setmode(_fileno(stdout), _O_BINARY);
+#endif
+
     if (argc > 1 && (std::strcmp(argv[1], "-h") == 0 || std::strcmp(argv[1], "--help") == 0)) {
         std::printf(
             "usage: %s [scenario-name ...]\n"
