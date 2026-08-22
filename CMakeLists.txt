@@ -255,5 +255,48 @@ target_link_libraries(mortal_wombat
 # is wanted during development. Flip it when there is something to ship.
 set_target_properties(mortal_wombat PROPERTIES WIN32_EXECUTABLE OFF)
 
+# Located at top level, before the summary below reports on it. Doing this in
+# tests/ meant the summary ran first and always reported it missing -- the
+# summary caught that about itself on its first run.
+find_package(Python3 COMPONENTS Interpreter)
+
+# ---------------------------------------------------------------------------
+# Configuration summary
+#
+# Printed because a guarantee nobody can observe is not a guarantee. Ninja does
+# not echo command lines, so "the debug build has sanitizers" was previously
+# unverifiable from a CI log -- the only evidence was this file, which is the
+# thing you would be trying to check.
+# ---------------------------------------------------------------------------
+message(STATUS "")
+message(STATUS "Mortal Wombat ${PROJECT_VERSION}")
+message(STATUS "  build type    : ${CMAKE_BUILD_TYPE}")
+message(STATUS "  compiler      : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+
+if(MW_ENABLE_SANITIZERS)
+    if(MSVC)
+        message(STATUS "  sanitizers    : ASan (Debug only). MSVC has no UBSan.")
+    else()
+        message(STATUS "  sanitizers    : ASan + UBSan (Debug only)")
+    endif()
+else()
+    message(STATUS "  sanitizers    : OFF")
+endif()
+
+if(MW_HAS_GENERAL_REGS_ONLY)
+    message(STATUS "  sim FP guard  : -mgeneral-regs-only (a float in src/sim/ is a compile error)")
+else()
+    message(STATUS "  sim FP guard  : unsupported here; tests/check_sim_boundary.py covers it")
+endif()
+
+if(Python3_Interpreter_FOUND OR Python3_FOUND)
+    message(STATUS "  boundary check: enabled")
+else()
+    message(STATUS "  boundary check: DISABLED -- Python not found")
+endif()
+
+message(STATUS "  Tracy         : ${MW_ENABLE_TRACY} (not yet integrated -- ADR 0012)")
+message(STATUS "")
+
 enable_testing()
 add_subdirectory(tests)

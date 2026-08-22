@@ -77,8 +77,16 @@ Everything is in namespace `mw`. The sim is in `mw::sim`.
    `static_assert` beat a runtime check.
 2. **Return a status.** `enum class LoadResult { Ok, FileMissing, BadSchema };`
    Callers must handle every case — no `default:` that swallows.
-3. **Assert.** `MW_ASSERT(cond, "message")` for invariants that indicate a
-   programming error. Active in debug, compiled out in release.
+3. **Assert.** `MW_ASSERT(cond, "message")` from `src/assert.h`, for invariants
+   whose violation means a programming error — not for anything a user or a data
+   file can cause, which gets a status instead. Active in debug, compiled out
+   entirely in release, so **the condition must have no side effects**.
+
+   **Not usable below the sim boundary.** Reporting a failed assertion is I/O,
+   and under rollback the same frame re-simulates up to 8x. The sim gets the
+   same guarantees the other two ways: `static_assert` for anything checkable at
+   compile time, and fixed-size arrays with compile-time bounds so the failure
+   cannot be expressed at all.
 
 **The sim never fails.** `advance_frame` has no error path — it cannot open a
 file, cannot allocate, and cannot encounter a missing resource. Everything it

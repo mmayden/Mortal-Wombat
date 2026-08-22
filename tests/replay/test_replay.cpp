@@ -202,7 +202,7 @@ TEST_CASE("The loader rejects a recording that asserts nothing") {
     // A file with no expected hashes would pass regardless of what the sim
     // did. Rejecting it at load time is what stops a truncated or hand-edited
     // recording from quietly becoming a no-op test.
-    const std::string path = replay_path("__malformed_probe");
+    const std::string path = std::string(MW_TEST_SCRATCH_DIR) + "/__malformed_probe.replay";
     Replay written;
     written.name = "probe";
     written.description = "written by the test, then deliberately stripped";
@@ -230,7 +230,7 @@ TEST_CASE("The loader reports a missing file rather than passing") {
 }
 
 TEST_CASE("A recording round-trips through save and load") {
-    const std::string path = replay_path("__roundtrip_probe");
+    const std::string path = std::string(MW_TEST_SCRATCH_DIR) + "/__roundtrip_probe.replay";
 
     const Scenario& scenario = SCENARIOS[1];
     const RunResult result = run_scenario(scenario.seed, scenario.frame_count, scenario.script);

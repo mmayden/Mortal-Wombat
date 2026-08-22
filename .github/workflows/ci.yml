@@ -113,6 +113,92 @@ jobs:
           retention-days: 7
 
   # -------------------------------------------------------------------------
+  # Release build, and determinism across optimization levels.
+  #
+  # Everything else in this workflow builds Debug. Until this job existed, the
+  # release configuration had never been compiled anywhere -- so an optimized
+  # build could have failed, or worse, behaved differently, and nobody would
+  # have known until it was time to ship.
+  #
+  # The second half matters more than the first. The simulation is integer-only
+  # by construction (ADR 0002), so optimization SHOULD NOT change its results --
+  # but "should not" is exactly the class of claim this project checks rather
+  # than assumes, and a divergence here would mean the sim depends on something
+  # the optimizer is free to alter.
+  #
+  # Linux only, deliberately. The three-platform matrix already covers codegen
+  # differences between compilers; this covers optimization level, which is
+  # orthogonal, and running it everywhere would double CI time to re-answer the
+  # same question.
+  # -------------------------------------------------------------------------
+  release:
+    name: release build + determinism across -O levels
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@v5
+
+      - name: Install SDL3 build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev \
+            libxfixes-dev libxss-dev libxtst-dev libxkbcommon-dev \
+            libwayland-dev wayland-protocols libdecor-0-dev \
+            libdrm-dev libgbm-dev \
+            libgl1-mesa-dev libgles2-mesa-dev libegl1-mesa-dev \
+            libasound2-dev libpulse-dev \
+            libdbus-1-dev libudev-dev libibus-1.0-dev
+
+      - name: Cache CPM packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.CPM_SOURCE_CACHE }}
+          key: cpm-${{ runner.os }}-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: cpm-${{ runner.os }}-
+
+      - name: Configure and build both configurations
+        run: |
+          cmake --preset debug
+          cmake --build --preset debug
+          cmake --preset release
+          cmake --build --preset release
+
+      - name: Test release
+        run: ctest --preset release --output-on-failure
+
+      - name: Compare state hashes across optimization levels
+        run: |
+          ./build/debug/bin/mw_desync_probe   > trace-debug.txt
+          ./build/release/bin/mw_desync_probe > trace-release.txt
+
+          for f in trace-debug.txt trace-release.txt; do
+            if [ ! -s "$f" ]; then
+              echo "::error::$f is empty -- the probe produced no output, so this"
+              echo "::error::check would otherwise pass vacuously."
+              exit 1
+            fi
+          done
+
+          if diff -q trace-debug.txt trace-release.txt > /dev/null; then
+            echo "OK: release and debug simulate identically"
+            exit 0
+          fi
+
+          echo "::error::Release and Debug simulations diverge."
+          echo ""
+          diff trace-debug.txt trace-release.txt | head -20
+          echo ""
+          echo "The simulation is integer-only, so optimization must not change"
+          echo "its results. A divergence here means it depends on something the"
+          echo "optimizer is allowed to alter: undefined behaviour, an"
+          echo "uninitialized read, or a signed-overflow assumption. Run the"
+          echo "debug build under ASan and UBSan first."
+          exit 1
+
+  # -------------------------------------------------------------------------
   # The desync check. ADR 0011 calls this the most important test in the
   # project, and it is the reason this repo runs a three-platform matrix at
   # all rather than building on Linux alone.

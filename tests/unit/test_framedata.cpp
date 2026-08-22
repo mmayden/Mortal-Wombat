@@ -42,7 +42,10 @@ CharacterData load_or_fail(const char* id) {
 // Writes a temporary TOML file, loads it, and returns the outcome. Used to
 // prove each validation rule actually rejects what it claims to.
 LoadResult load_text(const std::string& body, std::string& error) {
-    const std::string path = std::string(MW_DATA_DIR) + "/characters/__probe.toml";
+    // Build tree, not the source tree: a test must not dirty the working copy.
+    // The filename still ends in the id the file declares, because rule 2 checks
+    // that the id matches the filename stem.
+    const std::string path = std::string(MW_TEST_SCRATCH_DIR) + "/__probe.toml";
     {
         std::ofstream file(path, std::ios::binary);
         REQUIRE(file.is_open());
