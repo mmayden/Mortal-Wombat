@@ -27,26 +27,49 @@ constexpr const char* MOVE_KEYS[mw::sim::MOVE_COUNT] = {
     "crouch_high_punch", "crouch_low_kick", "crouch_high_kick", "jump_attack", "special",
 };
 
+// Looks up a nested key, returning null if any level is missing or is not a
+// table.
+//
+// Plain node pointers rather than toml::node_view throughout this file: GCC's
+// -Wconversion rejects constructing a node_view from a table as an ambiguous
+// conversion, and the pointer form is clearer about "this may not exist"
+// anyway.
+const toml::node* find(const toml::table& table, std::initializer_list<const char*> path) {
+    const toml::table* current = &table;
+    const toml::node* found = nullptr;
+
+    for (const char* key : path) {
+        if (current == nullptr) {
+            return nullptr;
+        }
+        found = current->get(key);
+        if (found == nullptr) {
+            return nullptr;
+        }
+        current = found->as_table();
+    }
+    return found;
+}
+
 // Reads an integer, refusing a float.
 //
 // This is the single most important validation in the file. A float in the data
 // is a float in the sim, and ADR 0002 makes that a desync -- one that would
 // appear only in a real match between two machines. TOML distinguishes 1 from
 // 1.0 at the type level, so rejecting is exact rather than heuristic.
-bool read_int(const toml::node_view<const toml::node>& node, const char* what, int64_t& out,
-              std::string& error) {
-    if (!node) {
+bool read_int(const toml::node* node, const char* what, int64_t& out, std::string& error) {
+    if (node == nullptr) {
         error = std::string("missing required field: ") + what;
         return false;
     }
-    if (node.is_floating_point()) {
+    if (node->is_floating_point()) {
         error = std::string(what) +
                 " is a float. Every value in this format is an integer -- durations are "
                 "frames at 60Hz, speeds are 1/65536ths (docs/framedata_schema.md, Units). "
                 "A float here becomes a float in the sim, which ADR 0002 makes a desync.";
         return false;
     }
-    const std::optional<int64_t> value = node.value<int64_t>();
+    const std::optional<int64_t> value = node->value<int64_t>();
     if (!value) {
         error = std::string(what) + " is not an integer";
         return false;
@@ -55,8 +78,7 @@ bool read_int(const toml::node_view<const toml::node>& node, const char* what, i
     return true;
 }
 
-bool read_i32(const toml::node_view<const toml::node>& node, const char* what, int32_t& out,
-              std::string& error) {
+bool read_i32(const toml::node* node, const char* what, int32_t& out, std::string& error) {
     int64_t wide = 0;
     if (!read_int(node, what, wide, error)) {
         return false;
@@ -69,17 +91,17 @@ bool read_i32(const toml::node_view<const toml::node>& node, const char* what, i
     return true;
 }
 
-bool read_box(const toml::node_view<const toml::node>& node, const char* what, Box& out,
-              std::string& error) {
-    if (!node || !node.is_table()) {
+bool read_box(const toml::node* node, const char* what, Box& out, std::string& error) {
+    const toml::table* table = (node == nullptr) ? nullptr : node->as_table();
+    if (table == nullptr) {
         error = std::string(what) + " must be a table with x, y, w, h";
         return false;
     }
     const std::string prefix(what);
-    return read_i32(node["x"], (prefix + ".x").c_str(), out.x, error) &&
-           read_i32(node["y"], (prefix + ".y").c_str(), out.y, error) &&
-           read_i32(node["w"], (prefix + ".w").c_str(), out.w, error) &&
-           read_i32(node["h"], (prefix + ".h").c_str(), out.h, error);
+    return read_i32(table->get("x"), (prefix + ".x").c_str(), out.x, error) &&
+           read_i32(table->get("y"), (prefix + ".y").c_str(), out.y, error) &&
+           read_i32(table->get("w"), (prefix + ".w").c_str(), out.w, error) &&
+           read_i32(table->get("h"), (prefix + ".h").c_str(), out.h, error);
 }
 
 // Rule 7: every box has positive extent. A zero-width hitbox can never connect
@@ -120,15 +142,14 @@ bool copy_name(const std::string& value, char (&out)[mw::sim::MAX_NAME_LENGTH], 
 bool load_move(const toml::table& table, const char* key, MoveData& out, std::string& error) {
     out = MoveData{};
 
-    const toml::node_view<const toml::node> node(table);
     const std::string prefix = std::string("moves.") + key;
 
-    if (!read_i32(node["startup"], (prefix + ".startup").c_str(), out.startup, error) ||
-        !read_i32(node["active"], (prefix + ".active").c_str(), out.active, error) ||
-        !read_i32(node["recovery"], (prefix + ".recovery").c_str(), out.recovery, error) ||
-        !read_i32(node["damage"], (prefix + ".damage").c_str(), out.damage, error) ||
-        !read_i32(node["hitstun"], (prefix + ".hitstun").c_str(), out.hitstun, error) ||
-        !read_i32(node["blockstun"], (prefix + ".blockstun").c_str(), out.blockstun, error)) {
+    if (!read_i32(table.get("startup"), (prefix + ".startup").c_str(), out.startup, error) ||
+        !read_i32(table.get("active"), (prefix + ".active").c_str(), out.active, error) ||
+        !read_i32(table.get("recovery"), (prefix + ".recovery").c_str(), out.recovery, error) ||
+        !read_i32(table.get("damage"), (prefix + ".damage").c_str(), out.damage, error) ||
+        !read_i32(table.get("hitstun"), (prefix + ".hitstun").c_str(), out.hitstun, error) ||
+        !read_i32(table.get("blockstun"), (prefix + ".blockstun").c_str(), out.blockstun, error)) {
         return false;
     }
 
@@ -145,7 +166,8 @@ bool load_move(const toml::table& table, const char* key, MoveData& out, std::st
     // Rule 8. DESIGN.md 4.6 cuts cancels from v1, so this must stay empty --
     // and being explicit here means the field can exist in the format, ready
     // for post-v1, without anyone quietly starting to use it.
-    if (const toml::array* cancels = table["cancel_into"].as_array()) {
+    const toml::node* cancel_node = table.get("cancel_into");
+    if (const toml::array* cancels = (cancel_node == nullptr) ? nullptr : cancel_node->as_array()) {
         if (!cancels->empty()) {
             error = prefix +
                     ": cancel_into must be empty in v1 -- DESIGN.md 4.6 cuts combo strings "
@@ -155,7 +177,7 @@ bool load_move(const toml::table& table, const char* key, MoveData& out, std::st
     }
 
     if (table.contains("hurtbox_override")) {
-        if (!read_box(node["hurtbox_override"], (prefix + ".hurtbox_override").c_str(),
+        if (!read_box(table.get("hurtbox_override"), (prefix + ".hurtbox_override").c_str(),
                       out.hurtbox_override, error) ||
             !check_box_extent(out.hurtbox_override, (prefix + ".hurtbox_override").c_str(),
                               error)) {
@@ -163,7 +185,8 @@ bool load_move(const toml::table& table, const char* key, MoveData& out, std::st
         }
     }
 
-    const toml::array* hitboxes = table["hitboxes"].as_array();
+    const toml::node* hitboxes_node = table.get("hitboxes");
+    const toml::array* hitboxes = (hitboxes_node == nullptr) ? nullptr : hitboxes_node->as_array();
     if (hitboxes == nullptr || hitboxes->empty()) {
         error = prefix + ": needs at least one hitbox (rule 5)";
         return false;
@@ -183,24 +206,22 @@ bool load_move(const toml::table& table, const char* key, MoveData& out, std::st
         }
 
         const std::string where = prefix + ".hitboxes[" + std::to_string(index) + "]";
-        const toml::node_view<const toml::node> hitbox_node(*hitbox);
 
         HitboxSpan span{};
-        const toml::array* frames = hitbox_node["frames"].as_array();
+        const toml::node* frames_node = hitbox->get("frames");
+        const toml::array* frames = (frames_node == nullptr) ? nullptr : frames_node->as_array();
         if (frames == nullptr || frames->size() != 2) {
             error = where + ".frames must be a two-element array [first, last]";
             return false;
         }
-        if (!read_i32(toml::node_view<const toml::node>(frames->get(0)),
-                      (where + ".frames[0]").c_str(), span.first_frame, error) ||
-            !read_i32(toml::node_view<const toml::node>(frames->get(1)),
-                      (where + ".frames[1]").c_str(), span.last_frame, error)) {
+        if (!read_i32(frames->get(0), (where + ".frames[0]").c_str(), span.first_frame, error) ||
+            !read_i32(frames->get(1), (where + ".frames[1]").c_str(), span.last_frame, error)) {
             return false;
         }
-        if (!read_i32(hitbox_node["x"], (where + ".x").c_str(), span.box.x, error) ||
-            !read_i32(hitbox_node["y"], (where + ".y").c_str(), span.box.y, error) ||
-            !read_i32(hitbox_node["w"], (where + ".w").c_str(), span.box.w, error) ||
-            !read_i32(hitbox_node["h"], (where + ".h").c_str(), span.box.h, error)) {
+        if (!read_i32(hitbox->get("x"), (where + ".x").c_str(), span.box.x, error) ||
+            !read_i32(hitbox->get("y"), (where + ".y").c_str(), span.box.y, error) ||
+            !read_i32(hitbox->get("w"), (where + ".w").c_str(), span.box.w, error) ||
+            !read_i32(hitbox->get("h"), (where + ".h").c_str(), span.box.h, error)) {
             return false;
         }
         if (!check_box_extent(span.box, where.c_str(), error)) {
@@ -297,8 +318,7 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
 
     // Rule 1.
     int64_t schema_version = 0;
-    if (!read_int(toml::node_view<const toml::node>(root)["schema_version"], "schema_version",
-                  schema_version, error)) {
+    if (!read_int(root.get("schema_version"), "schema_version", schema_version, error)) {
         return LoadResult::ValidationFailed;
     }
     if (schema_version != SUPPORTED_SCHEMA_VERSION) {
@@ -310,9 +330,10 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
     }
 
     CharacterData character{};
-    const toml::node_view<const toml::node> node(root);
 
-    const std::optional<std::string> id = node["character"]["id"].value<std::string>();
+    const toml::node* id_node = find(root, {"character", "id"});
+    const std::optional<std::string> id =
+        (id_node == nullptr) ? std::nullopt : id_node->value<std::string>();
     if (!id) {
         error = path + ": character.id is missing";
         return LoadResult::ValidationFailed;
@@ -330,8 +351,9 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
         return LoadResult::ValidationFailed;
     }
 
+    const toml::node* display_node = find(root, {"character", "display_name"});
     const std::optional<std::string> display =
-        node["character"]["display_name"].value<std::string>();
+        (display_node == nullptr) ? std::nullopt : display_node->value<std::string>();
     if (!copy_name(display.value_or(*id), character.display_name, "character.display_name",
                    error)) {
         return LoadResult::ValidationFailed;
@@ -339,15 +361,15 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
 
     int32_t walk_forward = 0;
     int32_t walk_backward = 0;
-    if (!read_i32(node["character"]["physics"]["walk_forward_speed"],
+    if (!read_i32(find(root, {"character", "physics", "walk_forward_speed"}),
                   "character.physics.walk_forward_speed", walk_forward, error) ||
-        !read_i32(node["character"]["physics"]["walk_backward_speed"],
+        !read_i32(find(root, {"character", "physics", "walk_backward_speed"}),
                   "character.physics.walk_backward_speed", walk_backward, error) ||
-        !read_i32(node["character"]["physics"]["jump_duration"], "character.physics.jump_duration",
-                  character.jump_duration, error) ||
-        !read_i32(node["character"]["physics"]["jump_apex"], "character.physics.jump_apex",
+        !read_i32(find(root, {"character", "physics", "jump_duration"}),
+                  "character.physics.jump_duration", character.jump_duration, error) ||
+        !read_i32(find(root, {"character", "physics", "jump_apex"}), "character.physics.jump_apex",
                   character.jump_apex, error) ||
-        !read_i32(node["character"]["physics"]["starting_health"],
+        !read_i32(find(root, {"character", "physics", "starting_health"}),
                   "character.physics.starting_health", character.starting_health, error)) {
         return LoadResult::ValidationFailed;
     }
@@ -362,11 +384,11 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
         return LoadResult::ValidationFailed;
     }
 
-    if (!read_box(node["character"]["boxes"]["standing_hurtbox"],
+    if (!read_box(find(root, {"character", "boxes", "standing_hurtbox"}),
                   "character.boxes.standing_hurtbox", character.standing_hurtbox, error) ||
-        !read_box(node["character"]["boxes"]["crouching_hurtbox"],
+        !read_box(find(root, {"character", "boxes", "crouching_hurtbox"}),
                   "character.boxes.crouching_hurtbox", character.crouching_hurtbox, error) ||
-        !read_box(node["character"]["boxes"]["pushbox"], "character.boxes.pushbox",
+        !read_box(find(root, {"character", "boxes", "pushbox"}), "character.boxes.pushbox",
                   character.pushbox, error)) {
         return LoadResult::ValidationFailed;
     }
@@ -377,7 +399,8 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
         return LoadResult::ValidationFailed;
     }
 
-    const toml::table* moves = node["moves"].as_table();
+    const toml::node* moves_node = root.get("moves");
+    const toml::table* moves = (moves_node == nullptr) ? nullptr : moves_node->as_table();
     if (moves == nullptr) {
         error = path + ": no [moves] table";
         return LoadResult::ValidationFailed;
