@@ -22,10 +22,16 @@ does that for you; every command below is run through it.
 | Unit only | `powershell -File tools/dev.ps1 ctest --preset debug -L unit` |
 | Smoke | `powershell -File tools/dev.ps1 ctest --preset debug -L smoke` |
 | Replay | `powershell -File tools/dev.ps1 ctest --preset debug -L replay` |
-| Run the game | `build/debug/mortal_wombat.exe` |
+| Re-record replays | `build/debug/bin/mw_replay_record.exe` |
+| Per-frame state hashes | `build/debug/bin/mw_desync_probe.exe` |
 
 On Linux/macOS (and in CI) drop the wrapper: `cmake --preset debug`,
 `cmake --build --preset debug`, `ctest --preset debug`.
+
+**There is no game binary yet.** The harness is complete and green; the
+bootstrap (window, render loop, input, one fighter on screen) is the next
+phase. Until then the sim is exercised entirely headless through the test
+tiers — which is possible because the sim has no platform dependency at all.
 
 **The full suite must stay under 5 minutes and a full rebuild under 60s
 (ADR 0010). If you exceed either, that is a bug — report it, do not absorb it.**
