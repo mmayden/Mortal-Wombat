@@ -265,7 +265,7 @@ will not help.
 - [ ] Two characters with the full §4.5 moveset
 - [ ] Block, hitstun, blockstun, knockdown, wakeup all correct
 - [ ] Best-of-three rounds with timer and win conditions
-- [ ] Local versus on two gamepads
+- [x] Local versus on two gamepads *(input path done; unvalidated — no pad has been connected yet)*
 - [ ] Training mode: hitbox display, frame data readout, input display
 - [ ] 50+ replay tests passing
 - [ ] Desync CI green across three platforms

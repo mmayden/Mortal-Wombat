@@ -14,9 +14,20 @@ struct SDL_Renderer;
 
 namespace mw::platform {
 
+// How many gamepads the game tracks. DESIGN.md 6 puts local versus on two
+// gamepads in the v1 definition of done, and the game is two-player, so a third
+// pad has nowhere to go.
+inline constexpr int32_t MAX_GAMEPADS = 2;
+
 struct Platform {
     SDL_Window* window;
     SDL_Renderer* renderer;
+
+    // Open gamepads, indexed by player. Null means that player is on the
+    // keyboard. Assigned in connection order: first pad plugged in is player
+    // one. SDL_Gamepad is an opaque handle, so this is a void* to keep SDL out
+    // of this header's interface.
+    void* gamepads[MAX_GAMEPADS];
 
     bool should_quit;
     bool show_debug;
