@@ -35,6 +35,20 @@ jobs:
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@v5
 
+      # SDL3 refuses to configure on Linux without X11 or Wayland development
+      # headers, and the GitHub runner image ships neither.
+      #
+      # Installing them rather than setting SDL_UNIX_CONSOLE_BUILD: the console
+      # build would configure and would let CI go green, but it produces an SDL
+      # that cannot open a window at all. The Linux job would then be testing a
+      # configuration no player will ever run, which is worse than not testing
+      # Linux -- a green check that means less than it appears to.
+      - name: Install SDL3 build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends             libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev             libxfixes-dev libxss-dev libxkbcommon-dev             libwayland-dev wayland-protocols             libegl1-mesa-dev libgl1-mesa-dev libasound2-dev
+
       - name: Set up MSVC environment
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
