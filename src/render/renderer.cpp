@@ -46,7 +46,9 @@ void outline(SDL_Renderer* renderer, float x, float y, float w, float h, Color c
     SDL_RenderRect(renderer, &rect);
 }
 
-float lerp(float a, float b, float t) { return a + (b - a) * t; }
+float lerp(float a, float b, float t) {
+    return a + (b - a) * t;
+}
 
 float to_float(mw::sim::Fixed value) {
     // The one-way crossing. Below this line everything is exact integer
@@ -59,13 +61,15 @@ float to_float(mw::sim::Fixed value) {
 // track. It follows the midpoint between the fighters and clamps to the stage,
 // which is the standard fighting-game camera and needs nothing cleverer.
 float camera_x(const GameState& previous, const GameState& current, float alpha) {
-    const float p_mid = (to_float(previous.fighters[0].x) + to_float(previous.fighters[1].x)) * 0.5f;
+    const float p_mid =
+        (to_float(previous.fighters[0].x) + to_float(previous.fighters[1].x)) * 0.5f;
     const float c_mid = (to_float(current.fighters[0].x) + to_float(current.fighters[1].x)) * 0.5f;
     const float midpoint = lerp(p_mid, c_mid, alpha);
 
     const float half_screen = static_cast<float>(mw::sim::SCREEN_WIDTH) * 0.5f;
     const float min_x = 0.0f;
-    const float max_x = static_cast<float>(mw::sim::STAGE_WIDTH) - static_cast<float>(mw::sim::SCREEN_WIDTH);
+    const float max_x =
+        static_cast<float>(mw::sim::STAGE_WIDTH) - static_cast<float>(mw::sim::SCREEN_WIDTH);
 
     float left = midpoint - half_screen;
     if (left < min_x) {
@@ -93,8 +97,7 @@ void draw_stage(SDL_Renderer* renderer, float camera) {
     fill(renderer, right_wall, 0.0f, 3.0f, ground_y, STAGE_EDGE);
 }
 
-void draw_sprite(SDL_Renderer* renderer, const SpriteQuad& quad, float origin_x,
-                 float origin_y) {
+void draw_sprite(SDL_Renderer* renderer, const SpriteQuad& quad, float origin_x, float origin_y) {
     const SDL_FRect destination{origin_x + quad.offset_x, origin_y + quad.offset_y, quad.width,
                                 quad.height};
 
@@ -113,9 +116,9 @@ void draw_sprite(SDL_Renderer* renderer, const SpriteQuad& quad, float origin_x,
     SDL_RenderTexture(renderer, quad.texture, &source, &destination);
 }
 
-void draw_fighter(SDL_Renderer* renderer, const SpriteManifest& manifest,
-                  const Fighter& previous, const Fighter& current, int32_t player_index,
-                  float alpha, float camera, bool show_debug) {
+void draw_fighter(SDL_Renderer* renderer, const SpriteManifest& manifest, const Fighter& previous,
+                  const Fighter& current, int32_t player_index, float alpha, float camera,
+                  bool show_debug) {
     // Interpolate position only. State, facing, and everything discrete comes
     // from the current frame — interpolating a state machine produces
     // in-between states that never existed.
@@ -145,13 +148,11 @@ void draw_hud(SDL_Renderer* renderer, const GameState& state) {
     const float screen_w = static_cast<float>(mw::sim::SCREEN_WIDTH);
 
     for (int32_t i = 0; i < 2; ++i) {
-        const float fraction =
-            static_cast<float>(state.fighters[i].health) /
-            static_cast<float>(mw::sim::STARTING_HEALTH);
+        const float fraction = static_cast<float>(state.fighters[i].health) /
+                               static_cast<float>(mw::sim::STARTING_HEALTH);
         const float clamped = fraction < 0.0f ? 0.0f : (fraction > 1.0f ? 1.0f : fraction);
 
-        const float bar_x =
-            i == 0 ? HUD_MARGIN : screen_w - HUD_MARGIN - HEALTH_BAR_WIDTH;
+        const float bar_x = i == 0 ? HUD_MARGIN : screen_w - HUD_MARGIN - HEALTH_BAR_WIDTH;
         const float bar_y = HUD_MARGIN;
 
         fill(renderer, bar_x, bar_y, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT, HEALTH_EMPTY);
@@ -179,8 +180,8 @@ void draw_hud(SDL_Renderer* renderer, const GameState& state) {
         }
     }
 
-    const float timer_fraction = static_cast<float>(state.round_timer) /
-                                 static_cast<float>(mw::sim::ROUND_TIMER_FRAMES);
+    const float timer_fraction =
+        static_cast<float>(state.round_timer) / static_cast<float>(mw::sim::ROUND_TIMER_FRAMES);
     const float timer_width = 64.0f * timer_fraction;
     fill(renderer, (screen_w - 64.0f) * 0.5f, HUD_MARGIN, 64.0f, 6.0f, HEALTH_EMPTY);
     fill(renderer, (screen_w - timer_width) * 0.5f, HUD_MARGIN, timer_width, 6.0f, TIMER_BAR);
@@ -188,9 +189,8 @@ void draw_hud(SDL_Renderer* renderer, const GameState& state) {
 
 }  // namespace
 
-void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
-                const GameState& previous, const GameState& current, float alpha,
-                bool show_debug) {
+void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest, const GameState& previous,
+                const GameState& current, float alpha, bool show_debug) {
     const float camera = camera_x(previous, current, alpha);
 
     draw_stage(renderer, camera);

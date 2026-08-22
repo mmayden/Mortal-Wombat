@@ -75,8 +75,7 @@ void report_difference(const Scenario& scenario, const RunResult& result) {
 }
 
 int record_one(const Scenario& scenario) {
-    const RunResult result =
-        run_scenario(scenario.seed, scenario.frame_count, scenario.script);
+    const RunResult result = run_scenario(scenario.seed, scenario.frame_count, scenario.script);
 
     report_difference(scenario, result);
 

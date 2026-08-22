@@ -40,8 +40,8 @@ struct Fixed {
     // constants can express "1.2 units per frame" without ever writing a float.
     // from_ratio(12, 10) is the fixed-point value closest to 1.2.
     static constexpr Fixed from_ratio(int32_t numerator, int32_t denominator) {
-        return Fixed(static_cast<int32_t>(
-            (static_cast<int64_t>(numerator) << FIXED_SHIFT) / denominator));
+        return Fixed(
+            static_cast<int32_t>((static_cast<int64_t>(numerator) << FIXED_SHIFT) / denominator));
     }
 
     // Truncate toward negative infinity, matching an arithmetic shift.
@@ -98,9 +98,13 @@ constexpr Fixed operator*(Fixed a, int32_t scalar) {
     return Fixed(static_cast<int32_t>(static_cast<int64_t>(a.raw) * scalar));
 }
 
-constexpr Fixed operator*(int32_t scalar, Fixed a) { return a * scalar; }
+constexpr Fixed operator*(int32_t scalar, Fixed a) {
+    return a * scalar;
+}
 
-constexpr Fixed operator/(Fixed a, int32_t scalar) { return Fixed(a.raw / scalar); }
+constexpr Fixed operator/(Fixed a, int32_t scalar) {
+    return Fixed(a.raw / scalar);
+}
 
 constexpr Fixed& operator+=(Fixed& a, Fixed b) {
     a = a + b;
@@ -112,18 +116,36 @@ constexpr Fixed& operator-=(Fixed& a, Fixed b) {
     return a;
 }
 
-constexpr bool operator==(Fixed a, Fixed b) { return a.raw == b.raw; }
-constexpr bool operator!=(Fixed a, Fixed b) { return a.raw != b.raw; }
-constexpr bool operator<(Fixed a, Fixed b) { return a.raw < b.raw; }
-constexpr bool operator<=(Fixed a, Fixed b) { return a.raw <= b.raw; }
-constexpr bool operator>(Fixed a, Fixed b) { return a.raw > b.raw; }
-constexpr bool operator>=(Fixed a, Fixed b) { return a.raw >= b.raw; }
+constexpr bool operator==(Fixed a, Fixed b) {
+    return a.raw == b.raw;
+}
+constexpr bool operator!=(Fixed a, Fixed b) {
+    return a.raw != b.raw;
+}
+constexpr bool operator<(Fixed a, Fixed b) {
+    return a.raw < b.raw;
+}
+constexpr bool operator<=(Fixed a, Fixed b) {
+    return a.raw <= b.raw;
+}
+constexpr bool operator>(Fixed a, Fixed b) {
+    return a.raw > b.raw;
+}
+constexpr bool operator>=(Fixed a, Fixed b) {
+    return a.raw >= b.raw;
+}
 
-constexpr Fixed fixed_abs(Fixed a) { return a.raw < 0 ? -a : a; }
+constexpr Fixed fixed_abs(Fixed a) {
+    return a.raw < 0 ? -a : a;
+}
 
-constexpr Fixed fixed_min(Fixed a, Fixed b) { return a.raw < b.raw ? a : b; }
+constexpr Fixed fixed_min(Fixed a, Fixed b) {
+    return a.raw < b.raw ? a : b;
+}
 
-constexpr Fixed fixed_max(Fixed a, Fixed b) { return a.raw > b.raw ? a : b; }
+constexpr Fixed fixed_max(Fixed a, Fixed b) {
+    return a.raw > b.raw ? a : b;
+}
 
 constexpr Fixed fixed_clamp(Fixed value, Fixed low, Fixed high) {
     return fixed_min(fixed_max(value, low), high);

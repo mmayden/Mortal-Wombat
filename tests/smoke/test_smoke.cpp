@@ -156,8 +156,7 @@ TEST_CASE("600 ticks run fast enough to be worth measuring") {
     }
     const auto elapsed = std::chrono::steady_clock::now() - start;
 
-    const int64_t micros =
-        std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+    const int64_t micros = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
     const double per_frame_micros = static_cast<double>(micros) / SMOKE_TICKS;
 
     std::printf("smoke: %d ticks in %lld us (%.2f us/frame)\n", SMOKE_TICKS,
