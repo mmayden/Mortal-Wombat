@@ -98,6 +98,32 @@ inline constexpr int32_t STAGE_RIGHT_BOUND = STAGE_WIDTH - STAGE_EDGE_MARGIN;
 inline constexpr int32_t ROUND_START_FREEZE_FRAMES = 90;
 inline constexpr int32_t ROUND_END_FREEZE_FRAMES = 120;
 
+// Frames between pressing up and leaving the ground.
+//
+// NEEDS A DECISION: DESIGN.md 4.4 gives "jump duration 44 frames total" without
+// saying whether that includes a startup, and 4.3 does not mention one. Three
+// frames is a commitment window -- long enough that a jump is a decision an
+// opponent can react to, which is what DESIGN.md 3 asks for, and short enough
+// not to feel unresponsive. The 44 frames are counted as airborne time, so a
+// jump costs 3 + 44 + 4 frames end to end.
+inline constexpr int32_t JUMP_STARTUP_FRAMES = 3;
+
+// Recovery on touching down, during which the fighter cannot act.
+//
+// This one IS specified: DESIGN.md 4.5 gives the jump attack a recovery of
+// "4 (landing)". Applying the same landing recovery to every jump keeps one
+// rule rather than making an empty jump cheaper than an attacking one.
+inline constexpr int32_t LANDING_FRAMES = 4;
+
+// Horizontal speed of a forward or backward jump, as a multiple of the
+// character's walk speed in that direction.
+//
+// NEEDS A DECISION: unspecified anywhere. Jumping at exactly walk speed makes a
+// forward jump strictly worse than walking -- same distance, no ability to
+// block, and a landing recovery -- so it has to travel further to be a choice
+// at all. This is pure feel and cannot be judged until someone plays it.
+inline constexpr Fixed JUMP_HORIZONTAL_SCALE = Fixed::from_ratio(9, 5);  // 1.8x
+
 // Capacity, not a target — a bound chosen so that GameState stays trivially
 // copyable and small enough that rollback's memcpy is free (ADR 0005).
 //

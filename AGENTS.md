@@ -45,8 +45,8 @@ possible because it has no platform dependency at all. `--frames` exists so CI
 can boot the real binary too: set `SDL_VIDEODRIVER=dummy` and it runs on a
 machine with no display.
 
-**Not built yet:** jumping and the airborne states, the special-move input
-parser, and throws. Fighters walk, crouch, block, attack with all eight ground
+**Not built yet:** the special-move input parser (`B,F+HP`), knockdown and
+wakeup, and throws. Fighters walk, crouch, block, attack with all eight ground
 normals, take damage, and suffer hitstun and blockstun; rounds resolve on KO or
 timeout.
 

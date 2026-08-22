@@ -191,7 +191,7 @@ void draw_debug_boxes(SDL_Renderer* renderer, const mw::sim::MatchData& data,
         if (fighter.state == FighterState::Crouch) {
             hurtbox = character.crouching_hurtbox;
         }
-        if (fighter.state == FighterState::Attack && fighter.move_id >= 0) {
+        if (fighter.move_id >= 0) {
             const mw::sim::MoveData& move =
                 mw::sim::move_of(character, static_cast<mw::sim::MoveId>(fighter.move_id));
             if (!mw::sim::box_is_empty(move.hurtbox_override)) {
@@ -200,7 +200,11 @@ void draw_debug_boxes(SDL_Renderer* renderer, const mw::sim::MatchData& data,
         }
         draw_box(hurtbox, DEBUG_HURTBOX, false);
 
-        if (fighter.state != FighterState::Attack || fighter.move_id < 0) {
+        // move_id, not the state: a jump attack runs while the state is
+        // Airborne, and an overlay that hides those hitboxes is worst exactly
+        // where it is needed most -- air-to-ground spacing is the hardest thing
+        // in a fighting game to judge by eye.
+        if (fighter.move_id < 0) {
             continue;
         }
 

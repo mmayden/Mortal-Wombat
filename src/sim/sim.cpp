@@ -65,6 +65,153 @@ MoveId requested_move(InputFrame current, InputFrame previous, bool crouching) {
     return MoveId::Count;
 }
 
+// True when any attack button was newly pressed this frame.
+bool attack_pressed(InputFrame current, InputFrame previous) {
+    return input_pressed(current, previous, Button::LowPunch) ||
+           input_pressed(current, previous, Button::HighPunch) ||
+           input_pressed(current, previous, Button::LowKick) ||
+           input_pressed(current, previous, Button::HighKick);
+}
+
+// Gravity, derived from the character's jump_duration and jump_apex rather
+// than written down as its own number.
+//
+// The arc is integrated discretely -- each frame the fighter moves by its
+// current velocity, then gravity is added -- so the rise over `half` frames is
+//
+//     rise = v0 + sum(v0 - k*g) for k in [1, half)  =  g * half * (half + 1) / 2
+//
+// with v0 = half * g. Setting that equal to jump_apex gives the gravity below.
+// Deriving it means changing jump_apex in a character's TOML actually changes
+// how high they jump, instead of silently disagreeing with a separate constant.
+//
+// The exact denominator depends on the integration order and was got wrong
+// twice before being derived by simulating the loop rather than reasoning about
+// it. advance_frame applies gravity BEFORE moving, except on the frame the
+// fighter leaves the ground, where the launch velocity is applied with no
+// gravity yet -- that lone frame is the whole difference between half*(half+1)
+// and half*(half-1), and between a 90-unit jump and a 99-unit one.
+//
+// The continuous formula (2*apex/half^2) is wrong here for the same reason:
+// discrete integration is not the parabola it approximates.
+Fixed jump_gravity(const CharacterData& character) {
+    const int32_t half = character.jump_duration / 2;
+    if (half <= 0) {
+        return Fixed();
+    }
+    return Fixed::from_ratio(2 * character.jump_apex, half * (half + 1));
+}
+
+Fixed jump_rise_velocity(const CharacterData& character) {
+    return jump_gravity(character) * (character.jump_duration / 2);
+}
+
+// Begins a jump. DESIGN.md 4.3: three types, chosen at takeoff, and the
+// trajectory is committed there -- no air control, no double jump, no jump
+// cancel. That commitment is the whole reason this is one function that runs
+// once rather than a per-frame velocity update.
+void begin_jump(Fighter& fighter, const CharacterData& character, int32_t horizontal) {
+    fighter.state = FighterState::JumpStartup;
+    fighter.state_frames_remaining = JUMP_STARTUP_FRAMES;
+    fighter.move_id = -1;
+    fighter.move_frame = 0;
+    fighter.hit_already_landed = 0;
+
+    // Horizontal velocity is set now and never touched again until landing.
+    // `horizontal` is in world space; forward depends on facing.
+    if (horizontal == 0) {
+        fighter.velocity_x = Fixed();
+    } else {
+        const bool forward = (horizontal == static_cast<int32_t>(fighter.facing));
+        const Fixed speed = forward ? character.walk_forward_speed : character.walk_backward_speed;
+        fighter.velocity_x = speed * JUMP_HORIZONTAL_SCALE * horizontal;
+    }
+
+    // Vertical velocity is deliberately NOT set here. Movement is applied every
+    // frame, so setting it now would lift the fighter off the ground during the
+    // startup frames -- which is the opposite of a commitment window, and is
+    // what the "stays grounded through startup" test caught. It is set at the
+    // moment the fighter actually leaves the ground, below.
+    fighter.velocity_y = Fixed();
+}
+
+// Advances a fighter that is in the air, or about to be.
+//
+// Returns true if it handled the fighter this frame, so the caller can skip the
+// grounded state machine entirely -- being airborne is not a state a ground
+// input can interrupt.
+bool tick_airborne(Fighter& fighter, const CharacterData& character, InputFrame current,
+                   InputFrame previous) {
+    // Neither branch below decrements state_frames_remaining. Step 8 does that
+    // for every fighter, once. Decrementing here as well halved every duration
+    // -- landing recovery ran for 2 frames instead of 4 -- which is the kind of
+    // error that reads as a feel problem rather than a bug.
+    if (fighter.state == FighterState::JumpStartup) {
+        if (fighter.state_frames_remaining == 0) {
+            fighter.state = FighterState::Airborne;
+            fighter.velocity_y = -jump_rise_velocity(character);
+        }
+        return true;
+    }
+
+    if (fighter.state == FighterState::Landing) {
+        fighter.velocity_x = Fixed();
+        if (fighter.state_frames_remaining == 0) {
+            fighter.state = FighterState::Idle;
+            fighter.move_id = -1;
+            fighter.move_frame = 0;
+        }
+        return true;
+    }
+
+    if (fighter.state != FighterState::Airborne) {
+        return false;
+    }
+
+    // A jump attack, if one has not already been thrown. DESIGN.md 4.5 gives
+    // one jump attack rather than one per button, so any attack button
+    // produces it.
+    if (fighter.move_id < 0 && attack_pressed(current, previous)) {
+        fighter.move_id = static_cast<int32_t>(MoveId::JumpAttack);
+        fighter.move_frame = 1;
+        fighter.hit_already_landed = 0;
+    } else if (fighter.move_id >= 0) {
+        ++fighter.move_frame;
+    }
+
+    // Gravity. Horizontal velocity is deliberately untouched: the arc was
+    // committed at takeoff.
+    fighter.velocity_y += jump_gravity(character);
+    return true;
+}
+
+// Called after movement has been applied. Ends the jump on ground contact.
+//
+// Landing is detected by position rather than by counting frames, so the fixed
+// arc and the ground plane cannot disagree -- a fighter cannot end a jump in
+// the air or sink through the floor because a duration was tuned.
+void resolve_landing(Fighter& fighter) {
+    if (fighter.state != FighterState::Airborne) {
+        return;
+    }
+    if (fighter.y < Fixed::from_int(GROUND_Y)) {
+        return;
+    }
+
+    fighter.y = Fixed::from_int(GROUND_Y);
+    fighter.velocity_y = Fixed();
+    fighter.velocity_x = Fixed();
+    fighter.state = FighterState::Landing;
+    fighter.state_frames_remaining = LANDING_FRAMES;
+
+    // The jump attack ends on touchdown regardless of its remaining frames.
+    // DESIGN.md 4.5 gives its active window as "until landing", which the
+    // schema cannot express as an integer -- so the rule lives here, in the
+    // sim, rather than as a number in the data.
+    fighter.move_id = -1;
+    fighter.move_frame = 0;
+}
+
 void begin_move(Fighter& fighter, MoveId move) {
     fighter.state = FighterState::Attack;
     fighter.move_id = static_cast<int32_t>(move);
@@ -97,6 +244,12 @@ void tick_fighter_state(Fighter& fighter, const CharacterData& character, InputF
         return;
     }
 
+    // Airborne states own the fighter completely -- a ground input cannot
+    // interrupt a jump, which is what "committed at takeoff" means.
+    if (tick_airborne(fighter, character, current, previous)) {
+        return;
+    }
+
     // Losing your turn is the entire point of these two states, and it is what
     // makes landing a hit worth anything.
     if (fighter.hitstun_remaining > 0) {
@@ -111,6 +264,14 @@ void tick_fighter_state(Fighter& fighter, const CharacterData& character, InputF
     }
 
     const bool crouching = input_vertical(current) > 0;
+
+    // Up starts a jump. Checked before attacks so that up-plus-button is a
+    // jump attack rather than a grounded normal -- there is no separate jump
+    // button, and DESIGN.md 4.1 has only four directions.
+    if (input_vertical(current) < 0) {
+        begin_jump(fighter, character, input_horizontal(current));
+        return;
+    }
 
     const MoveId move = requested_move(current, previous, crouching);
     if (move != MoveId::Count) {
@@ -465,6 +626,12 @@ void advance_frame(GameState& state, const MatchData& data, InputPair current, I
 
         fighter.x += fighter.velocity_x;
         fighter.y += fighter.velocity_y;
+    }
+
+    // Ground contact, checked after movement so the fighter is tested at the
+    // position it actually reached this frame.
+    for (int32_t i = 0; i < 2; ++i) {
+        resolve_landing(state.fighters[i]);
     }
 
     // Step 5.

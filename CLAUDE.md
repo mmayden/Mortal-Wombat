@@ -137,15 +137,15 @@ The single rule everything resolves against:
 
 ## State of the build
 
-**Working:** fixed-point sim at 60Hz, seeded RNG, input-as-data, fixed-timestep
+**Working:** fixed-point sim at 60Hz, jumping with fixed arcs and jump attacks, seeded RNG, input-as-data, fixed-timestep
 loop with interpolation, SDL3 window and rendering, keyboard and gamepad input,
 TOML frame data for Frenchy and Wisdom, walking, crouching, blocking, all eight
 ground normals, hit detection, damage, hitstun, blockstun, pushbox separation,
 round flow, the `F1` hitbox overlay, and per-state fighter tinting.
 
-**Not built:** jumping and the airborne states (so `W` / `Up` does nothing), the
-special-move input parser (`B,F+HP`), throws, audio, netcode, and every tool
-under `tools/`.
+**Not built:** the special-move input parser (`B,F+HP`), knockdown and wakeup
+(two of the sixteen states in DESIGN.md §4.2 are still unreachable), throws,
+audio, netcode, and every tool under `tools/`.
 
 **Unvalidated:** the gamepad path compiles and detects zero pads correctly, but
 no pad has ever been connected to this machine. Do not describe it as working.

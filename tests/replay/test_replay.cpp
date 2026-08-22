@@ -134,6 +134,38 @@ TEST_CASE("The combat recordings actually connect") {
     }
 }
 
+TEST_CASE("The jump recording actually leaves the ground") {
+    // Same guard as the combat recordings: a jump scenario whose input never
+    // reaches the airborne state reproduces perfectly and proves nothing. This
+    // is the failure that already happened once, when scenarios pressed buttons
+    // during the round-start freeze and silently did nothing.
+    Replay replay;
+    std::string error;
+    REQUIRE(load_replay(replay_path("jump_attack"), replay, error) == ReplayIoStatus::Ok);
+
+    mw::sim::GameState state{};
+    mw::sim::init_state(state, replay.seed);
+    mw::sim::InputPair previous{{mw::sim::InputFrame{0u}, mw::sim::InputFrame{0u}}};
+
+    int32_t airborne_frames = 0;
+    int32_t jump_attack_frames = 0;
+    for (int32_t frame = 0; frame < replay.frame_count; ++frame) {
+        const mw::sim::InputPair current = input_at_frame(replay, frame);
+        mw::sim::advance_frame(state, mw::test::shipped_match_data(), current, previous);
+        previous = current;
+
+        if (state.fighters[0].state == mw::sim::FighterState::Airborne) {
+            ++airborne_frames;
+            if (state.fighters[0].move_id == static_cast<int32_t>(mw::sim::MoveId::JumpAttack)) {
+                ++jump_attack_frames;
+            }
+        }
+    }
+
+    CHECK(airborne_frames > 0);
+    CHECK(jump_attack_frames > 0);
+}
+
 TEST_CASE("Blocking in a recording still costs the defender their turn") {
     // The other half of the blocked-hit contract. No damage, but the defender
     // spent time in blockstun -- otherwise "attack into block" would be
