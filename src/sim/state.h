@@ -142,6 +142,24 @@ static_assert(std::is_trivially_copyable_v<GameState>,
               "A std::string, a pointer with ownership, or a virtual function breaks this.");
 static_assert(std::is_standard_layout_v<GameState>,
               "GameState must have standard layout so the state hash can walk its bytes.");
+
+// Trivially copyable is not enough on its own.
+//
+// This assertion exists because its absence let a bug through: Fixed had a
+// user-provided default constructor, which left GameState trivially COPYABLE
+// but not trivially DEFAULT-CONSTRUCTIBLE. memset on such a type is still
+// well-defined, but GCC rejects it under -Wclass-memaccess, so the build was
+// green on MSVC and broken on Linux -- discovered by CI rather than here.
+//
+// is_trivial_v covers both halves, which is what "flat POD" in ADR 0005
+// actually means. Keeping it makes the property a compile error on every
+// compiler instead of a warning on one of them.
+static_assert(std::is_trivial_v<GameState>,
+              "GameState must be trivial, not merely trivially copyable: a member with a "
+              "user-provided default constructor makes memset on it a diagnostic under GCC, "
+              "and makes 'flat POD' (ADR 0005) untrue.");
+static_assert(std::is_trivial_v<Fighter>, "Fighter must be trivial -- see GameState above");
+static_assert(std::is_trivial_v<Projectile>, "Projectile must be trivial -- see GameState above");
 static_assert(sizeof(GameState) < 4096,
               "GameState is saved up to 8x per frame under rollback. Growing past 4KB means "
               "the entity model needs a rethink, not a bigger budget.");
