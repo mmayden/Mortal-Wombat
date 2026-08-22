@@ -87,6 +87,25 @@ CPMAddPackage(
         "SDL_DISABLE_INSTALL ON"
 )
 
+# tomlplusplus — frame data, character definitions, move properties. ADR 0009.
+#
+# ADR 0009 calls this the highest-leverage architectural decision in the
+# project: frame data as text is diffable, reviewable, agent-editable, and
+# testable, and it makes balance changes data commits rather than code commits.
+#
+# TOML_EXCEPTIONS=0 because the game binary builds without exceptions
+# (ADR 0001), so the parser has to report failure by return value. That suits
+# the loader anyway: parsing happens at load time, outside the sim, where
+# failure is recoverable and reportable (CONVENTIONS.md 3).
+#
+# Header-only, and used at load time only -- never inside advance_frame.
+CPMAddPackage(
+    NAME tomlplusplus
+    GITHUB_REPOSITORY marzer/tomlplusplus
+    GIT_TAG v3.4.0
+    OPTIONS "TOML_EXCEPTIONS 0"
+)
+
 # ---------------------------------------------------------------------------
 # Warning and language-subset flags
 #
