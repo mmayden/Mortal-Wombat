@@ -105,6 +105,7 @@ The one rule everything follows from:
 
 | File | What it answers |
 |---|---|
+| [ROADMAP.md](ROADMAP.md) | What is done, what is next, what is blocked |
 | [AGENTS.md](AGENTS.md) | Entry point for any contributor, human or agent |
 | [docs/DESIGN.md](docs/DESIGN.md) | What the game is and how it must feel |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | How the code is shaped |

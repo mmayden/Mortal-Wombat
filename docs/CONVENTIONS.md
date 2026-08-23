@@ -58,7 +58,7 @@ every local test, and fails only in a real match between two machines.
 | Namespaces | `snake_case`, short | `mw`, `mw::sim` |
 | Files | `snake_case.h` / `.cpp` | `fixed.h`, `state.h`, `sim.cpp` |
 | Test files | `test_<subject>.cpp` | `test_fixed.cpp` |
-| Macros | `SCREAMING_SNAKE`, `MW_` prefix | `MW_ASSERT` |
+| Macros | `SCREAMING_SNAKE`, `MW_` prefix | `MW_LOG_INFO` |
 
 **Frame counts carry their unit in the name** when the type does not:
 `startup_frames`, `hitstun_remaining`, `round_timer` (all `int32_t` frames).
@@ -77,16 +77,20 @@ Everything is in namespace `mw`. The sim is in `mw::sim`.
    `static_assert` beat a runtime check.
 2. **Return a status.** `enum class LoadResult { Ok, FileMissing, BadSchema };`
    Callers must handle every case — no `default:` that swallows.
-3. **Assert.** `MW_ASSERT(cond, "message")` from `src/mw_assert.h`, for invariants
-   whose violation means a programming error — not for anything a user or a data
-   file can cause, which gets a status instead. Active in debug, compiled out
-   entirely in release, so **the condition must have no side effects**.
+3. **Assert at compile time.** `static_assert` for anything checkable there,
+   and fixed-size arrays with compile-time bounds so the failure cannot be
+   expressed at runtime at all. `state.h` is the worked example: the memcpy
+   contract, the triviality requirement, and the absence of padding are all
+   build errors rather than checks.
 
-   **Not usable below the sim boundary.** Reporting a failed assertion is I/O,
-   and under rollback the same frame re-simulates up to 8x. The sim gets the
-   same guarantees the other two ways: `static_assert` for anything checkable at
-   compile time, and fixed-size arrays with compile-time bounds so the failure
-   cannot be expressed at all.
+**There is deliberately no runtime assert macro.** One existed briefly and had
+zero callers — it was written to satisfy this document rather than to serve any
+code, which is the wrong order. The sim cannot use one anyway (reporting is I/O,
+and rollback would fire it up to 8x per frame), and above the boundary every
+failure so far has had a real caller to report to, which makes a status return
+the better answer.
+
+Add one when a specific invariant needs it, with the caller in the same commit.
 
 **The sim never fails.** `advance_frame` has no error path — it cannot open a
 file, cannot allocate, and cannot encounter a missing resource. Everything it
