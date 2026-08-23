@@ -52,7 +52,8 @@ Ordered by what unblocks the most. Each is one branch.
 
 ### 1. Play it and report on feel  *(needs a human — nothing else does)*
 
-**`docs/PLAYTEST.md` says what to look for and what each answer unblocks.**
+**`docs/PLAYTEST.md` says what to try and what to watch for.**
+`docs/MECHANICS.md` explains the terms behind it.
 
 Everything below is guesswork until this happens. The test suite structurally
 cannot check feel, and `DESIGN.md` §3 makes feel the anti-drift anchor.
@@ -63,6 +64,10 @@ Specifically unvalidated, all in the `PROVISIONAL` block of
 - jump distance (1.8× walk speed) and jump startup (3 frames)
 - round-start separation (200 units) and the round freezes (90 / 120 frames)
 - camera edge margin (90 units)
+
+**Answered so far:** hit feedback is readable — the character lights up on a
+hit, confirmed in play. That lowers the priority of extra hit effects in the
+readability pass.
 - every hitbox coordinate in `data/characters/*.toml`
 
 ### 2. Knockdown and wakeup
