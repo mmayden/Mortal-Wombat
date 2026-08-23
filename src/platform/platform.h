@@ -35,6 +35,14 @@ struct Platform {
     // The live device state, rebuilt each poll. Not sanitized until it is
     // handed out — see current_input().
     mw::sim::InputPair input;
+
+    // The same frame, split by where it came from. Kept separately so that
+    // --input-test can say WHICH device produced an input rather than only
+    // that one arrived: a controller whose d-pad is also emulating arrow keys
+    // looks identical to a game bug from the sim's side, and the two need
+    // opposite fixes.
+    mw::sim::InputPair keyboard_input;
+    mw::sim::InputPair pad_input;
 };
 
 bool init(Platform& platform, const char* title);

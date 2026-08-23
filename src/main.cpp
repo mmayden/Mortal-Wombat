@@ -60,7 +60,8 @@ constexpr uint64_t DEFAULT_SEED = 20260822u;
 //
 // DESIGN.md 6 puts an input display in training mode for v1. This is the
 // console-shaped ancestor of it.
-void print_input(int32_t frame, const mw::sim::InputPair& input) {
+// Names the buttons held in one frame. Empty string when nothing is held.
+std::string decode_input(mw::sim::InputFrame frame) {
     struct Named {
         mw::sim::Button button;
         const char* name;
@@ -73,19 +74,38 @@ void print_input(int32_t frame, const mw::sim::InputPair& input) {
         {mw::sim::Button::Block, "BLOCK"},
     };
 
-    for (int32_t player = 0; player < 2; ++player) {
-        std::string held;
-        for (const Named& named : NAMES) {
-            if (mw::sim::input_held(input.players[player], named.button)) {
-                if (!held.empty()) {
-                    held += " + ";
-                }
-                held += named.name;
+    std::string held;
+    for (const Named& named : NAMES) {
+        if (mw::sim::input_held(frame, named.button)) {
+            if (!held.empty()) {
+                held += " + ";
             }
+            held += named.name;
         }
-        if (!held.empty()) {
-            MW_LOG_INFO("f%-6d P%d  %s", frame, player + 1, held.c_str());
+    }
+    return held;
+}
+
+// Prints each player's input whenever it changes, tagged with the device that
+// produced it.
+//
+// The tag is the entire point. An input arriving on the wrong player looks the
+// same from the sim's side whether the game mis-assigned it or the operating
+// system is feeding a controller's d-pad to the keyboard as arrow keys -- and
+// those two need opposite fixes. Printing pad and keyboard separately answers
+// it in one keypress.
+//
+// DESIGN.md 6 puts an input display in training mode for v1. This is its
+// console-shaped ancestor.
+void print_input(int32_t frame, const mw::platform::Platform& platform) {
+    for (int32_t player = 0; player < 2; ++player) {
+        const std::string pad = decode_input(platform.pad_input.players[player]);
+        const std::string keys = decode_input(platform.keyboard_input.players[player]);
+        if (pad.empty() && keys.empty()) {
+            continue;
         }
+        MW_LOG_INFO("f%-6d P%d  pad[%s]  keyboard[%s]", frame, player + 1, pad.c_str(),
+                    keys.c_str());
     }
 }
 
@@ -194,7 +214,7 @@ int main(int argc, char** argv) {
             if (options.input_test &&
                 (current_input.players[0].buttons != previous_input.players[0].buttons ||
                  current_input.players[1].buttons != previous_input.players[1].buttons)) {
-                print_input(state.frame, current_input);
+                print_input(state.frame, platform);
             }
 
             mw::sim::advance_frame(state, match_data, current_input, previous_input);
