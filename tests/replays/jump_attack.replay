@@ -42,16 +42,16 @@ checkpoint 120 0xFACEB9EF2139A0DC
 checkpoint 150 0xEEED4CC3575B6D62
 checkpoint 180 0xC1C7C239AC029B9E
 checkpoint 210 0x49CE3579C1238096
-checkpoint 240 0xA28094E249C55891
-checkpoint 270 0xC6070A403F585AF2
-checkpoint 300 0xFE11E7B66CDCFCD5
-checkpoint 330 0x55942F0D1FF5E6E0
-checkpoint 360 0x18A9BC0AA08DEF99
-checkpoint 390 0x5B22087F35550625
-checkpoint 420 0xE59030051389ED54
-checkpoint 450 0x011037DAC6C3191B
-checkpoint 480 0xB5FCD96B97562E35
+checkpoint 240 0x7F40DA223AC67253
+checkpoint 270 0x95A86AF648516FEE
+checkpoint 300 0x892E9A75BBB7368C
+checkpoint 330 0xCD468A0E144C0AEB
+checkpoint 360 0x1551012FC7D4E6A7
+checkpoint 390 0x46D578150FB5B7CA
+checkpoint 420 0x9C34CEF9966AAB42
+checkpoint 450 0x748DE7F02AA2306D
+checkpoint 480 0x9B2297F1AA5E7A14
 
 # Visible-state hash after the final frame. Excludes RNG position
 # so that a render-side effect drawing a number cannot fail this.
-final 0x8FE3697D7D14B5D2
+final 0xC3DC640547BFD17F

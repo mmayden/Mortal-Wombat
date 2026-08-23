@@ -164,6 +164,12 @@ TEST_CASE("The jump recording actually leaves the ground") {
 
     CHECK(airborne_frames > 0);
     CHECK(jump_attack_frames > 0);
+
+    // And that it CONNECTS. Asserting only that the fighter got airborne and
+    // threw the move is what let a completely unusable jump attack -- one that
+    // could not hit anybody from any range at any timing -- reproduce
+    // perfectly and pass for as long as it existed.
+    CHECK(state.fighters[1].health < mw::sim::STARTING_HEALTH);
 }
 
 TEST_CASE("Blocking in a recording still costs the defender their turn") {

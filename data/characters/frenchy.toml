@@ -212,11 +212,23 @@ hitstun   = 16
 blockstun = 11
 
 [[moves.jump_attack.hitboxes]]
+# Low and forward, NOT up at head height like the standing normals.
+#
+# A jumping fighter carries its whole body upward, hitbox included. Authored at
+# standing-punch height (y = -96) this box floated above the opponent's head for
+# the entire arc: a sweep of 208 combinations of range and timing produced zero
+# connections. The attack was unusable and nothing caught it, because the jump
+# replay asserted that the fighter got airborne and threw the move -- not that
+# it ever touched anyone.
+#
+# Reaching from just above the feet to slightly below them is what makes an
+# air-to-ground attack land while descending, which is when a jump-in is
+# supposed to be a threat.
 frames = [7, 40]
-x = 14
-y = -96
-w = 36
-h = 34
+x = 10
+y = -34
+w = 44
+h = 44
 
 # ---------------------------------------------------------------------------
 #  Special — DESIGN.md 4.5, input B,F+HP (4.5, chosen over a quarter-circle)
