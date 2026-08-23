@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@v5
+        uses: seanmiddleditch/gha-setup-ninja@v6
 
       # SDL3 refuses to configure on Linux without the X11/Wayland development
       # headers, and the runner image ships none of them.
@@ -152,7 +152,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Ninja
-        uses: seanmiddleditch/gha-setup-ninja@v5
+        uses: seanmiddleditch/gha-setup-ninja@v6
 
       - name: Install SDL3 build dependencies
         run: |
