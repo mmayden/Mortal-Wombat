@@ -21,17 +21,19 @@ powershell -File tools/dev.ps1 ctest --preset debug
 `pwsh` is not installed — use `powershell`. On Linux/macOS and in CI, call
 `cmake`/`ctest` directly.
 
+**Run `tools/verify.ps1` before pushing.** It does format, sim boundary, build,
+tests, and a replay-drift check — everything CI can check on one machine, in the
+order a failure is cheapest to fix. `-Fix` reformats in place.
+
+It exists because scripted edits kept skipping clang-format and CI kept catching
+it two minutes after a push. `git config core.hooksPath tools/hooks` makes it
+run on every push.
+
 **clang-format is pinned at 22.1.8** and the check blocks merges. On this
 machine the pip-installed binary lives at:
 
 ```
 C:/Users/mj/AppData/Roaming/Python/Python310/Scripts/clang-format.exe
-```
-
-Run it over every file the branch touched:
-
-```
-clang-format -i $(find src tests -name '*.h' -o -name '*.cpp')
 ```
 
 ---
@@ -141,7 +143,8 @@ The single rule everything resolves against:
 loop with interpolation, SDL3 window and rendering, keyboard and gamepad input,
 TOML frame data for Frenchy and Wisdom, walking, crouching, blocking, all eight
 ground normals, hit detection, damage, hitstun, blockstun, pushbox separation,
-round flow, the `F1` hitbox overlay, and per-state fighter tinting.
+round flow, the `F1` hitbox overlay, per-state fighter tinting, a deadzone camera, and
+`--input-test` for checking which device produced which input.
 
 **Not built:** the special-move input parser (`B,F+HP`), knockdown and wakeup
 (two of the sixteen states in DESIGN.md §4.2 are still unreachable), throws,

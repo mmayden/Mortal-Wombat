@@ -5,6 +5,20 @@ on:
   push:
     branches: [main]
 
+  # Weekly, to catch rot rather than changes.
+  #
+  # Almost everything this build depends on lives outside the repository: SDL3,
+  # doctest and tomlplusplus are fetched at configure time, the runner images
+  # update continuously, and the actions themselves get deprecated on their own
+  # schedule. A repo can go green-to-red without a single commit, and on a
+  # project with long quiet stretches the alternative is discovering it while
+  # trying to ship something else.
+  schedule:
+    - cron: '0 6 * * 1'
+
+  # So a red scheduled run can be re-checked without an empty commit.
+  workflow_dispatch:
+
 # A new push supersedes an in-flight run on the same branch. Agent branches
 # push often, and a queue of stale runs is a queue nobody reads.
 concurrency:
