@@ -7,6 +7,7 @@ goes stale.
 
 | You want to know | Read |
 |---|---|
+| What to work on next | [ROADMAP.md](ROADMAP.md) |
 | The rules, the commands, the sim boundary | [AGENTS.md](AGENTS.md) |
 | Environment quirks and traps that have cost time | [CLAUDE.md](CLAUDE.md) |
 | What the game is and how it must feel | [docs/DESIGN.md](docs/DESIGN.md) |
