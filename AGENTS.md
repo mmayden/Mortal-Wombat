@@ -123,6 +123,9 @@ Below the boundary, these are build-breaking errors, not style preferences:
 
 ## Where to look before deciding anything
 
+- `ROADMAP.md` — what is done, what is next, what is blocked on a decision.
+  **Read this first if you are picking the project up cold.**
+
 - `docs/DESIGN.md` — what the game is, how it must feel, what is cut from v1.
   §3 is the anti-drift anchor for any judgment call about feel.
 - `docs/decisions/README.md` — the ADR index. Settled questions;
