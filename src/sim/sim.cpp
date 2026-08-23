@@ -377,7 +377,18 @@ void resolve_hits(GameState& state, const MatchData& data) {
         const Fighter& attacking = state.fighters[attacker];
         const Fighter& defending = state.fighters[defender];
 
-        if (attacking.state != FighterState::Attack || attacking.hit_already_landed != 0) {
+        // Keyed on move_id, NOT on the state.
+        //
+        // A jump attack runs while the state is Airborne -- the jump owns the
+        // state and the move rides along. Testing for FighterState::Attack
+        // meant the jump attack was never evaluated for collision at all: a
+        // sweep of 208 combinations of range and timing produced zero hits.
+        //
+        // This is the third place the same assumption caused a bug. The
+        // renderer hid the jump attack's limb, the debug overlay hid its
+        // hitbox, and here it could not connect. "Attacking" is a move being
+        // active, not a state the fighter is in.
+        if (attacking.move_id < 0 || attacking.hit_already_landed != 0) {
             continue;
         }
 
