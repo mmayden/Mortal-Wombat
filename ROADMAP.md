@@ -52,6 +52,8 @@ Ordered by what unblocks the most. Each is one branch.
 
 ### 1. Play it and report on feel  *(needs a human — nothing else does)*
 
+**`docs/PLAYTEST.md` says what to look for and what each answer unblocks.**
+
 Everything below is guesswork until this happens. The test suite structurally
 cannot check feel, and `DESIGN.md` §3 makes feel the anti-drift anchor.
 
@@ -77,21 +79,42 @@ debug UI and it is not integrated. **Decide that before starting.**
 
 The console `--input-test` is the input display's ancestor and can be promoted.
 
-### 4. Grow the replay library toward 50
+### 4. Readability pass  *(in scope per ADR 0017; art is not)*
+
+Making the game easier to *see*, without touching the art pipeline. Cheap,
+reversible, and it directly serves the playtest — feel cannot be tuned through a
+display that shows nothing happening.
+
+Candidates, roughly by value: hit and block feedback (flash, a few frames of
+hitstop), a stage with a real floor and depth cues rather than a flat backdrop,
+clearer per-state poses, and a landing squash so the jump reads.
+
+**Not** sprites, atlases, Blender, or anything that pins character proportions —
+ADR 0013 owns those and they wait for the v1 definition of done.
+
+### 5. Grow the replay library toward 50
 
 9 of 50. Cheap to add, and the highest-value regression net this project has —
 `ADR 0011` calls it the primary one. Every fixed bug should leave a recording
 behind. The rule that makes them worth having: a recording must *assert on the
 thing it is named after*, or it reproduces perfectly and proves nothing.
 
-### 5. `tools/framedata_editor/`
+### 6. `tools/framedata_editor/`
 
-The stack decision says build this **before** authoring content, and that advice
-was already overrun — the shipped hitboxes were hand-written to reach the first
-connecting hit. It is the best parallel-agent task in the project: pure tooling,
-no sim contact, cannot desync anything.
+The stack decision says build this **before** authoring content. That advice was
+overrun — every hitbox in `data/characters/` was hand-written to reach the first
+connecting hit — and the cost has already been paid once.
 
-Blocked on nothing. Worth doing before any real balance pass.
+The jump attack shipped with its hitbox at standing-punch height, floating above
+the opponent's head for its entire arc. It could not hit anyone from any range
+at any timing. Nobody could see that, because the numbers are plausible in a
+text file and the geometry is only obvious when drawn. A visual editor is not a
+convenience here; it is the thing that makes frame data reviewable at all.
+
+Pure tooling, no sim contact, cannot desync anything — the best parallel-agent
+task in the project. Blocked on nothing.
+
+Worth doing before any real balance pass, and before authoring the special.
 
 ---
 
@@ -132,6 +155,8 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Jump attack fix | It could not hit anyone; three files shared one wrong assumption |
+| Playtest guide | `docs/PLAYTEST.md` — what to look for and what each answer unblocks |
 | Process automation | `tools/verify.ps1`, pre-push hook, PR template, Dependabot, weekly CI |
 | Camera deadzone | Fixed the view dragging a stationary opponent across the screen |
 | Gamepad | Hot-plug, dedupe, `--input-test`; one pad no longer claims both slots |

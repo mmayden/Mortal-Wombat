@@ -147,10 +147,28 @@ decides matches.
 - Does the change plausibly push a full rebuild past 60s or the suite past
   5 minutes? (ADR 0010 treats both as hard requirements)
 
+### Sibling instances of a fixed assumption
+
+When the diff fixes a bug that rested on a wrong assumption rather than a typo:
+
+- **Where else does that assumption live?** Grep for it. `FighterState::Attack`
+  as a proxy for "is attacking" was wrong in three separate files; two were
+  fixed in isolation and the third — hit resolution — left a move unable to hit
+  anyone at all.
+- **Does a diagnostic share the assumption?** The `F1` overlay was blind to jump
+  attacks for the same reason the sim was, so the one tool that should have
+  caught it reproduced the bug and looked right doing so.
+- **Is the fix keyed on the real thing, or on a proxy for it?** "Attacking" is a
+  move being active (`move_id >= 0`), not a state the fighter happens to be in.
+
 ### Tests that prove nothing
 
 The failure mode to look for is a test that passes regardless of behaviour.
 
+- **Does the test assert on the noun in its name?** A test called "the jump
+  recording leaves the ground" asserted exactly that, and nothing more, while
+  the jump attack it recorded could not hit anybody. Watching the wrong noun
+  passes forever.
 - A new replay scenario: does anything **assert on what it exercises**? A combat
   recording whose attacks whiff reproduces perfectly and proves nothing. This
   has happened — input is ignored for the first 90 frames of a round, so a
