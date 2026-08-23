@@ -294,10 +294,12 @@ void poll(Platform& platform) {
     // there rather than storing it here is what lets a rollback recompute
     // button edges correctly instead of restoring a stale flag.
     const bool* keys = SDL_GetKeyboardState(nullptr);
-    platform.input.players[0] =
+    platform.keyboard_input.players[0] =
         read_bindings(keys, P1_BINDINGS, static_cast<int32_t>(SDL_arraysize(P1_BINDINGS)));
-    platform.input.players[1] =
+    platform.keyboard_input.players[1] =
         read_bindings(keys, P2_BINDINGS, static_cast<int32_t>(SDL_arraysize(P2_BINDINGS)));
+
+    platform.input = platform.keyboard_input;
 
     // Pad input is OR-ed with the keyboard rather than replacing it, so one
     // player can be on a pad and the other on keys without any mode to select.
@@ -305,6 +307,7 @@ void poll(Platform& platform) {
     // is the point of input-as-data (ADR 0002).
     for (int32_t i = 0; i < MAX_GAMEPADS; ++i) {
         const InputFrame pad = read_gamepad(static_cast<SDL_Gamepad*>(platform.gamepads[i]));
+        platform.pad_input.players[i] = pad;
         platform.input.players[i] =
             InputFrame{static_cast<uint16_t>(platform.input.players[i].buttons | pad.buttons)};
     }
