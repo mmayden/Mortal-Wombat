@@ -14,6 +14,7 @@
 #include <string>
 
 #include "platform/platform.h"
+#include "render/camera.h"
 #include "render/renderer.h"
 #include "render/sprite.h"
 #include "sim/constants.h"
@@ -186,6 +187,10 @@ int main(int argc, char** argv) {
 
     const mw::render::PlaceholderManifest manifest;
 
+    // Render-layer state: the view is not part of GameState and is never
+    // rolled back (ARCHITECTURE.md 3).
+    mw::render::Camera camera{};
+
     mw::sim::GameState state{};
     mw::sim::init_state(state, DEFAULT_SEED);
 
@@ -240,8 +245,9 @@ int main(int argc, char** argv) {
         // never crosses the boundary (ARCHITECTURE.md 4).
         const float alpha = static_cast<float>(accumulator) / static_cast<float>(FRAME_NS);
 
-        mw::render::draw_frame(platform.renderer, manifest, match_data, previous_state, state,
-                               alpha, platform.show_debug);
+        mw::render::camera_update(camera, previous_state, state, alpha);
+        mw::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
+                               state, alpha, platform.show_debug);
         mw::platform::present(platform);
         ++frames_rendered;
 
@@ -257,8 +263,9 @@ int main(int argc, char** argv) {
         // particularly bad failure for a debugging tool: the image looked
         // plausible and was one frame stale, which is exactly enough to make a
         // hitbox look inactive on the frame it connected.
-        mw::render::draw_frame(platform.renderer, manifest, match_data, previous_state, state, 0.0f,
-                               platform.show_debug);
+        mw::render::camera_update(camera, previous_state, state, 0.0f);
+        mw::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
+                               state, 0.0f, platform.show_debug);
 
         if (!mw::platform::save_screenshot(platform, options.screenshot)) {
             mw::platform::shutdown(platform);

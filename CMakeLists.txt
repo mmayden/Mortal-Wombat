@@ -245,6 +245,7 @@ endif()
 add_executable(mortal_wombat
     src/main.cpp
     src/platform/platform.cpp
+    src/render/camera.cpp
     src/render/renderer.cpp
     src/render/sprite.cpp)
 
