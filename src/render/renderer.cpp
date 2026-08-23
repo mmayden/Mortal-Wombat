@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL.h>
 
+#include "render/camera.h"
 #include "sim/constants.h"
 #include "sim/sim.h"
 
@@ -61,30 +62,6 @@ float to_float(mw::sim::Fixed value) {
     // arithmetic; above it, pixels. Conversion happens here and never in the
     // other direction (ARCHITECTURE.md 1).
     return static_cast<float>(value.raw) / static_cast<float>(mw::sim::FIXED_ONE);
-}
-
-// The stage is 960 units wide and the screen is 480, so the camera has to
-// track. It follows the midpoint between the fighters and clamps to the stage,
-// which is the standard fighting-game camera and needs nothing cleverer.
-float camera_x(const GameState& previous, const GameState& current, float alpha) {
-    const float p_mid =
-        (to_float(previous.fighters[0].x) + to_float(previous.fighters[1].x)) * 0.5f;
-    const float c_mid = (to_float(current.fighters[0].x) + to_float(current.fighters[1].x)) * 0.5f;
-    const float midpoint = lerp(p_mid, c_mid, alpha);
-
-    const float half_screen = static_cast<float>(mw::sim::SCREEN_WIDTH) * 0.5f;
-    const float min_x = 0.0f;
-    const float max_x =
-        static_cast<float>(mw::sim::STAGE_WIDTH) - static_cast<float>(mw::sim::SCREEN_WIDTH);
-
-    float left = midpoint - half_screen;
-    if (left < min_x) {
-        left = min_x;
-    }
-    if (left > max_x) {
-        left = max_x;
-    }
-    return left;
 }
 
 void draw_stage(SDL_Renderer* renderer, float camera) {
@@ -274,9 +251,9 @@ void draw_hud(SDL_Renderer* renderer, const GameState& state) {
 }  // namespace
 
 void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
-                const mw::sim::MatchData& data, const GameState& previous, const GameState& current,
-                float alpha, bool show_debug) {
-    const float camera = camera_x(previous, current, alpha);
+                const mw::sim::MatchData& data, const Camera& view, const GameState& previous,
+                const GameState& current, float alpha, bool show_debug) {
+    const float camera = view.x;
 
     draw_stage(renderer, camera);
 

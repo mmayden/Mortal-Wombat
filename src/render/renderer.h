@@ -10,6 +10,7 @@
 // std::string are all fine.
 #pragma once
 
+#include "render/camera.h"
 #include "render/sprite.h"
 #include "sim/framedata.h"
 #include "sim/state.h"
@@ -34,7 +35,8 @@ namespace mw::render {
 // viewer the project's debugging environment -- it is how "why did that miss?"
 // becomes answerable without attaching a debugger.
 void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
-                const mw::sim::MatchData& data, const mw::sim::GameState& previous,
-                const mw::sim::GameState& current, float alpha, bool show_debug);
+                const mw::sim::MatchData& data, const Camera& camera,
+                const mw::sim::GameState& previous, const mw::sim::GameState& current, float alpha,
+                bool show_debug);
 
 }  // namespace mw::render
