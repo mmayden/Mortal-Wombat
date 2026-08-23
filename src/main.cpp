@@ -97,16 +97,29 @@ std::string decode_input(mw::sim::InputFrame frame) {
 //
 // DESIGN.md 6 puts an input display in training mode for v1. This is its
 // console-shaped ancestor.
-void print_input(int32_t frame, const mw::platform::Platform& platform) {
+void print_input(int32_t frame, const mw::platform::Platform& platform,
+                 const mw::sim::GameState& state) {
+    const char* STATE_NAMES[] = {"RoundStart", "Idle",      "WalkFwd",  "WalkBack",
+                                 "Crouch",     "JumpStart", "Airborne", "Landing",
+                                 "Attack",     "Blocking",  "Hitstun",  "Blockstun",
+                                 "Knockdown",  "Wakeup",    "Win",      "Lose"};
+
     for (int32_t player = 0; player < 2; ++player) {
         const std::string pad = decode_input(platform.pad_input.players[player]);
         const std::string keys = decode_input(platform.keyboard_input.players[player]);
-        if (pad.empty() && keys.empty()) {
-            continue;
-        }
-        MW_LOG_INFO("f%-6d P%d  pad[%s]  keyboard[%s]", frame, player + 1, pad.c_str(),
-                    keys.c_str());
+        const mw::sim::Fighter& fighter = state.fighters[player];
+
+        // Position and state are printed alongside the input because "both
+        // characters moved" has two very different causes that look the same
+        // from the outside: input reaching the wrong player, or pushboxes
+        // separating two fighters who are touching. A player whose x changes
+        // while its own input line is empty is being pushed, not driven.
+        MW_LOG_INFO("f%-6d P%d  pad[%-22s] keys[%-22s] x=%-5d %s", frame, player + 1, pad.c_str(),
+                    keys.c_str(), fighter.x.to_int(),
+                    STATE_NAMES[static_cast<int32_t>(fighter.state)]);
     }
+    MW_LOG_INFO("        gap between fighters: %d units",
+                state.fighters[1].x.to_int() - state.fighters[0].x.to_int());
 }
 
 struct Options {
@@ -214,7 +227,7 @@ int main(int argc, char** argv) {
             if (options.input_test &&
                 (current_input.players[0].buttons != previous_input.players[0].buttons ||
                  current_input.players[1].buttons != previous_input.players[1].buttons)) {
-                print_input(state.frame, platform);
+                print_input(state.frame, platform, state);
             }
 
             mw::sim::advance_frame(state, match_data, current_input, previous_input);
