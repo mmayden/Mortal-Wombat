@@ -29,6 +29,7 @@ record of what was believed, and why, is most of the value.
 | 0014 | The sim boundary is enforced mechanically, not by review | [0014](0014-harness-boundary-enforcement.md) |
 | 0015 | Bootstrap order deviation; provisional constants quarantined | [0015](0015-bootstrap-order-and-provisional-constants.md) |
 | 0016 | SDL_Renderer for v1, not the GPU API (amends 0004) | [0016](0016-sdl-renderer-for-v1.md) |
+| 0017 | Readability work is in scope; art is not (clarifies 0013) | [0017](0017-readability-is-not-art.md) |
 
 ADRs 0001–0013 live in one file because they were decided together, as the
 project's founding stack decision. That file also carries the scope tier, the

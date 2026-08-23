@@ -103,6 +103,27 @@ contains `\n` through a bash heredoc has repeatedly produced a literal newline
 inside a string literal. Use the Write tool for such content, or build the
 escape from character codes (`chr(92)`).
 
+**A wrong assumption is never in one place. Grep for its siblings.**
+
+`FighterState::Attack` was used as a proxy for "this fighter is attacking" in
+three places. A jump attack runs while the state is `Airborne`, so all three
+were wrong: the renderer hid its limb, the debug overlay hid its hitbox, and hit
+resolution skipped it entirely — the move could not touch anyone from any range
+at any timing.
+
+The first two were found and fixed *in isolation*, weeks apart, without anyone
+asking where else the assumption lived. Both fixes were correct and neither was
+sufficient. When a bug turns out to rest on a wrong assumption, the fix is not
+done until you have searched for every other site holding it.
+
+**Diagnostics must not share assumptions with the code they diagnose.**
+
+The `F1` hitbox overlay exists to answer "why did that miss?". It was blind to
+jump attacks for exactly the same reason the sim was — so the one tool that
+should have caught the bug instead reproduced it, and looked correct doing so.
+A debug view derived from the same wrong premise as the code is worse than none:
+it actively confirms the mistake.
+
 **Never name a header after a standard C header.** `src/` is on the include
 path for every target and every dependency built through it. A header briefly
 named `src/assert.h` shadowed the C standard `<assert.h>` — toml++ included it, got ours, and the
@@ -124,6 +145,7 @@ before pushing.
 | Need | Place |
 |---|---|
 | **What to work on next, and what is blocked** | `ROADMAP.md` |
+| What to look for when playing it | `docs/PLAYTEST.md` |
 | What the game is, how it must feel | `docs/DESIGN.md` (§3 is the anti-drift anchor) |
 | Settled technical decisions | `docs/decisions/README.md` (index) — **do not relitigate** |
 | Module map, the sim boundary, `advance_frame` step order | `docs/ARCHITECTURE.md` |
