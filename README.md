@@ -34,6 +34,9 @@ cmake --build --preset debug
 ctest --preset debug
 ```
 
+Before pushing, `powershell -File tools/verify.ps1` runs everything CI can check
+on one machine. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 Presets: `debug` (ASan, and UBSan where the compiler supports it), `release`,
 `profile` (Tracy enabled).
 

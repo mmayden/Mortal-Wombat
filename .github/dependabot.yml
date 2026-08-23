@@ -1,0 +1,21 @@
+# Keeps the GitHub Actions this workflow depends on current.
+#
+# Worth automating because the cost of NOT doing it is silent: actions get
+# deprecated on a schedule nobody here is watching, and the first symptom is a
+# warning nobody reads, followed later by a hard failure. This repo has already
+# seen the Node 20 deprecation notice on every run.
+#
+# C++ dependencies are NOT covered. They are pinned by git tag through CPM in
+# CMakeLists.txt, which Dependabot does not understand. Updating those stays a
+# deliberate act -- ADR 0010 treats the dependency list as a serialized hotspot,
+# and an automatic bump of SDL or tomlplusplus is exactly the kind of change
+# that should land alone and be reviewed.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(ci)"

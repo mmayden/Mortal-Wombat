@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Runs the same checks CI runs, before the push rather than two minutes after.
+#
+# Install once per clone:
+#     git config core.hooksPath tools/hooks
+#
+# Skip deliberately when you mean to:
+#     git push --no-verify
+#
+# Pre-PUSH rather than pre-commit on purpose. Commits should stay instant --
+# committing work in progress is how you avoid losing it -- and the thing worth
+# gating is what other people and CI will see.
+set -e
+
+echo "pre-push: running local checks (git push --no-verify to skip)"
+
+if command -v powershell >/dev/null 2>&1; then
+    powershell -NoProfile -ExecutionPolicy Bypass -File tools/verify.ps1
+else
+    # Linux and macOS: no dev-shell wrapper needed, cmake is on PATH.
+    cmake --build --preset debug
+    ctest --preset debug --output-on-failure
+    python tests/check_sim_boundary.py src/sim
+fi

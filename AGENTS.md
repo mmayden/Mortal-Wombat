@@ -54,15 +54,21 @@ timeout.
 active), yellow pushboxes. It is the fastest way to answer "why did that
 miss?".
 
-**Format before pushing.** clang-format is pinned at 22.1.8 and its check
-blocks merges:
+**Before pushing, run everything CI runs:**
 
 ```
-clang-format -i $(find src tests -name '*.h' -o -name '*.cpp')
+powershell -File tools/verify.ps1        # add -Fix to reformat in place
 ```
 
-Run it over everything the branch touched, not just what you edited by hand —
-scripted edits skip the formatter as easily as they skip review.
+Format, sim boundary, build, tests, and a replay-drift warning, in the order a
+failure is cheapest to fix. Install the hook once and it cannot be forgotten:
+
+```
+git config core.hooksPath tools/hooks
+```
+
+CI still owns what a single machine cannot check: the three-platform matrix,
+the desync comparison, and the release build.
 
 **The full suite must stay under 5 minutes and a full rebuild under 60s
 (ADR 0010). If you exceed either, that is a bug — report it, do not absorb it.**

@@ -1,0 +1,27 @@
+# Editors write LF directly, so .gitattributes has nothing to normalise on
+# commit. Without this every commit on Windows prints a wall of "CRLF will be
+# replaced by LF" warnings, which trains people to skim git output -- and git
+# output is where the useful warnings also appear.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{h,cpp,hpp,inl}]
+indent_style = space
+indent_size = 4
+max_line_length = 100
+
+[*.{cmake,txt,json,yml,yaml,toml,py}]
+indent_style = space
+indent_size = 2
+
+[*.md]
+# Trailing spaces are a line break in Markdown.
+trim_trailing_whitespace = false
+
+[Makefile]
+indent_style = tab
