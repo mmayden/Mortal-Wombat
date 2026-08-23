@@ -51,6 +51,44 @@ constexpr uint64_t DEFAULT_SEED = 20260822u;
 // N ticks; until this existed, the smoke tier covered the simulation and left
 // the window, renderer, and loop completely untested. Paired with SDL's dummy
 // video driver it runs on a machine with no display.
+// Prints each player's decoded input whenever it changes.
+//
+// Exists because the gamepad path could be verified only by someone holding a
+// controller: the code compiled, CI passed, and a pad assigned to both players
+// at once still looked correct from here. A button that lands on the wrong
+// action is invisible to every test in the suite.
+//
+// DESIGN.md 6 puts an input display in training mode for v1. This is the
+// console-shaped ancestor of it.
+void print_input(int32_t frame, const mw::sim::InputPair& input) {
+    struct Named {
+        mw::sim::Button button;
+        const char* name;
+    };
+    constexpr Named NAMES[] = {
+        {mw::sim::Button::Up, "Up"},       {mw::sim::Button::Down, "Down"},
+        {mw::sim::Button::Left, "Left"},   {mw::sim::Button::Right, "Right"},
+        {mw::sim::Button::LowPunch, "LP"}, {mw::sim::Button::HighPunch, "HP"},
+        {mw::sim::Button::LowKick, "LK"},  {mw::sim::Button::HighKick, "HK"},
+        {mw::sim::Button::Block, "BLOCK"},
+    };
+
+    for (int32_t player = 0; player < 2; ++player) {
+        std::string held;
+        for (const Named& named : NAMES) {
+            if (mw::sim::input_held(input.players[player], named.button)) {
+                if (!held.empty()) {
+                    held += " + ";
+                }
+                held += named.name;
+            }
+        }
+        if (!held.empty()) {
+            MW_LOG_INFO("f%-6d P%d  %s", frame, player + 1, held.c_str());
+        }
+    }
+}
+
 struct Options {
     // Counted in SIMULATION frames, not render frames. The loop is uncapped
     // (no vsync -- the fixed timestep owns pacing), so render frames outnumber
@@ -61,6 +99,10 @@ struct Options {
     // 600 sim frames is 10 seconds of game time, matching BLUEPRINT.md 1.3.
     int32_t frames = -1;  // -1 means run until the player quits
     const char* screenshot = nullptr;
+
+    // Print each player's decoded input whenever it changes. The only way to
+    // verify a controller is wired to the actions its label claims.
+    bool input_test = false;
 };
 
 Options parse_options(int argc, char** argv) {
@@ -70,6 +112,8 @@ Options parse_options(int argc, char** argv) {
             options.frames = std::atoi(argv[++i]);
         } else if (std::strcmp(argv[i], "--screenshot") == 0 && i + 1 < argc) {
             options.screenshot = argv[++i];
+        } else if (std::strcmp(argv[i], "--input-test") == 0) {
+            options.input_test = true;
         } else {
             MW_LOG_WARN("ignoring unrecognized argument: %s", argv[i]);
         }
@@ -146,6 +190,12 @@ int main(int argc, char** argv) {
             previous_state = state;
             previous_input = current_input;
             current_input = mw::platform::current_input(platform);
+
+            if (options.input_test &&
+                (current_input.players[0].buttons != previous_input.players[0].buttons ||
+                 current_input.players[1].buttons != previous_input.players[1].buttons)) {
+                print_input(state.frame, current_input);
+            }
 
             mw::sim::advance_frame(state, match_data, current_input, previous_input);
 

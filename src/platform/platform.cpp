@@ -118,6 +118,22 @@ InputFrame read_gamepad(SDL_Gamepad* pad) {
 // replugs, and "the first pad plugged in is player one" is a rule a person can
 // verify by looking at the couch.
 void attach_gamepad(Platform& platform, SDL_JoystickID id) {
+    // Refuse a device that is already open in a slot.
+    //
+    // Without this, one physical pad ends up driving BOTH fighters. Pads
+    // connected before launch are picked up twice: once by the explicit
+    // enumeration in init(), and again when SDL delivers a GAMEPAD_ADDED event
+    // for them on the first event pump. The two paths are both correct on their
+    // own, which is why this only appears with a controller actually plugged
+    // in -- it survived review and CI and was caught the first time real
+    // hardware was present.
+    for (int32_t i = 0; i < MAX_GAMEPADS; ++i) {
+        SDL_Gamepad* existing = static_cast<SDL_Gamepad*>(platform.gamepads[i]);
+        if (existing != nullptr && SDL_GetGamepadID(existing) == id) {
+            return;
+        }
+    }
+
     for (int32_t i = 0; i < MAX_GAMEPADS; ++i) {
         if (platform.gamepads[i] != nullptr) {
             continue;
