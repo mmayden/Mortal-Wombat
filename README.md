@@ -106,7 +106,8 @@ The one rule everything follows from:
 | File | What it answers |
 |---|---|
 | [ROADMAP.md](ROADMAP.md) | What is done, what is next, what is blocked |
-| [docs/PLAYTEST.md](docs/PLAYTEST.md) | What to look for when playing it |
+| [docs/MECHANICS.md](docs/MECHANICS.md) | What the mechanics are, in plain language |
+| [docs/PLAYTEST.md](docs/PLAYTEST.md) | What to try when playing it, and what to watch for |
 | [AGENTS.md](AGENTS.md) | Entry point for any contributor, human or agent |
 | [docs/DESIGN.md](docs/DESIGN.md) | What the game is and how it must feel |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | How the code is shaped |

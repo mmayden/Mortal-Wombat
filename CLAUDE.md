@@ -145,7 +145,8 @@ before pushing.
 | Need | Place |
 |---|---|
 | **What to work on next, and what is blocked** | `ROADMAP.md` |
-| What to look for when playing it | `docs/PLAYTEST.md` |
+| The mechanics explained without jargon | `docs/MECHANICS.md` |
+| What to try when playing it | `docs/PLAYTEST.md` |
 | What the game is, how it must feel | `docs/DESIGN.md` (§3 is the anti-drift anchor) |
 | Settled technical decisions | `docs/decisions/README.md` (index) — **do not relitigate** |
 | Module map, the sim boundary, `advance_frame` step order | `docs/ARCHITECTURE.md` |
