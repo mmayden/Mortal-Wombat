@@ -39,7 +39,35 @@ question cannot be answered by playing, the game is not showing enough.
 | Question | Answer | Result |
 |---|---|---|
 | Can you tell when a hit lands? | **Yes — the character lights up** | Hit feedback works. Lowers the priority of extra hit effects. |
+| Does a gamepad work? | **Partly answered** | A real pad connects, drives the left fighter only, and moves. Whether each button does what its label says is still unchecked — see below. |
 | Does the camera shove you around? | **It did, and it is fixed** | Backing away walked the LEFT fighter off the edge of the screen; the camera always sacrificed that side. Confirmed fixed on keyboard. Never tested on a pad. |
+
+---
+
+## 0. Which gamepad button is which?  *(two minutes, needs a pad)*
+
+**A pad that moves and swings feels like it works even if kick and punch are
+swapped.** Playing cannot tell you — you would just learn the wrong buttons.
+
+```
+build\debugin\mortal_wombat.exe --input-test
+```
+
+Every time an input changes it prints a line per player. Press one control at a
+time and check the name that appears:
+
+| Press | Should print |
+|---|---|
+| Left face button pair | `LowPunch` then `HighPunch` |
+| Right face button pair | `LowKick` then `HighKick` |
+| Either shoulder or trigger | `Block` |
+| Stick or d-pad, each way | `Left` `Right` `Up` `Down` |
+
+**Watch the `pad[...]` column, not `keys[...]`.** They are printed separately on
+purpose, so you can see which device produced an input.
+
+Anything landing on the wrong name is a real bug and a one-line fix — but only
+if somebody looks, which is the whole reason this section exists.
 
 ---
 

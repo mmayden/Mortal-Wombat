@@ -39,7 +39,7 @@ the status.** Numbering matches that list.
 | Two characters with the full v1 moveset | **9 of ≈14** — the special is unimplemented, and medium punch and medium kick do not exist yet (ADR 0021) |
 | Block, hitstun, blockstun, knockdown, wakeup all correct | **partial** — knockdown and wakeup are unbuilt |
 | Best-of-three rounds with timer and win conditions | **done** |
-| Local versus on two gamepads | **done, half-validated** — one pad tested, never two |
+| Local versus on two gamepads | **half-validated** — one real pad connects, drives P1 only, and moves (2026-08-24). Button-to-action mapping unverified; two pads never tried |
 | Training mode: hitbox display, frame data readout, input display | **1 of 3** — `F1` hitboxes; no readout, no on-screen input display |
 | 50+ replay tests passing | **9 of 50** |
 | Desync CI green across three platforms | **done** |
@@ -137,7 +137,8 @@ Specifically unvalidated, all in the `PROVISIONAL` block of
 **Answered so far:** hit feedback is readable — the character lights up on a
 hit, confirmed in play. That lowers the priority of extra hit effects in the
 readability pass. The camera no longer shoves the view around, confirmed on
-keyboard after the second fix; it has still never been tested on a pad.
+keyboard after the second fix, and the session that first used a real pad
+reported nothing wrong with it either.
 
 **Recording a session is now the preferred way to report one of these.**
 `--record session.replay` captures what you did, and the file replays exactly.

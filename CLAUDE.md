@@ -170,9 +170,24 @@ is precisely how four documents ended up disagreeing about what was built.
 
 **State of the build → [`ROADMAP.md`](ROADMAP.md).** What works, what does not,
 and what is unvalidated. One of those is worth repeating because it is a trap
-rather than a status: **the gamepad path has never had a pad connected to it on
-this machine.** It compiles and it correctly detects zero pads. Do not describe
-it as working.
+rather than a status: **the gamepad path is now partly validated, and the parts
+still unproven are the ones that fail quietly.**
+
+A real pad has been connected and played on 2026-08-24. It is detected, it
+drives player one and only player one -- the earlier bug where a single pad
+claimed both slots does not recur -- and movement works.
+
+What that run did *not* establish, because playing does not reveal it:
+
+- **Which physical button produces which attack.** A pad that moves and swings
+  feels like it works even if kick and punch are transposed. `--input-test` is
+  the only thing that answers this; it prints the decoded input per player next
+  to each fighter's position and state.
+- **Two pads at once.** Still never tried. This is where the both-slots class of
+  bug lives.
+
+So: "one pad, drives P1, moves" is what may be claimed. Not "the gamepad
+works".
 
 **Open questions → [`drawing-board/RULESET.md`](drawing-board/RULESET.md)** for
 mechanics still being decided, and `ROADMAP.md` for what they block. The rule
