@@ -410,9 +410,11 @@ void resolve_hits(GameState& state, const MatchData& data) {
                 continue;
             }
 
-            // DESIGN.md 4.6 cuts chip damage, so a blocked hit deals none. It
-            // still costs the defender their turn, which is what keeps
-            // attacking into a block a real decision rather than a free one.
+            // A blocked hit deals no damage. Chip damage is UNDECIDED rather
+            // than ruled out (ADR 0018); this is the current behaviour and
+            // the simpler default. The hit still costs the defender their
+            // turn, which is what keeps attacking into a block a real
+            // decision rather than a free one.
             const bool blocked = defending.state == FighterState::Blocking;
             outcomes[attacker] = Outcome{true, blocked, blocked ? 0 : move.damage,
                                          blocked ? move.blockstun : move.hitstun};

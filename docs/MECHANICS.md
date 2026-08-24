@@ -278,7 +278,7 @@ Both fighters hit each other on the same frame. Both take damage.
 ### Mix-up
 
 Making an attack that must be defended two different ways, so the defender has
-to guess. **Not in v1** — `DESIGN.md` §4.6 cuts the tools that create them.
+to guess. Whether this game has them is undecided — see `ROADMAP.md`.
 
 ---
 
@@ -307,29 +307,20 @@ coming up.
 
 ## What exists right now
 
-| Mechanic | State |
-|---|---|
-| Walk forward and back, at different speeds | built |
-| Crouch | built |
-| Block | built, **but as a button** — the design now says hold back (§4.1) |
-| Eight ground attacks (4 standing, 4 crouching) | built |
-| Jumping with fixed arcs, three directions | built |
-| Jump attack | built — only recently able to hit anything |
-| Hitstun, blockstun, damage, KO, rounds | built |
-| Pushboxes so fighters cannot overlap | built |
-| **Special move** (`B,F+HP`) | **not built** — needs the input parser |
-| **Knockdown and wakeup** | **not built** |
-| Throws, combos, cancels, chip damage, juggles | **cut from v1** (`DESIGN.md` §4.6) |
-| Frame data readout, input display | **not built** |
-
----
+This document explains what the words mean. **It deliberately does not track
+what is built or what is planned** — `ROADMAP.md` owns that, and a second copy
+would drift.
 
 ## Deliberately simple
 
-`DESIGN.md` §4.6 cuts combos, cancels, juggles, throws and chip damage from v1,
-and §10 says to choose the simpler option whenever a question is unclear.
+`DESIGN.md` §10 says to choose the simpler option whenever a question is
+unclear, and §3 asks for a slow, readable, commitment-based game.
 
 That is not a limitation to work around. A game where every attack is a single
 decision with a visible cost is *easier to read, easier to learn, and easier to
 tune* — and it is exactly what "two people can pick it up in ninety seconds"
 requires.
+
+Which mechanics the game ends up with is being decided in
+`drawing-board/RULESET.md`, under the rule in ADR 0019: one mechanic per role,
+adopted for what it does here rather than for where it came from.

@@ -127,10 +127,10 @@ inline constexpr Fixed JUMP_HORIZONTAL_SCALE = Fixed::from_ratio(9, 5);  // 1.8x
 // Capacity, not a target — a bound chosen so that GameState stays trivially
 // copyable and small enough that rollback's memcpy is free (ADR 0005).
 //
-// NEEDS CONFIRMATION: DESIGN.md 4.5 leaves the v1 special's "active" column
-// blank, which reads like a projectile, but 4.6 does not say either way. If the
-// special turns out not to spawn one, this array and the Projectile type come
-// out of GameState entirely.
+// NEEDS A DECISION: no move currently spawns a projectile, and whether any
+// will is open -- it depends on the specials, which are undecided. If none
+// do, this array and the Projectile type come out of GameState entirely,
+// which would shrink what rollback copies every frame.
 inline constexpr int32_t MAX_PROJECTILES = 8;
 
 }  // namespace mw::sim

@@ -31,7 +31,8 @@ runs into.
 
 ## v1 definition of done
 
-`DESIGN.md` §6 is the authority on what v1 means. This is its honest state.
+`DESIGN.md` §6 defines what v1 means and carries no status. **This file owns
+the status.** Numbering matches that list.
 
 | | Status |
 |---|---|
@@ -200,7 +201,10 @@ Recorded so they are not proposed as improvements.
   apology, and that the v1 definition of done comes first.
 - **More than two characters.** §6: if two play well, a third is content work.
   If they do not, twelve will not help.
-- **Anything in §4.6** — juggles, cancels, chip damage, throws, run, fatalities.
+- **Anything not yet decided.** §4.6's old cut list is void (ADR 0018) — it
+  excluded combos, cancels and throws under a design that has been dropped.
+  `drawing-board/RULESET.md` is the only place that says what is in or out now,
+  and most of it is still open.
 
 ---
 

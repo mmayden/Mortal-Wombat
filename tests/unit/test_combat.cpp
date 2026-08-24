@@ -178,8 +178,8 @@ TEST_CASE("A hit puts the defender in hitstun for the documented duration") {
 }
 
 TEST_CASE("Blocking prevents damage but still costs the defender their turn") {
-    // DESIGN.md 4.6 cuts chip damage, so a blocked hit deals none. Blockstun is
-    // what keeps attacking into a block a real decision rather than a free one.
+    // A blocked hit deals no damage. Chip damage is undecided rather than ruled
+    // out; blockstun is what keeps attacking into a block a real decision.
     GameState state = fighting_state();
     const int32_t before = state.fighters[1].health;
 
@@ -241,8 +241,8 @@ TEST_CASE("A move whiffs when the opponent is out of range") {
 }
 
 TEST_CASE("An attack runs to completion before another can start") {
-    // Committing to an action means committing (DESIGN.md 3). Attacks cannot be
-    // cancelled, which DESIGN.md 4.6 also cuts explicitly.
+    // Committing to an action means committing (DESIGN.md 3, still binding).
+    // Attacks cannot currently be cancelled; a combo system is undecided.
     GameState state = fighting_state(400);
 
     press(state, Button::HighKick, 0);

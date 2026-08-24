@@ -15,7 +15,17 @@ independently on the same root axes, which is why they are treated as root.
 
 ---
 
-## Decided
+## Where the settled decisions live
+
+**Decisions 1 to 5 have graduated. `DESIGN.md` §4.1 is now the specification and
+the only place the rules are stated.** What follows is the *reasoning* behind
+them, which a specification should not carry — kept because knowing why a
+decision was made is what stops it being re-argued.
+
+If this file and `DESIGN.md` ever disagree about what a rule *is*, `DESIGN.md`
+is right and this file is stale.
+
+## Decided — reasoning
 
 ### 1. Hold back to block
 

@@ -118,7 +118,7 @@ recovery    = 16                 # frames after active before actionable
 damage      = 8
 hitstun     = 18                 # frames the opponent is stunned on hit
 blockstun   = 12                 # frames the opponent is stunned on block
-cancel_into = []                 # v1: always empty — DESIGN.md §4.6 cuts cancels
+cancel_into = []                 # reserved: the combo system is undecided
 
 [[moves.high_punch.hitboxes]]
 frames = [8, 10]                 # inclusive frame range, 1-based within the move
@@ -139,7 +139,7 @@ h = 26
 | `damage` | int ≥ 0 | yes | |
 | `hitstun` | int ≥ 0 | yes | |
 | `blockstun` | int ≥ 0 | yes | |
-| `cancel_into` | string[] | no | Empty in v1. Values: `special`, `super` |
+| `cancel_into` | string[] | no | **Reserved — must be empty.** The combo system is undecided |
 | `hurtbox_override` | box | no | Replaces the default for this move's duration |
 | `hitboxes` | array of box+frames | yes | At least one |
 
@@ -185,7 +185,7 @@ time, outside the sim, where failure is recoverable.
 5. Every move has at least one hitbox
 6. Every hitbox `frames` range lies within the move's active window
 7. Every box has `w > 0` and `h > 0`
-8. `cancel_into` is empty (v1 constraint — `DESIGN.md` §4.6)
+8. `cancel_into` is empty — reserved until a combo system is designed
 
 `tests/unit/test_framedata.cpp` asserts that both shipped character files pass
 every rule, so a hand-edit that breaks the schema fails CI rather than the

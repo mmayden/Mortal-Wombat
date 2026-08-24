@@ -163,15 +163,16 @@ bool load_move(const toml::table& table, const char* key, MoveData& out, std::st
         return false;
     }
 
-    // Rule 8. DESIGN.md 4.6 cuts cancels from v1, so this must stay empty --
-    // and being explicit here means the field can exist in the format, ready
-    // for post-v1, without anyone quietly starting to use it.
+    // Rule 8. Cancels are UNDECIDED, not cut -- the old cut list that excluded
+    // them is void (ADR 0018). The field exists in the format so it is ready
+    // when a combo system is designed, and is rejected until then so nobody
+    // starts depending on behaviour that has not been agreed.
     const toml::node* cancel_node = table.get("cancel_into");
     if (const toml::array* cancels = (cancel_node == nullptr) ? nullptr : cancel_node->as_array()) {
         if (!cancels->empty()) {
             error = prefix +
-                    ": cancel_into must be empty in v1 -- DESIGN.md 4.6 cuts combo strings "
-                    "and cancels (rule 8)";
+                    ": cancel_into must be empty -- the combo system is undecided, and this "
+                    "field is reserved until it is (rule 8)";
             return false;
         }
     }

@@ -313,17 +313,19 @@ will not help.
 
 ### Definition of done for v1
 
-- [ ] Two characters with the full §4.5 moveset — *9 of 10; the special is unimplemented*
-- [ ] Block, hitstun, blockstun, knockdown, wakeup all correct — *knockdown and wakeup unbuilt*
-- [x] Best-of-three rounds with timer and win conditions
-- [x] Local versus on two gamepads — *one pad validated; never tested with two*
-- [ ] Training mode: hitbox display, frame data readout, input display — *1 of 3*
-- [ ] 50+ replay tests passing — *9 of 50*
-- [x] Desync CI green across three platforms
-- [ ] **It is fun** — *nobody has played it*
+1. Two characters with the full §4.5 moveset
+2. Block, hitstun, blockstun, knockdown, wakeup all correct
+3. Best-of-three rounds with timer and win conditions
+4. Local versus on two gamepads
+5. Training mode: hitbox display, frame data readout, input display
+6. 50+ replay tests passing
+7. Desync CI green across three platforms
+8. **It is fun**
 
-Status is mirrored in `ROADMAP.md`, which also carries what to work on next.
-This list is the authority on what v1 *means*; that file tracks where it stands.
+**This list defines what v1 means. It deliberately carries no status.**
+`ROADMAP.md` tracks how far along each line is — keeping the definition and the
+progress in two places was already drifting, and a requirement that quietly
+marks itself complete is worse than no checklist.
 
 Rollback netplay is explicitly *not* in the v1 definition of done. The
 architecture supports it from day one; the integration waits.

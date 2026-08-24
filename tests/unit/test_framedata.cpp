@@ -180,10 +180,10 @@ TEST_CASE("Shipped physics match DESIGN.md 4.4") {
 }
 
 TEST_CASE("Frenchy and Wisdom are mechanically identical in v1") {
-    // DESIGN.md 4.5 gives one frame-data table "per character" and 4.6 cuts
-    // per-character variation, so any difference here is drift rather than
-    // design -- most likely someone editing one file and not the other before
-    // the frame-data editor exists.
+    // The two characters are mechanically identical for now, so any difference
+    // here is drift rather than design -- most likely someone editing one file
+    // and not the other. This expectation is expected to be REMOVED once the
+    // cast is differentiated; it guards the interim, not the destination.
     const CharacterData a = load_or_fail("frenchy");
     const CharacterData b = load_or_fail("wisdom");
 
@@ -393,8 +393,8 @@ h = 20
 }
 
 TEST_CASE("Validation rejects a non-empty cancel_into") {
-    // DESIGN.md 4.6 cuts cancels from v1. The field exists in the format ready
-    // for post-v1; this stops anyone quietly starting to use it early.
+    // Cancels are undecided, so the field is reserved. This stops anyone
+    // depending on behaviour that has not been agreed.
     std::string error;
     const LoadResult result = load_text(valid_probe(R"(
 [moves.low_punch]
