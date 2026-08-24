@@ -128,6 +128,11 @@ Below the boundary, these are build-breaking errors, not style preferences:
    `docs/framedata_schema.md` and bumping its version in the same commit.
    The schema is a contract between the sim and `tools/framedata_editor/`.
 6. Every behavior change requires a test. No test, no merge.
+   **This includes the render layer**, which was quietly exempt until a camera
+   defect was reported twice with nothing to run either time. `camera.cpp` is
+   its own library (`mw_render_camera`) precisely so it can be tested;
+   `renderer.cpp` and `sprite.cpp` still cannot be, because they draw through
+   SDL. If you can factor the arithmetic out of them, do.
 7. If a task requires editing a file outside your stated scope, **STOP and
    report.** Do not refactor your way there.
 8. When a balance change legitimately breaks a replay test, re-record it **in
