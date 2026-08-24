@@ -39,7 +39,7 @@ question cannot be answered by playing, the game is not showing enough.
 | Question | Answer | Result |
 |---|---|---|
 | Can you tell when a hit lands? | **Yes — the character lights up** | Hit feedback works. Lowers the priority of extra hit effects. |
-| Does a gamepad work? | **Partly answered** | A real pad connects, drives the left fighter only, and moves. Whether each button does what its label says is still unchecked — see below. |
+| Does a gamepad work? | **Yes — one pad and two** | Two real pads, one per player, each driving its own fighter. Whether each button does what its label says is still unchecked — §0 below is the two-minute check. |
 | Does the camera shove you around? | **It did, and it is fixed** | Backing away walked the LEFT fighter off the edge of the screen; the camera always sacrificed that side. Confirmed fixed on keyboard. Never tested on a pad. |
 
 ---

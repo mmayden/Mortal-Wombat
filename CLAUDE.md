@@ -173,21 +173,21 @@ and what is unvalidated. One of those is worth repeating because it is a trap
 rather than a status: **the gamepad path is now partly validated, and the parts
 still unproven are the ones that fail quietly.**
 
-A real pad has been connected and played on 2026-08-24. It is detected, it
-drives player one and only player one -- the earlier bug where a single pad
-claimed both slots does not recur -- and movement works.
+Real pads were connected and played on 2026-08-24 -- one first, then two at
+once. Both are detected, each drives its own fighter, and the earlier bug where
+a single pad claimed both slots does not recur at either count. Two-player local
+versus on pads works.
 
-What that run did *not* establish, because playing does not reveal it:
+One thing that run did *not* establish, because playing structurally cannot:
 
-- **Which physical button produces which attack.** A pad that moves and swings
-  feels like it works even if kick and punch are transposed. `--input-test` is
-  the only thing that answers this; it prints the decoded input per player next
-  to each fighter's position and state.
-- **Two pads at once.** Still never tried. This is where the both-slots class of
-  bug lives.
+**Which physical button produces which attack.** A pad that moves and swings
+feels like it works even if kick and punch are transposed -- the player simply
+learns the wrong buttons and never reports it. `--input-test` is the only thing
+that answers it, printing the decoded input per player next to each fighter's
+position and state. `docs/PLAYTEST.md` §0 has the procedure.
 
-So: "one pad, drives P1, moves" is what may be claimed. Not "the gamepad
-works".
+Until someone runs that, the honest claim is "two pads, two players, movement
+and attacks come out" -- not "the mapping is right".
 
 **Open questions → [`drawing-board/RULESET.md`](drawing-board/RULESET.md)** for
 mechanics still being decided, and `ROADMAP.md` for what they block. The rule
@@ -200,7 +200,16 @@ that governed the old list still stands and is the reason to point at all:
 The one open question that is genuinely this file's business, because it is
 about how work gets verified here rather than about the game:
 
-**Nobody has played it.** Feel is the one thing the test suite structurally
-cannot check, and `BLUEPRINT.md` makes the sixty-second manual play the primary
-regression gate for it. Every number in the `PROVISIONAL` block is a guess until
-someone does.
+**It has been played; its feel has not been judged.** Those are different, and
+conflating them is how a guessed number becomes a settled one.
+
+Sessions on 2026-08-24 covered keyboard, one pad and two. They found a real
+camera defect that no test had caught -- which is the argument for playing, made
+concretely. What they did not produce is an answer to any question in
+`docs/PLAYTEST.md`: whether attacking is risky enough, whether jumping is worth
+it, whether blocking is worth doing.
+
+Feel is the one thing the test suite structurally cannot check, and
+`BLUEPRINT.md` makes the sixty-second manual play the primary regression gate
+for it. Every number in the `PROVISIONAL` block stays a guess until those
+questions are answered.

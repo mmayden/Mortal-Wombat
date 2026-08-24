@@ -24,8 +24,12 @@ The verification layer is complete and is ahead of the game: determinism is
 proven byte-identical across Linux, Windows and macOS, and proven unchanged
 between debug and release.
 
-**Nobody has played it for feel.** That is the gate everything below eventually
-runs into.
+**It has been played, but not yet judged.** Sessions on 2026-08-24 covered
+keyboard, one pad and two, and found a real camera defect that no test had
+caught. What none of them produced is a verdict on *feel* -- whether attacking
+is risky enough, whether jumping is worth it, whether blocking is worth doing.
+`docs/PLAYTEST.md` asks those, and question 1 is the thesis in a form a person
+can feel. That is still the gate everything below eventually runs into.
 
 ---
 
@@ -39,11 +43,11 @@ the status.** Numbering matches that list.
 | Two characters with the full v1 moveset | **9 of ≈14** — the special is unimplemented, and medium punch and medium kick do not exist yet (ADR 0021) |
 | Block, hitstun, blockstun, knockdown, wakeup all correct | **partial** — knockdown and wakeup are unbuilt |
 | Best-of-three rounds with timer and win conditions | **done** |
-| Local versus on two gamepads | **half-validated** — one real pad connects, drives P1 only, and moves (2026-08-24). Button-to-action mapping unverified; two pads never tried |
+| Local versus on two gamepads | **done** — two real pads, one per player, played 2026-08-24. Button-to-action mapping still unverified (`--input-test`, PLAYTEST §0) |
 | Training mode: hitbox display, frame data readout, input display | **1 of 3** — `F1` hitboxes; no readout, no on-screen input display |
 | 50+ replay tests passing | **9 of 50** |
 | Desync CI green across three platforms | **done** |
-| **It is fun** | **unknown — nobody has played it** |
+| **It is fun** | **unknown** — played, but the feel questions in `PLAYTEST.md` are unanswered |
 
 ---
 
@@ -260,7 +264,7 @@ Newest first. Enough to orient; `git log` has the detail.
 | Playtest guide | `docs/PLAYTEST.md` — what to look for and what each answer unblocks |
 | Process automation | `tools/verify.ps1`, pre-push hook, PR template, Dependabot, weekly CI |
 | Camera deadzone | Fixed the view dragging a stationary opponent across the screen |
-| Gamepad | Hot-plug, dedupe, `--input-test`; one pad no longer claims both slots |
+| Gamepad | Hot-plug, dedupe, `--input-test`; one pad no longer claims both slots. Validated on real hardware at one pad and two |
 | Jumping | Fixed arcs, jump attacks, landing recovery |
 | Combat | Hitboxes, damage, hitstun, blockstun, pushboxes |
 | Frame data | TOML loader, validation, Frenchy and Wisdom as data |
