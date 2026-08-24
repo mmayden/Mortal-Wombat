@@ -114,6 +114,26 @@ jobs:
           SDL_VIDEODRIVER: dummy
           SDL_AUDIODRIVER: dummy
 
+      # Proves the session recorder produces files the replay tooling can
+      # actually read and reproduce -- not merely that it writes something.
+      #
+      # tests/replays/idle.replay is 300 frames of no input from the same seed
+      # the game boots with, recorded by mw_replay_record. A --record run of the
+      # same length must therefore agree on every hash. If the game and the test
+      # tooling ever disagree about frame numbering or when a checkpoint is
+      # taken, the recordings a player sends in stop reproducing, and this is
+      # the only thing that would notice.
+      - name: Session recorder round-trips through the replay format
+        run: |
+          ./build/debug/bin/mortal_wombat --frames 300 --record recorded.replay
+          grep -E '^(checkpoint|final) ' recorded.replay > recorded-hashes.txt
+          grep -E '^(checkpoint|final) ' tests/replays/idle.replay > expected-hashes.txt
+          diff -u expected-hashes.txt recorded-hashes.txt
+        shell: bash
+        env:
+          SDL_VIDEODRIVER: dummy
+          SDL_AUDIODRIVER: dummy
+
       # Uploaded so a desync failure below can be inspected without a rerun.
       - name: Record state hash trace
         run: ./build/debug/bin/mw_desync_probe > desync-${{ runner.os }}.txt

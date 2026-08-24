@@ -10,6 +10,20 @@ build\debug\bin\mortal_wombat.exe
 
 `F1` shows the collision boxes. `ESC` quits. Controls are in `AGENTS.md`.
 
+**If something looks wrong, record it.**
+
+```
+build\debugin\mortal_wombat.exe --record session.replay
+```
+
+Play until you see the problem, then quit. Send me `session.replay` and I can
+replay your exact session frame by frame instead of asking you which key you
+were pressing. The camera bug took two rounds of guessing before this existed —
+one of them wrong twice over.
+
+You do not need to describe it well if you record it. "Around the ten second
+mark" is plenty.
+
 **A rough answer is a complete answer.** "That felt bad" is genuinely useful.
 The last three real bugs all came from a loose description of something looking
 wrong, not from a precise report — that hit rate is better than my reasoning has
@@ -25,6 +39,7 @@ question cannot be answered by playing, the game is not showing enough.
 | Question | Answer | Result |
 |---|---|---|
 | Can you tell when a hit lands? | **Yes — the character lights up** | Hit feedback works. Lowers the priority of extra hit effects. |
+| Does the camera shove you around? | **It did, and it is fixed** | Backing away walked the LEFT fighter off the edge of the screen; the camera always sacrificed that side. Confirmed fixed on keyboard. Never tested on a pad. |
 
 ---
 

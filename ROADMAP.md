@@ -136,7 +136,11 @@ Specifically unvalidated, all in the `PROVISIONAL` block of
 
 **Answered so far:** hit feedback is readable — the character lights up on a
 hit, confirmed in play. That lowers the priority of extra hit effects in the
-readability pass.
+readability pass. The camera no longer shoves the view around, confirmed on
+keyboard after the second fix; it has still never been tested on a pad.
+
+**Recording a session is now the preferred way to report one of these.**
+`--record session.replay` captures what you did, and the file replays exactly.
 - every hitbox coordinate in `data/characters/*.toml`
 
 ### 2. `tools/framedata_editor/`
@@ -249,6 +253,7 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Session recorder | `--record` captures a played session as a replay file, so a feel report stops being guesswork |
 | Camera, second fix | Backing away walked you off the left edge; the render layer had no tests at all |
 | Jump attack fix | It could not hit anyone; three files shared one wrong assumption |
 | Playtest guide | `docs/PLAYTEST.md` — what to look for and what each answer unblocks |
