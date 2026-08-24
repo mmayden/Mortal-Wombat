@@ -36,6 +36,7 @@ does that for you; every command below is run through it.
 | **Run the game** | `build/debug/bin/mortal_wombat.exe` |
 | Headless boot (N sim frames) | `mortal_wombat.exe --frames 600` |
 | Capture a frame | `mortal_wombat.exe --frames 200 --screenshot out.bmp` |
+| **Record a played session** | `mortal_wombat.exe --record session.replay` |
 
 Controls, keyboard: P1 `WASD` + `F G C V` + `B`. P2 arrows + numpad
 `4 5 1 2` + `0`. `ESC` quits, `F1` toggles the debug overlay.
@@ -61,6 +62,13 @@ machine with no display.
 
 **`ROADMAP.md` owns what is built and what is not.** It is not repeated here —
 this file tells you how to work, that one tells you what to work on.
+
+`--record` writes the whole session to a replay file when you quit, in the
+format `tests/replay/replay_file.h` reads. It is how a report like *"the other
+character slid toward me"* becomes something reproducible instead of something
+to guess at — two camera defects were chased by guessing before this existed.
+Drop the file into `tests/replays/`, add its name to the scenario list, and a
+bug someone found by playing becomes a regression test.
 
 `F1` toggles the hitbox overlay — blue hurtboxes, red hitboxes (filled while
 active), yellow pushboxes. It is the fastest way to answer "why did that

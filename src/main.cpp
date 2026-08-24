@@ -14,6 +14,7 @@
 #include <string>
 
 #include "platform/platform.h"
+#include "platform/session_recorder.h"
 #include "render/camera.h"
 #include "render/renderer.h"
 #include "render/sprite.h"
@@ -137,6 +138,11 @@ struct Options {
     // Print each player's decoded input whenever it changes. The only way to
     // verify a controller is wired to the actions its label claims.
     bool input_test = false;
+
+    // Write this session to a replay file on quit. The point is to make a
+    // report like "the other character slid toward me" reproducible instead of
+    // a thing that has to be guessed at from a description.
+    const char* record = nullptr;
 };
 
 Options parse_options(int argc, char** argv) {
@@ -148,6 +154,8 @@ Options parse_options(int argc, char** argv) {
             options.screenshot = argv[++i];
         } else if (std::strcmp(argv[i], "--input-test") == 0) {
             options.input_test = true;
+        } else if (std::strcmp(argv[i], "--record") == 0 && i + 1 < argc) {
+            options.record = argv[++i];
         } else {
             MW_LOG_WARN("ignoring unrecognized argument: %s", argv[i]);
         }
@@ -202,6 +210,17 @@ int main(int argc, char** argv) {
     mw::sim::InputPair current_input{};
     mw::sim::InputPair previous_input{};
 
+    // Heap rather than a local: the recorder holds fixed-size arrays for ten
+    // minutes of play, which is far too large for the stack. This is the render
+    // side of the boundary, so an allocation here is fine -- it would not be
+    // twenty lines further down.
+    mw::platform::SessionRecorder* recorder = nullptr;
+    if (options.record != nullptr) {
+        recorder = new mw::platform::SessionRecorder();
+        mw::platform::recorder_begin(*recorder, DEFAULT_SEED);
+        MW_LOG_INFO("recording this session to %s", options.record);
+    }
+
     MW_LOG_INFO("running at a fixed %d Hz; ESC quits, F1 toggles debug", mw::sim::FRAME_RATE);
 
     uint64_t last_time = mw::platform::now_ns();
@@ -236,6 +255,10 @@ int main(int argc, char** argv) {
             }
 
             mw::sim::advance_frame(state, match_data, current_input, previous_input);
+
+            if (recorder != nullptr) {
+                mw::platform::recorder_frame(*recorder, current_input, state);
+            }
 
             accumulator -= FRAME_NS;
         }
@@ -275,6 +298,13 @@ int main(int argc, char** argv) {
     }
 
     MW_LOG_INFO("ran %d render frames, %d simulation frames", frames_rendered, state.frame);
+
+    // Written after the screenshot path, so --record and --screenshot compose.
+    if (recorder != nullptr) {
+        mw::platform::recorder_write(*recorder, options.record, state);
+        delete recorder;
+        recorder = nullptr;
+    }
 
     mw::platform::shutdown(platform);
     return 0;

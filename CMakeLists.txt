@@ -261,6 +261,7 @@ target_include_directories(mw_render_camera PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/
 add_executable(mortal_wombat
     src/main.cpp
     src/platform/platform.cpp
+    src/platform/session_recorder.cpp
     src/render/renderer.cpp
     src/render/sprite.cpp)
 
