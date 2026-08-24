@@ -30,6 +30,12 @@ question cannot be answered by playing, the game is not showing enough.
 
 ## 1. Is attacking risky enough?
 
+> **This is the thesis question, asked in a way you can feel.** The whole design
+> answers *"was that worth committing to?"* — and unlike everything else that
+> matters in this project, that has no test that can check it. The sim boundary
+> has a script, determinism has a CI job, `GameState` has assertions. This
+> question has you playing for a minute. `DESIGN.md` §3 is what it is testing.
+
 **Try this:** stand well away from the other fighter, out of reach. Press `V`
 (high kick) so it swings at nothing.
 
@@ -40,8 +46,13 @@ question cannot be answered by playing, the game is not showing enough.
   over and hit them before they recover?
 
 **Why it matters:** the design says a big attack that misses should genuinely
-hurt you. If it does not, every attack is free and there is no reason to be
-careful. This is the single most important thing in the design document.
+hurt you. If it does not, every attack is free, there is no reason to be
+careful, and the question the game is built to ask has no teeth.
+
+**Both answers are useful.** If attacking feels free, the design is not landing.
+If it feels so punishing that you never want to press anything, that is the
+*other* failure of this branch — a game about commitment where nobody commits.
+Say which way it errs, even roughly.
 
 ---
 

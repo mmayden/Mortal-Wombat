@@ -160,6 +160,7 @@ re-recorded replays in the same commit:
 2. Resolve facing        fighters always face each other
 3. State machine tick    Idle/Walk/Jump/Attack/Hitstun/... transitions
 4. Apply movement        integer velocity, gravity, committed jump arcs
+4b. Resolve landing      ground contact, tested at the position just reached
 5. Resolve pushboxes     separate overlapping bodies
 6. Resolve hitboxes      active hitbox vs hurtbox -> damage, hitstun/blockstun
 7. Clamp to stage        wall bounds
@@ -174,6 +175,13 @@ the frame-data table says it means.
 
 Step 1 has no code of its own: input decoding happens inside step 3, at the
 point the decision it feeds is made.
+
+Step 4b is numbered rather than folded into 4 because it is a separate pass over
+both fighters: ground contact is checked *after* movement has been applied, so a
+fighter is tested at the position it actually reached this frame rather than the
+one it started at. Folding it into step 4 would let one fighter land before the
+other has moved, which is an ordering dependency between players and therefore a
+desync waiting to happen.
 
 **Timers tick after hits (step 8 after step 6), and that is load-bearing.** Stun
 applied on a frame is decremented once in that same frame, so the frame a hit

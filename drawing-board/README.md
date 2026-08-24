@@ -3,8 +3,16 @@
 **Research and design work in progress. Nothing here is binding.**
 
 Kept separate from `docs/` on purpose: `docs/` is what the project has decided,
-this is what it is still deciding. Material graduates out of here when it
-settles, and this folder keeps the reasoning that produced it.
+this is what it is still deciding.
+
+**When something settles it leaves entirely** (ADR 0023): the rule goes to
+`DESIGN.md`, the reasoning goes to an ADR, and `RULESET.md` keeps a pointer to
+both. Reasoning does not stay here — an ADR is the durable record and is never
+edited, so it has to be self-contained.
+
+What this folder keeps permanently is the **research** the decisions were made
+from. Merged ADRs cite these paths and merged ADRs cannot be corrected, so
+nothing here moves or is deleted.
 
 | File | What it is |
 |---|---|
