@@ -208,10 +208,82 @@ Down together. The fix is strictly additive.
 - An input display to verify a mapping. `--input-test` is the console ancestor
   of this.
 
-**Still to decide:** whether to offer a simplified control scheme alongside the
-six-button one, in the manner of SF6's Modern controls. That is an accessibility
-*mechanic*, not hardware support, and the research is pointed about it — see the
-deep dive's §5 on execution accessibility versus system accessibility.
+### 5. Two control schemes: Classic and Modern
+
+Both offered, chosen per player.
+
+**Classic.** Six attack buttons, motion inputs for specials. The full move list
+and the full damage.
+
+**Modern.** Fewer attack buttons — light, medium, heavy, plus a dedicated
+Special button — with specials performed as a direction plus Special rather than
+a motion, and repeated presses producing an authored combo sequence.
+
+**Where the scheme lives.** Per player, fixed for the match, chosen before it
+starts. That makes it *config*, so it belongs in `MatchData` alongside frame
+data rather than in `GameState` — nothing about it changes during a round.
+
+---
+
+#### The consequence worth knowing before building it
+
+**Both schemes need input history, and the simulation currently keeps none.**
+
+`advance_frame` receives exactly two frames: the current input and the previous
+one. That is enough for button edges and nothing else. But:
+
+- **Classic motion inputs** are a pattern across recent frames. Recognising a
+  quarter-circle means remembering the last several directions.
+- **Modern auto-combos** need to know *where in a sequence* the player is, which
+  is history by another name.
+
+So both require a rolling buffer of recent inputs per player — and **it has to
+live in `GameState`.** Rollback re-simulates recent frames from a restored
+snapshot; anything the input translator remembers must be restored with it, or a
+rolled-back frame recognises a different move than the original did. That is a
+desync, and one that would only appear in real matches.
+
+**The cost is small and worth stating so it is not feared.** Sixteen frames of
+two-byte inputs for two players is sixty-four bytes, against a four-kilobyte
+budget that currently sits at just over four hundred. It is the *placement* that
+matters, not the size.
+
+**It pays for itself twice.** An input buffer is also what makes a slightly
+early press still come out, which is standard modern practice and currently
+absent — listed separately under controller support. One structure serves both.
+
+**This will need an ADR when implemented**, because it changes the shape of
+`GameState`, which ADR 0005 governs.
+
+---
+
+#### Two questions Modern leaves open
+
+**Is Modern a pure remap, or its own balance?** If it only translates inputs,
+the simulation never learns which scheme a player used and the two are exactly
+equivalent in power. SF6 does not do this — its assisted specials deal less
+damage, which is a deliberate trade for easier execution. That choice makes the
+scheme a *simulation* input rather than a presentation detail, and it means
+per-scheme move properties.
+
+**How much content do auto-combos add?** They are authored sequences, so they
+are frame data, on top of the eighteen normals per character that six buttons
+already implies.
+
+---
+
+#### An honest note on what this buys
+
+The research is pointed here, and it is worth recording rather than discovering:
+**execution accessibility and system accessibility are different problems.** Two
+control schemes lower the barrier to *performing* a move. They do nothing for a
+player who cannot answer "what should I be doing right now".
+
+That is not an argument against this decision — being unable to execute is a
+real wall, and removing it is a real kindness. It is an argument against
+expecting it to carry retention on its own. The thing that does carry retention,
+per the same research, is keeping the *system count* low, which the 1v1 and
+single-meter decisions are already aimed at.
 
 ---
 
@@ -221,8 +293,7 @@ Next up, from the deep dive's §6:
 
 | # | Decision | Why it is there |
 |---|---|---|
-| 5 | **SOCD scheme for horizontal (neutral vs last-input-wins)** | Vertical is settled and fixed. Horizontal is genuinely contested among leverless players, and last-input-wins would need input history the sim does not currently keep. |
-| 6 | **Simplified control scheme? (SF6 Modern style)** | An accessibility mechanic, not hardware support. The deep dive's §5 argues execution accessibility and system accessibility are different problems. |
+| 6 | **SOCD scheme for horizontal (neutral vs last-input-wins)** | Vertical is settled and fixed. Horizontal is genuinely contested among leverless players, and last-input-wins would need input history the sim does not currently keep. |
 | 7 | **Attack heights (high / mid / low / overhead) and stance blocking** | Hold-back only pays off with a high/low axis alongside left/right. Follows directly from decision 1. |
 | 8 | **Knockdown → okizeme loop** | The deep dive calls it "the engine; everything else decorates it". Already a v1 definition-of-done line. |
 | 9 | **One active-defence mechanic — parry, Just Defend, or instant block** | Rated the highest-return decision available. Exactly one. Window size is a netcode decision too — see decision 0. |
