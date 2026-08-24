@@ -142,7 +142,8 @@ Below the boundary, these are build-breaking errors, not style preferences:
   before using fighting-game vocabulary with anyone.
 - `docs/DESIGN.md` — what the game is, how it must feel, what v1 means.
   **The notice at the top of that file gives the binding status of every
-  section** — most of §4 is binding; §4.5 is superseded and §4.7 is void. Read
+  section** — most of §4 is binding; §4.5's move list is superseded while its
+  frame values are live, and §4.7 is void. Read
   it rather than assuming either way. §3 is the anti-drift anchor for any
   judgment call about feel, and §10 breaks ties among options that survive it.
 - `docs/decisions/README.md` — the ADR index. Settled questions;
