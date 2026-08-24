@@ -132,14 +132,16 @@ Next up, from the deep dive's §6:
 
 | # | Decision | Why it is next |
 |---|---|---|
-| 4 | **Attack heights** (high / mid / low / overhead) and stance blocking | Hold-back only pays off with a high/low axis alongside left/right. Directly follows decision 1. |
-| 5 | **Knockdown → okizeme loop** | The deep dive calls it "the engine; everything else decorates it". Already roadmap item 2 and a v1 definition-of-done line. |
-| 6 | **One active-defence mechanic** — parry, Just Defend, or instant block | Rated the highest-return decision available. Exactly one. |
-| 7 | **One general-purpose commitment release**, priced in a contested resource | Not five specific ones. Meaningless unless the resource has other uses. |
-| 8 | **Meter: how many jobs does it do?** | Opportunity cost is depth per byte. One meter doing three to five jobs beats three meters. |
-| 9 | **Movement tiers** | Loved in proportion to how *differentiated* they are, not how many there are. |
-| 10 | **Combo determinism cap** | Decide before shipping, not in a patch. |
-| 11 | **System count audit** | Count the pairwise interactions a new player must hold. |
+| 4 | **Button count and layout** | Dropping the block button freed an input. Four attack buttons plus hold-back blocking is the King of Fighters layout, which is the family now chosen. |
+| 5 | **Attack heights** (high / mid / low / overhead) and stance blocking | Hold-back only pays off with a high/low axis alongside left/right. Directly follows decision 1. |
+| 6 | **Knockdown → okizeme loop** | The deep dive calls it "the engine; everything else decorates it". Already a v1 definition-of-done line. |
+| 7 | **One active-defence mechanic** — parry, Just Defend, or instant block | Rated the highest-return decision available. Exactly one. Window size is a netcode decision too — see decision 0. |
+| 8 | **One general-purpose commitment release**, priced in a contested resource | Not five specific ones. Meaningless unless the resource has other uses. |
+| 9 | **Meter: how many jobs does it do?** | Opportunity cost is depth per byte. One meter doing three to five jobs beats three meters. |
+| 10 | **Movement tiers** | Loved in proportion to how *differentiated* they are, not how many there are. |
+| 11 | **Throws** | Without them, blocking has no downside. Currently cut by the old §4.6, which is no longer binding. |
+| 12 | **Combo determinism cap** | Decide before shipping, not in a patch. |
+| 13 | **System count audit** | Count the pairwise interactions a new player must hold. |
 
 ## Dissolved by the redesign
 

@@ -75,6 +75,100 @@ no other rule.
 
 ---
 
+## Kinds of move
+
+"How many moves does a character have?" is ambiguous until you say which of
+these you are counting. This is the vocabulary the genre uses.
+
+### Normals
+
+**Attacks done with a plain button press.** No motion, no meter. The bread and
+butter of the game — most of what you throw in a match is a normal.
+
+Every normal usually has three variants depending on what the fighter is doing,
+and each behaves differently:
+
+| Variant | Input | Typical role |
+|---|---|---|
+| Standing | button | general purpose |
+| Crouching | down + button | low attacks, ducking under things |
+| Jumping | button while airborne | approach, hitting from above |
+
+**This is where counting gets confusing.** With four buttons, "four normals"
+and "twelve normals" describe the same character — four buttons × three stances.
+Both are correct; they are counting different things.
+
+### Command normals
+
+**A direction plus a button that produces a genuinely different move**, not just
+the crouching or jumping version of a normal.
+
+Say forward + heavy punch is a distinct overhead attack that must be blocked
+standing. That is a command normal. It costs no meter and needs no motion, but
+it is its own move with its own frame data.
+
+Characters usually have none to a handful.
+
+### Specials
+
+**Motion input plus a button.** A fireball, an uppercut, a charge attack. These
+are what make a character *that character* — most of a fighter's identity lives
+in two to four specials.
+
+They cost nothing but are harder to execute, and they are usually stronger or
+stranger than any normal.
+
+### Supers
+
+**Bigger specials that cost meter.** Depending on the game they are called
+supers, ultras, criticals, or Fatal Blows. Same idea: spend a resource, get an
+outsized attack.
+
+A game with no meter has no supers. That is a legitimate choice, not an omission.
+
+### Throws
+
+**A close-range grab that beats blocking entirely.** Their whole job is to
+answer a defender who is simply holding block — without them, blocking has no
+downside.
+
+Most games make them escapable with a matching input, so they are a guess rather
+than a guarantee.
+
+### Universal mechanics
+
+Not moves, but things every character can do: dashing, parrying, rolling.
+Everyone has them; how much they are worth varies by character.
+
+---
+
+## What the "twelve or ten moves" question was
+
+`DESIGN.md` §4.5 said *"Twelve moves total"* above a table that listed:
+
+- four standing normals (light and heavy punch, light and heavy kick)
+- crouching versions of those four
+- one jump attack
+- one special
+
+That is **ten**, counting each stance variant separately. Two are missing, and
+nothing in the document says which.
+
+The likeliest explanation is that the table intended four *jumping* normals —
+one per button — which gives four standing plus four crouching plus four
+jumping, exactly twelve, with the special counted separately as a thirteenth.
+But that is a guess, and this project does not guess at design.
+
+**The question is now moot.** The moveset is being redesigned from a chosen
+ruleset rather than inherited, so the count will come out of that.
+
+It leaves behind a real question though, and a new one. Dropping the block
+button freed an input: the old design spent five buttons on four attacks plus
+block, and blocking is now a direction. **How many attack buttons, and what is
+on them, is an open decision** — and four attack buttons with hold-back
+blocking is exactly the King of Fighters layout, which is the family this
+project has now chosen.
+
 ## What happens when you get hit
 
 **Hitstun.** For a set number of frames after being hit, the defender cannot do
