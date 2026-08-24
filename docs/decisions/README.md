@@ -33,6 +33,7 @@ record of what was believed, and why, is most of the value.
 | 0018 | **The Mortal Kombat II basis is dropped** (supersedes the MK2 framing) | [0018](0018-mk2-basis-dropped.md) |
 | 0019 | **Adopt properties, not mechanics** — how to learn from other games | [0019](0019-adopt-properties-not-mechanics.md) |
 | 0020 | **The thesis: "Was that worth committing to?"** — neutral is a distinct phase | [0020](0020-thesis-commitment.md) |
+| 0021 | **Six buttons, hold-back blocking, two schemes, input history** (supersedes the five-button scheme) | [0021](0021-controls-six-buttons-hold-back.md) |
 
 ADRs 0001–0013 live in one file because they were decided together, as the
 project's founding stack decision. That file also carries the scope tier, the

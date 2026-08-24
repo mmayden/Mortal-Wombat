@@ -53,7 +53,7 @@ can forget:
 git config core.hooksPath tools/hooks
 ```
 
-`main` requires a pull request and six passing checks, **including for the repo
+`main` requires a pull request and seven passing checks, **including for the repo
 owner**. That is intentional: the moment an exception is carved out, the gate
 stops meaning anything.
 

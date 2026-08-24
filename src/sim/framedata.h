@@ -20,15 +20,23 @@
 
 namespace mw::sim {
 
-// DESIGN.md 4.5 enumerates ten moves: four standing, four crouching variants,
-// a jump attack, and one special.
+// OUT OF DATE WITH THE DESIGN, deliberately. This enumerates the four-attack
+// scheme: four standing normals, four crouching variants, a jump attack, and
+// one special.
 //
-// DISCREPANCY: that section's prose says "Twelve moves total" while its table
-// lists ten. The table is treated as the specification because it is the part
-// that carries actual numbers. Resolving this is a design decision, not an
-// implementation one -- the two candidate readings are per-button jump attacks
-// (giving thirteen) or separate jump punch and kick (eleven), and neither is
-// what the prose says either. Left as-is rather than guessed at.
+// DESIGN.md 4.1 and ADR 0021 specify SIX attack buttons -- light, medium and
+// heavy in punch and kick -- so medium punch and medium kick are missing here,
+// in docs/framedata_schema.md, and in both character TOMLs. Roughly eight new
+// move definitions, each needing hitbox geometry.
+//
+// It is not fixed here because it is not an implementation detail: the geometry
+// has to be seen to be reviewed. The jump attack shipped with its hitbox at
+// standing-punch height and could not touch anyone from any range at any
+// timing, because the numbers are plausible in a text file. ROADMAP.md
+// therefore sequences tools/framedata_editor/ ahead of authoring these.
+//
+// The old "twelve or ten moves?" discrepancy in DESIGN.md 4.5 is moot -- that
+// section is superseded, and the count now follows from the button set.
 enum class MoveId : int32_t {
     StandLowPunch = 0,
     StandHighPunch,

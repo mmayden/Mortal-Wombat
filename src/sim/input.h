@@ -13,8 +13,17 @@
 
 namespace mw::sim {
 
-// DESIGN.md 4.1: five buttons and four directions. Block is a button, not
-// hold-back, which removes the walk-backward/block ambiguity entirely.
+// OUT OF DATE WITH THE DESIGN, deliberately. This is the old scheme: four
+// attacks plus a dedicated Block button, and four directions.
+//
+// DESIGN.md 4.1 and ADR 0021 specify six attack buttons with HOLD BACK to
+// block, which is the opposite trade -- it reintroduces the walk-backward/block
+// ambiguity on purpose, because that ambiguity is what makes crossups an axis
+// of offence rather than a cosmetic side switch.
+//
+// Changing it invalidates every replay recording (they encode these input
+// semantics) and needs an input history in GameState, which does not exist yet.
+// ROADMAP.md sequences it. src/sim is a human-led zone -- AGENTS.md rule 1.
 enum class Button : uint16_t {
     Up = 1u << 0,
     Down = 1u << 1,

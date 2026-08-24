@@ -36,7 +36,7 @@ the status.** Numbering matches that list.
 
 | | Status |
 |---|---|
-| Two characters with the full §4.5 moveset | **9 of 10** — the special is unimplemented |
+| Two characters with the full v1 moveset | **9 of ≈14** — the special is unimplemented, and medium punch and medium kick do not exist yet (ADR 0021) |
 | Block, hitstun, blockstun, knockdown, wakeup all correct | **partial** — knockdown and wakeup are unbuilt |
 | Best-of-three rounds with timer and win conditions | **done** |
 | Local versus on two gamepads | **done, half-validated** — one pad tested, never two |
@@ -47,26 +47,30 @@ the status.** Numbering matches that list.
 
 ---
 
-## Design phase — active now
+## Design phase — the basis is settled, the details are not
 
-The mechanical basis is being redesigned. `DESIGN.md` §4 was written against a
-Mortal Kombat II inheritance that has been dropped, and is **marked non-binding
-until this settles**. Work lives in `drawing-board/`:
+The mechanical basis was redesigned and has **landed in `DESIGN.md`**. The
+notice at the top of that file gives the binding status of every section; §4.5
+is superseded and §4.7 is void, and everything else in §4 binds.
+
+Remaining detail work lives in `drawing-board/`:
 
 - `RULESET.md` — decisions made and the order of what is next
 - `2d-fighter-mechanics-deep-dive.md`, `2d-fighters-breakdown.txt` — research
 
-**Settled so far:** rollback required; hold back to block; grounded; one fighter
-per side; six attack buttons; Up-priority SOCD; Classic and Modern schemes, with
-Modern a pure input remap over one canonical action set and auto-combos as
-scripted canonical inputs.
-
 **The thesis is settled:** *"Was that worth committing to?"* — neutral is a
-distinct phase, and leaving it is a priced decision. `DESIGN.md` §3 states it;
-`drawing-board/RULESET.md` carries the reasoning and what it decides downstream.
+distinct phase, and leaving it is a priced decision (`DESIGN.md` §3, ADR 0020).
 
-That unblocks the remaining mechanical decisions, several of which it answers
-outright rather than merely constraining.
+**Settled and recorded as ADRs:** rollback required; hold back to block;
+grounded; one fighter per side; six attack buttons; Up-priority SOCD; Classic
+and Modern schemes, with Modern a pure input remap over one canonical action set
+and auto-combos as scripted canonical inputs (ADR 0021). Plus the four the
+thesis decided — Just Defend over parry, one commitment release, three meter
+jobs, a hard combo cap (`DESIGN.md` §4.6).
+
+**Still open:** six of the sixteen ruleset decisions, listed in
+`drawing-board/RULESET.md`. Their *direction* is now constrained by §3, which is
+why several of them got easier rather than merely later.
 
 Everything built survives it — determinism, movement, jump arcs, hit resolution,
 stun, rounds, the whole test layer. The only built thing affected is the block
@@ -83,11 +87,18 @@ implemented:
 | Hold back to block | Block is a button |
 | Two control schemes | One |
 | Input history in `GameState` | Only the current and previous frame |
+| Just Defend, one commitment release, three meter jobs, hard combo cap | None of it |
 
-**Reconciling this is the first implementation task once the ruleset settles**,
-and it is one change rather than four: the input layer, the block condition at
-hit resolution, and an input buffer. It invalidates every replay recording,
-which is expected — they encode the old input semantics.
+**This is a content change as well as an input change**, which an earlier version
+of this file under-counted. The input layer, the block condition at hit
+resolution and an input buffer are one coherent change — but **medium punch and
+medium kick do not exist in `MoveId`, in the schema, or in either character's
+TOML.** That is roughly eight new move definitions, each needing hitbox geometry
+that has to be *seen* to be reviewed, which is why the frame-data editor moved
+ahead of it below.
+
+It invalidates every replay recording, which is expected — they encode the old
+input semantics, and they get re-recorded in the same commit (rule 8).
 
 Nothing else in the simulation is affected. Movement, jump arcs, hit resolution,
 stun, pushboxes and round flow are all mechanically neutral (ADR 0018).
@@ -123,41 +134,7 @@ hit, confirmed in play. That lowers the priority of extra hit effects in the
 readability pass.
 - every hitbox coordinate in `data/characters/*.toml`
 
-### 2. Knockdown and wakeup
-
-The last two of the sixteen states in `DESIGN.md` §4.2 that are unreachable,
-and a named line in the v1 definition of done. Self-contained sim work with the
-frame-data and state-machine plumbing already in place.
-
-### 3. Training mode: frame data readout and input display
-
-`F1` already draws hitboxes. The other two thirds of the DoD line need text on
-screen, which the project has no path for yet — ADR 0012 plans Dear ImGui for
-debug UI and it is not integrated. **Decide that before starting.**
-
-The console `--input-test` is the input display's ancestor and can be promoted.
-
-### 4. Readability pass  *(in scope per ADR 0017; art is not)*
-
-Making the game easier to *see*, without touching the art pipeline. Cheap,
-reversible, and it directly serves the playtest — feel cannot be tuned through a
-display that shows nothing happening.
-
-Candidates, roughly by value: hit and block feedback (flash, a few frames of
-hitstop), a stage with a real floor and depth cues rather than a flat backdrop,
-clearer per-state poses, and a landing squash so the jump reads.
-
-**Not** sprites, atlases, Blender, or anything that pins character proportions —
-ADR 0013 owns those and they wait for the v1 definition of done.
-
-### 5. Grow the replay library toward 50
-
-9 of 50. Cheap to add, and the highest-value regression net this project has —
-`ADR 0011` calls it the primary one. Every fixed bug should leave a recording
-behind. The rule that makes them worth having: a recording must *assert on the
-thing it is named after*, or it reproduces perfectly and proves nothing.
-
-### 6. `tools/framedata_editor/`
+### 2. `tools/framedata_editor/`
 
 The stack decision says build this **before** authoring content. That advice was
 overrun — every hitbox in `data/characters/` was hand-written to reach the first
@@ -176,16 +153,67 @@ Worth doing before any real balance pass, and before authoring the special.
 
 ---
 
+### 3. Implement the ADR 0021 control scheme
+
+Six attack buttons, hold back to block, and an input buffer in `GameState`. One
+coherent change to the input layer and the block condition at hit resolution
+— plus **eight new move definitions**, because medium punch and medium kick do
+not exist in `MoveId`, in the schema, or in either character's TOML.
+
+That is why the editor comes first. It invalidates every replay recording, which
+is expected and gets re-recorded in the same commit (rule 8).
+
+`src/sim/**` is a human-led zone (AGENTS rule 1), so this one needs direction,
+not initiative.
+
+---
+
+### 4. Knockdown and wakeup
+
+The last two of the sixteen states in `DESIGN.md` §4.2 that are unreachable,
+and a named line in the v1 definition of done. Self-contained sim work with the
+frame-data and state-machine plumbing already in place.
+
+### 5. Training mode: frame data readout and input display
+
+`F1` already draws hitboxes. The other two thirds of the DoD line need text on
+screen, which the project has no path for yet — ADR 0012 plans Dear ImGui for
+debug UI and it is not integrated. **Decide that before starting.**
+
+The console `--input-test` is the input display's ancestor and can be promoted.
+
+### 6. Readability pass  *(in scope per ADR 0017; art is not)*
+
+Making the game easier to *see*, without touching the art pipeline. Cheap,
+reversible, and it directly serves the playtest — feel cannot be tuned through a
+display that shows nothing happening.
+
+Candidates, roughly by value: hit and block feedback (flash, a few frames of
+hitstop), a stage with a real floor and depth cues rather than a flat backdrop,
+clearer per-state poses, and a landing squash so the jump reads.
+
+**Not** sprites, atlases, Blender, or anything that pins character proportions —
+ADR 0013 owns those and they wait for the v1 definition of done.
+
+### 7. Grow the replay library toward 50
+
+9 of 50. Cheap to add, and the highest-value regression net this project has —
+`ADR 0011` calls it the primary one. Every fixed bug should leave a recording
+behind. The rule that makes them worth having: a recording must *assert on the
+thing it is named after*, or it reproduces perfectly and proves nothing.
+
 ## Blocked on a decision
 
-These cannot proceed without an answer, and inventing one is forbidden by
-`DESIGN.md` §10.
+**These need a human decision.** Every one is a `DESIGN.md` §5 TODO marked
+*do not invent*, and none of them is answerable from the design as written.
+
+That is what separates this table from the open decisions in
+`drawing-board/RULESET.md`: those are calls the design can make and has not yet;
+these are calls only the author can make.
 
 | Question | Blocks | Where |
 |---|---|---|
-| **Twelve or ten moves?** §4.5's prose says twelve; its table lists ten | The moveset DoD line | `src/sim/framedata.h`, `docs/framedata_schema.md` |
 | **Cast details** — silhouette, one special move, personality per character | The special-move parser: a special that "fits the character" needs a character | `DESIGN.md` §5.4 |
-| **Does the special spawn a projectile?** §4.5 leaves its "active" column blank | Whether `Projectile` and `MAX_PROJECTILES` stay in `GameState` at all | `src/sim/constants.h` |
 | **The stage** | Backgrounds, whether it scrolls, camera behaviour | `DESIGN.md` §5.5 |
 | **Fighter silhouette** — currently a 32×140 pillar, which contradicts §5.3's "round, heavy, short-limbed" | Art, and the hitbox geometry that follows from it | `src/render/sprite.cpp` |
 
@@ -203,7 +231,7 @@ Recorded so they are not proposed as improvements.
   apology, and that the v1 definition of done comes first.
 - **More than two characters.** §6: if two play well, a third is content work.
   If they do not, twelve will not help.
-- **Anything not yet decided.** §4.6's old cut list is void (ADR 0018) — it
+- **Anything not yet decided.** §4.7's old cut list is void (ADR 0018) — it
   excluded combos, cancels and throws under a design that has been dropped.
   `drawing-board/RULESET.md` is the only place that says what is in or out now,
   and most of it is still open.

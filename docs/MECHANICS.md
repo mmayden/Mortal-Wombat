@@ -159,13 +159,19 @@ one per button — which gives four standing plus four crouching plus four
 jumping, exactly twelve, with the special counted separately as a thirteenth.
 But that is a guess, and this project does not guess at design.
 
-**The question is now moot.** The moveset is being redesigned from a chosen
-ruleset rather than inherited, so the count will come out of that.
+**The question is settled, by being dissolved rather than answered.** Dropping
+the block button freed an input — the old design spent five buttons on four
+attacks plus block, and blocking is now a direction. §4.1 spends that freed
+input on a third strength, giving **six attack buttons**: light, medium and
+heavy, in punch and kick.
 
-It leaves behind a real question though, and a new one. Dropping the block
-button freed an input: the old design spent five buttons on four attacks plus
-block, and blocking is now a direction. **How many attack buttons, and what is
-on them, is an open decision** — and four attack buttons with hold-back
+So the count now falls out of the button set instead of being asserted in prose:
+six standing normals, six crouching, a jump attack and a special. §4.5's old
+table is superseded, and the code has not caught up yet — `ROADMAP.md` tracks
+that.
+
+The passage below is kept because the *reasoning* still applies to any future
+change of this kind. Four attack buttons with hold-back
 blocking is exactly the King of Fighters layout, which is the family this
 project has now chosen.
 
@@ -278,7 +284,8 @@ Both fighters hit each other on the same frame. Both take damage.
 ### Mix-up
 
 Making an attack that must be defended two different ways, so the defender has
-to guess. Whether this game has them is undecided — see `ROADMAP.md`.
+to guess. Whether this game has them is undecided — see
+`drawing-board/RULESET.md`, which is where mechanics still being decided live.
 
 ---
 
