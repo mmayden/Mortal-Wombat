@@ -341,6 +341,41 @@ single-meter decisions are already aimed at.
 
 ---
 
+## What we take from other games, and how
+
+Settled as **ADR 0019**, because "people love X, can we have X?" will otherwise
+be re-argued every time.
+
+Three buckets, and the bucket decides how freely a thing is taken:
+
+| Bucket | Rule | Examples for this project |
+|---|---|---|
+| **Tooling and presentation** | Take freely — it competes for no role | Training mode, frame-data display, replay review, input display, netcode, onboarding |
+| **System structure** | Take the principle, never the pricing | One multi-use resource with real opportunity cost, plus a punish state for overspending |
+| **Mechanics** | One per role, chosen for fit | One active defence. One commitment release. One resource. |
+
+Before adopting any mechanic: what constraint does it release, is that role
+already filled, and does it serve `DESIGN.md` §3?
+
+### The SF6 case, which is the reason the rule exists
+
+Its most-praised system and its most-complained-about system are the same one.
+The research puts the real objection to Drive Rush not at raw strength but at
+compressing neutral and offence into a single action — SF6 deliberately treating
+neutral as a **continuous surface**.
+
+`DESIGN.md` §3 asks for a *slow, readable, commitment-based neutral* — a
+**distinct phase**. That is the opposite answer to the same question, chosen on
+purpose by both.
+
+So SF6 is a game to learn a great deal from and not a game to copy the centre
+of. What this project takes is already substantial: rollback, an accessible
+control scheme, best-in-class practice tooling, a unified-resource *structure*,
+and a punish state for overspending. What it does not take is the pricing that
+made one spend dominant, and the continuous-neutral premise.
+
+---
+
 ## Open, in decision order
 
 Next up, from the deep dive's §6:
