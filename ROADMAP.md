@@ -46,6 +46,29 @@ runs into.
 
 ---
 
+## Design phase — active now
+
+The mechanical basis is being redesigned. `DESIGN.md` §4 was written against a
+Mortal Kombat II inheritance that has been dropped, and is **marked non-binding
+until this settles**. Work lives in `drawing-board/`:
+
+- `RULESET.md` — decisions made and the order of what is next
+- `2d-fighter-mechanics-deep-dive.md`, `2d-fighters-breakdown.txt` — research
+
+**Settled so far:** grounded, one fighter per side, hold back to block. That is
+the Street Fighter II / King of Fighters shape.
+
+Everything built survives it — determinism, movement, jump arcs, hit resolution,
+stun, rounds, the whole test layer. The only built thing affected is the block
+input.
+
+**The build items below are paused where they depend on unsettled mechanics.**
+Knockdown and wakeup in particular is now a *design* decision first: the deep
+dive calls the knockdown loop the engine of a 2D fighter, so it is worth
+deciding deliberately rather than implementing the simplest version.
+
+---
+
 ## Next, in order
 
 Ordered by what unblocks the most. Each is one branch.

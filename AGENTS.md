@@ -129,6 +129,8 @@ Below the boundary, these are build-breaking errors, not style preferences:
 - `docs/MECHANICS.md` — what the mechanics mean, in plain language. Read this
   before using fighting-game vocabulary with anyone.
 - `docs/DESIGN.md` — what the game is, how it must feel, what is cut from v1.
+  **§4 is currently under revision and is NOT binding** — see the notice at the
+  top of that file, and `drawing-board/RULESET.md` for what has been decided.
   §3 is the anti-drift anchor for any judgment call about feel.
 - `docs/decisions/README.md` — the ADR index. Settled questions;
   **these do not get relitigated.**
