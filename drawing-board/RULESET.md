@@ -386,21 +386,87 @@ made one spend dominant, and the continuous-neutral premise.
 
 ---
 
+## The thesis — settled
+
+**`DESIGN.md` §3 owns the statement.** This is the reasoning behind it.
+
+### Why "popular consensus" did not resolve it directly
+
+The question was whether neutral is a **distinct phase** or a **continuous
+surface**. Two signals point opposite ways.
+
+**Commercial popularity says continuous.** Street Fighter 6 is the best-selling
+modern fighting game and it chose continuous deliberately.
+
+**Player sentiment says the opposite, about that exact mechanic.** The research
+records Drive Rush as the most consistently named complaint, and the specific
+objection is precisely that it compresses neutral and offence into one action.
+The games the community holds up as best-designed skew phase-based.
+
+Attributing SF6's success to its most-complained-about system would be reading
+the wrong signal. Its netcode, tooling, onboarding and presentation are what the
+same research praises without reservation — and those are all in the "take
+freely" bucket of ADR 0019 anyway.
+
+### The binary was false, and the research says so
+
+It describes Roman Cancel and Drive Rush as *the same idea with a different
+bill*. Both are commitment releases. Roman Cancel is rated S+ and beloved as a
+general-purpose "buy out of your commitment" that players find their own uses
+for. Drive Rush is the top complaint.
+
+**So consensus is not against compressing commitment. It is against underpricing
+it.** The failure mode named in the research is one spend among several being
+dramatically better, which collapses the opportunity cost that made the resource
+interesting.
+
+### What was chosen, and why it is the consensus answer
+
+**Distinct-phase neutral, with exactly one general-purpose commitment release,
+priced expensively.**
+
+That takes the loved property — agency to buy your way out of a mistake — while
+avoiding the failure mode, and it is what the higher-rated design actually does.
+It also suits this project's constraints: one developer with no patch cadence
+cannot continuously audit five competing spends, and the research is explicit
+that auditing that gap is a permanent obligation rather than a launch decision.
+
+It required overruling nothing. `DESIGN.md` §3 already asked for a slow,
+readable, commitment-based neutral.
+
+### What the thesis now decides
+
+These stop being open questions and become consequences. Each still needs
+writing up, but the answer is no longer in doubt.
+
+| Open decision | What the thesis implies |
+|---|---|
+| Active defence | The **Just Defend / instant block** family — tighter timing on an action you are already performing, which rewards discipline. A parry is a separate commitment made on reflex, and it degrades badly under rollback: its fallback is being hit, where Just Defend's fallback is having blocked. |
+| Commitment release | **Exactly one**, general-purpose, expensive. Not one per situation. |
+| Meter | **Few uses** — three rather than five — so the gap between best and second-best stays auditable by one person. |
+| Combo cap | **Hard.** A game about whether a commitment was worth it cannot let a single commitment end the round. |
+| Projectiles | Likely **yes**, as a spacing tool. Distinct-phase neutral wants tools for controlling ground you are not standing on. This eventually answers whether `Projectile` stays in `GameState`. |
+
+---
+
 ## Open, in decision order
 
-Next up, from the deep dive's §6:
+Next up, from the deep dive's §6.
+
+**▸ marks a decision whose *direction* the thesis already settled** (ADR 0020).
+What remains there is the specifics — windows, costs, numbers — not the choice.
 
 | # | Decision | Why it is there |
 |---|---|---|
 | 6 | **SOCD scheme for horizontal (neutral vs last-input-wins)** | Vertical is settled and fixed. Horizontal is genuinely contested among leverless players, and last-input-wins would need input history the sim does not currently keep. |
 | 7 | **Attack heights (high / mid / low / overhead) and stance blocking** | Hold-back only pays off with a high/low axis alongside left/right. Follows directly from decision 1. |
 | 8 | **Knockdown → okizeme loop** | The deep dive calls it "the engine; everything else decorates it". Already a v1 definition-of-done line. |
-| 9 | **One active-defence mechanic — parry, Just Defend, or instant block** | Rated the highest-return decision available. Exactly one. Window size is a netcode decision too — see decision 0. |
-| 10 | **One general-purpose commitment release, priced in a contested resource** | Not five specific ones. Meaningless unless the resource has other uses. |
-| 11 | **Meter: how many jobs does it do?** | Opportunity cost is depth per byte. One meter doing three to five jobs beats three meters. |
+| 9 ▸ | **Active defence: the Just Defend / instant block family** | Direction settled: a tighter window on an action already being performed, whose failure state is *having blocked*. A parry is a separate commitment made on reflex and degrades badly under rollback. Open: the window, and what it grants. |
+| 10 ▸ | **One general-purpose commitment release** | Direction settled: exactly one, general-purpose rather than situational, priced expensively in a resource with other uses. Open: the price and what it releases you from. |
+| 11 ▸ | **Meter: how many jobs does it do?** | Direction settled: **three**, not five — one developer with no patch cadence has to keep the best/second-best gap auditable by hand. Open: which three, and how it fills. |
 | 12 | **Movement tiers** | Loved in proportion to how *differentiated* they are, not how many there are. |
 | 13 | **Throws** | Without them, blocking has no downside. Cut by the old §4.6, which is no longer binding. |
-| 14 | **Combo determinism cap** | Decide before shipping, not in a patch. |
+| 14 ▸ | **Combo determinism cap** | Direction settled: **hard cap**. A game about whether a commitment was worth it cannot let one commitment end the round. Open: the cap and its shape. |
 | 15 | **System count audit** | Count the pairwise interactions a new player must hold in their head. |
 
 ## Dissolved by the redesign

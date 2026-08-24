@@ -61,10 +61,12 @@ per side; six attack buttons; Up-priority SOCD; Classic and Modern schemes, with
 Modern a pure input remap over one canonical action set and auto-combos as
 scripted canonical inputs.
 
-**Not yet settled, and it gates the rest:** the *thesis* — the single question
-the game asks. The research is explicit that the thesis decides the remaining
-mechanics, and picking them without one produces a game full of individually
-good mechanics that answers nothing.
+**The thesis is settled:** *"Was that worth committing to?"* — neutral is a
+distinct phase, and leaving it is a priced decision. `DESIGN.md` §3 states it;
+`drawing-board/RULESET.md` carries the reasoning and what it decides downstream.
+
+That unblocks the remaining mechanical decisions, several of which it answers
+outright rather than merely constraining.
 
 Everything built survives it — determinism, movement, jump arcs, hit resolution,
 stun, rounds, the whole test layer. The only built thing affected is the block
