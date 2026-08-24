@@ -124,24 +124,95 @@ whenever a remote input arrives late, so:
 online play needs NAT traversal or a relay, which is a distribution decision
 that has not been made.
 
+### 4. Six attack buttons
+
+Light, medium and heavy punch; light, medium and heavy kick. The Street Fighter
+layout, which is the family the three root axes already put this game in.
+
+**Why.** It is the most widely understood layout in the genre, it is what nearly
+every arcade stick and leverless controller is physically laid out for, and it
+gives each attack a light/medium/heavy identity rather than a binary one.
+
+**Cost, and it is the real one.** Six buttons times three stances is **eighteen
+normals per character**, against twelve with a four-button layout. For two
+characters that is thirty-six sets of frame data plus specials — all of it
+hitbox geometry that has to be authored and, critically, *checked*.
+
+This moves `tools/framedata_editor/` from "worth doing" to **required before
+authoring content**. The jump attack already shipped with a hitbox that could
+not hit anyone, at twelve moves. Eighteen is not a difference of degree.
+
+**Cost in the input layer.** `InputFrame` becomes four directions plus six
+attacks — ten bits, against nine today. `Button::Block` leaves (decision 1),
+so the bitfield does not grow. Still comfortably inside the `uint16_t` that
+rollback sends per player per frame.
+
+### 4b. Controller support: leverless, pads, sticks
+
+A hardware requirement rather than a mechanic, recorded here because one part of
+it is a design decision that has to be made deliberately.
+
+**SOCD cleaning is the whole problem.** SOCD is Simultaneous Opposing Cardinal
+Directions — pressing Left and Right, or Up and Down, at the same time. On a
+stick or a d-pad this is physically impossible. On a leverless controller, where
+every direction is its own button, it is trivial, and the game must decide what
+it means.
+
+**What this project does today, and where it is wrong:**
+
+| Input | Current behaviour | Standard behaviour |
+|---|---|---|
+| Left + Right | Neutral | Neutral, or last-input-wins. **Ours is acceptable.** |
+| Up + Down | Neutral | **Up priority.** Ours is non-standard. |
+
+The Up + Down case is a real defect for the hardware just requested. A leverless
+player crouch-blocking holds Down; to jump they press Up without releasing Down.
+Under our rule that resolves to neutral and **the fighter simply does not
+jump**. Under Up priority — which is what essentially every major fighting game
+does — they jump.
+
+It cannot be found by testing with a pad, because a pad cannot produce the
+input. That is exactly why it needs to be a stated requirement rather than
+something discovered.
+
+Changing it alters `InputFrame` semantics, so every replay recording is
+invalidated and must be re-recorded. That is expected and correct.
+
+**The rest of what "SF6-like controller support" means here:**
+
+- Leverless devices, arcade sticks and pads all reaching the sim as the same
+  bitfield. Input-as-data (ADR 0002) already guarantees this — the sim cannot
+  tell what produced an input, which is the point.
+- Full button remapping. Needs a UI and a settings file; neither exists.
+- An input buffer, so a slightly early press still comes out. Standard modern
+  practice and currently absent.
+- An input display to verify a mapping. `--input-test` is the console ancestor
+  of this.
+
+**Still to decide:** whether to offer a simplified control scheme alongside the
+six-button one, in the manner of SF6's Modern controls. That is an accessibility
+*mechanic*, not hardware support, and the research is pointed about it — see the
+deep dive's §5 on execution accessibility versus system accessibility.
+
 ---
 
 ## Open, in decision order
 
 Next up, from the deep dive's §6:
 
-| # | Decision | Why it is next |
+| # | Decision | Why it is there |
 |---|---|---|
-| 4 | **Button count and layout** | Dropping the block button freed an input. Four attack buttons plus hold-back blocking is the King of Fighters layout, which is the family now chosen. |
-| 5 | **Attack heights** (high / mid / low / overhead) and stance blocking | Hold-back only pays off with a high/low axis alongside left/right. Directly follows decision 1. |
-| 6 | **Knockdown → okizeme loop** | The deep dive calls it "the engine; everything else decorates it". Already a v1 definition-of-done line. |
-| 7 | **One active-defence mechanic** — parry, Just Defend, or instant block | Rated the highest-return decision available. Exactly one. Window size is a netcode decision too — see decision 0. |
-| 8 | **One general-purpose commitment release**, priced in a contested resource | Not five specific ones. Meaningless unless the resource has other uses. |
-| 9 | **Meter: how many jobs does it do?** | Opportunity cost is depth per byte. One meter doing three to five jobs beats three meters. |
-| 10 | **Movement tiers** | Loved in proportion to how *differentiated* they are, not how many there are. |
-| 11 | **Throws** | Without them, blocking has no downside. Currently cut by the old §4.6, which is no longer binding. |
-| 12 | **Combo determinism cap** | Decide before shipping, not in a patch. |
-| 13 | **System count audit** | Count the pairwise interactions a new player must hold. |
+| 5 | **SOCD scheme for horizontal (neutral vs last-input-wins)** | Up priority is settled as standard; horizontal is genuinely contested among leverless players. Small, and it gates re-recording the replays. |
+| 6 | **Simplified control scheme? (SF6 Modern style)** | An accessibility mechanic, not hardware support. The deep dive's §5 argues execution accessibility and system accessibility are different problems. |
+| 7 | **Attack heights (high / mid / low / overhead) and stance blocking** | Hold-back only pays off with a high/low axis alongside left/right. Follows directly from decision 1. |
+| 8 | **Knockdown → okizeme loop** | The deep dive calls it "the engine; everything else decorates it". Already a v1 definition-of-done line. |
+| 9 | **One active-defence mechanic — parry, Just Defend, or instant block** | Rated the highest-return decision available. Exactly one. Window size is a netcode decision too — see decision 0. |
+| 10 | **One general-purpose commitment release, priced in a contested resource** | Not five specific ones. Meaningless unless the resource has other uses. |
+| 11 | **Meter: how many jobs does it do?** | Opportunity cost is depth per byte. One meter doing three to five jobs beats three meters. |
+| 12 | **Movement tiers** | Loved in proportion to how *differentiated* they are, not how many there are. |
+| 13 | **Throws** | Without them, blocking has no downside. Cut by the old §4.6, which is no longer binding. |
+| 14 | **Combo determinism cap** | Decide before shipping, not in a patch. |
+| 15 | **System count audit** | Count the pairwise interactions a new player must hold in their head. |
 
 ## Dissolved by the redesign
 
