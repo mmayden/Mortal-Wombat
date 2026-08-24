@@ -7,7 +7,7 @@ vocabulary as a prerequisite. `DESIGN.md` says what the game *is*; this says
 what the words in it *mean*.
 
 Nothing here is a decision. Where a number appears it is quoting `DESIGN.md`
-§4.4 or §4.5, and where something is unsettled it says so.
+§4.4 or §4.5's frame values, and where something is unsettled it says so.
 
 ---
 
@@ -20,6 +20,12 @@ else. If you guess right — you attacked when they were close and busy — you 
 them. If you guess wrong, you are stuck doing nothing while they hit you.
 
 That is the entire game. Everything below is vocabulary for parts of it.
+
+**This game asks one version of that question:** *"was that worth committing
+to?"* You picked a button, at a distance, at a moment, and now you live with it.
+`DESIGN.md` §3 is where that is decided and why; it is repeated here only
+because most of the words below are easier to understand once you know what
+they are all in service of.
 
 ---
 
@@ -140,6 +146,9 @@ than a guarantee.
 Not moves, but things every character can do: dashing, parrying, rolling.
 Everyone has them; how much they are worth varies by character.
 
+This game'''s universal mechanics are the four below — meter, a commitment
+release, Just Defend, and a combo cap.
+
 ---
 
 ## What the "twelve or ten moves" question was
@@ -174,6 +183,65 @@ The passage below is kept because the *reasoning* still applies to any future
 change of this kind. Four attack buttons with hold-back
 blocking is exactly the King of Fighters layout, which is the family this
 project has now chosen.
+
+## Four things this game has decided to have
+
+The design has settled on four systems. **What each one *is* lives in
+`DESIGN.md` §4.6; every number in them is still open.** Here is what the names
+mean.
+
+### Meter
+
+A bar that fills as the match goes on, which you spend to do things you
+otherwise could not.
+
+The interesting part is not the bar, it is the **choosing**. If a meter does one
+thing, spending it is not a decision — you spend it when you can. If it does
+several, every spend is a small sacrifice of the others. That is where the depth
+comes from, and it is why this game gives it **three** jobs rather than five:
+the gap between the best use and the second-best is what has to stay honest, and
+one person has to be able to check it by hand.
+
+### A commitment release
+
+A way to buy your way out of an attack you have already started — you swung,
+you can see it is going to miss, and you spend meter to cut the recovery short
+and not be punished for it.
+
+Guilty Gear's Roman Cancel is the famous one and it is widely loved, because it
+is general-purpose: it is not a move with a use, it is a tool players find their
+own uses for.
+
+**This game has exactly one, and it is expensive.** One, because two mechanics
+doing the same job just split the importance between them. Expensive, because a
+cheap way out of a bad commitment is a direct attack on the question the game is
+asking.
+
+### Just Defend (also called instant block)
+
+Blocking, but at exactly the right moment — a much tighter window than normal
+blocking, with a reward for hitting it.
+
+It is often confused with a **parry**, and the difference is what happens when
+you get it wrong. Miss a Just Defend and you have simply *blocked*. Miss a parry
+and you are *hit*. This game chose Just Defend for that reason: it rewards
+discipline without punishing you twice, and it behaves far better online, where
+you may be reacting to a moment the network later revises.
+
+### A combo cap
+
+A hard limit on how much damage one opening can produce.
+
+**Combo:** a sequence of attacks where the later ones are unavoidable because
+the earlier ones left you unable to move. Getting hit once and then watching
+helplessly is normal in fighting games; the question is how long it lasts.
+
+Many games use *scaling* — later hits do less — which discourages long combos
+without actually stopping them. This game uses a hard cap instead. A game about
+whether a commitment was worth it cannot answer *"yes, it won the entire
+round"*.
+
+---
 
 ## What happens when you get hit
 
@@ -264,8 +332,13 @@ unknown here, because jump attacks only started working recently.
 ### Neutral
 
 The part of the match where nobody is committed to anything — both fighters
-moving, looking for an opening. `DESIGN.md` §3 asks for "slow, readable,
-commitment-based neutral".
+moving, looking for an opening.
+
+**In this game neutral is a distinct place you stand, not a thing you drift in
+and out of.** Attacking is how you leave it, and leaving it wrongly is meant to
+cost you. Some modern fighting games deliberately blur that line so that a
+missed poke and a full attack are nearly the same action; this one deliberately
+does not (`DESIGN.md` §3).
 
 ### Spacing
 
@@ -320,8 +393,8 @@ would drift.
 
 ## Deliberately simple
 
-`DESIGN.md` §10 says to choose the simpler option whenever a question is
-unclear, and §3 asks for a slow, readable, commitment-based game.
+`DESIGN.md` §3 asks for a slow, readable, commitment-based game, and §10 breaks
+any remaining tie toward the simpler option.
 
 That is not a limitation to work around. A game where every attack is a single
 decision with a visible cost is *easier to read, easier to learn, and easier to

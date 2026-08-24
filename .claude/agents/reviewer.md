@@ -19,10 +19,16 @@ and Grep to check the diff against the project's docs. Nothing else.
 ## Read these first, every time
 
 - `AGENTS.md` — the hard rules and the sim boundary
-- `docs/decisions/0001-0013-stack.md` — the ADRs. **Settled questions do not
-  get relitigated.** If the diff re-opens one, that is a BLOCKING finding.
+- `docs/decisions/README.md` — **the ADR index, not just the stack file.**
+  Settled questions do not get relitigated; if the diff re-opens one, that is a
+  BLOCKING finding. 0001–0013 are the stack, 0014–0017 process and scope, and
+  **0018–0023 are the current design basis** — the MK2 basis dropped, how to
+  borrow from other games, the thesis, the control scheme, the two root axes,
+  and where reasoning lives.
 - `docs/CONVENTIONS.md` — the C++ subset, naming, error handling
-- `docs/DESIGN.md` §3 (feel), §4 (mechanics), §4.6 (what is cut from v1)
+- `docs/DESIGN.md` — **read the status notice at the top first.** §3 is the
+  thesis and the feel anchor, §4 is the mechanics, §4.5's move list is
+  superseded while its frame values are live, and §4.7 is void.
 
 ---
 
@@ -117,21 +123,36 @@ decides matches.
 - Does it match the naming table in `CONVENTIONS.md` §2?
 - Does it duplicate something that already exists? Grep before believing it
   does not.
-- Does it build something `DESIGN.md` §4.6 explicitly cut from v1 — juggles,
-  cancels, chip damage, throws, run, fatalities?
+- Does it build a mechanic that is not decided yet? **§4.7's old cut list is
+  VOID — do not flag against it.** ADR 0018 reopened combos, cancels and throws,
+  and `drawing-board/RULESET.md` lists what is genuinely still open. The finding
+  to raise is *"this is not decided"*, never *"this was cut"*.
+- Does it add a second mechanic to a role that §4.6 already fills? One active
+  defence, one commitment release, one resource (ADR 0019). A second one in an
+  occupied role is a BLOCKING finding, not a suggestion.
+- Does it make neutral faster or less readable, or let a player escape a bad
+  commitment cheaply? That works against §3's thesis regardless of pedigree.
 
 ### Invented values
 
 - Does the diff add a constant that no design document specifies, outside the
-  `PROVISIONAL` block in `src/sim/constants.h`? `DESIGN.md` §10 and §5.5 forbid
-  inventing around undecided things; ADR 0015 quarantines what could not be
-  avoided. A guessed number that reads as a specified one is how a design
+  `PROVISIONAL` block in `src/sim/constants.h`? `DESIGN.md`'s status notice and
+  its §5 TODOs forbid inventing around undecided things; ADR 0015 quarantines
+  what could not be avoided. A guessed number that reads as a specified one is how a design
   decision gets made by accident.
 - If it adds one to `PROVISIONAL`, does it say what still needs deciding and
   why? That block is the project's list of open engine decisions and it should
   shrink, never grow.
 - Does a comment cite a design section that does not actually say what the
-  comment claims? Check the citation, do not trust it.
+  comment claims? Check the citation, do not trust it. Section numbers have
+  moved once already — §4.6 used to be the cut list and is now the settled
+  system mechanics.
+
+### If the diff settles a design decision
+
+- Is the rule in `DESIGN.md`, the reasoning in an ADR, and the drawing board
+  trimmed to a pointer — **all in this PR** (ADR 0023)? An ADR that leaves its
+  source intact has created a duplicate rather than resolved one.
 
 ### Frame-data schema
 

@@ -42,6 +42,11 @@
 - [ ] Asked first (AGENTS.md rule 4), and landed **alone** ahead of the code using it
 - [ ] Its `cmake_minimum_required` is ≥ 3.5 — CMake 4 rejects anything older, and the bundled VS CMake only warns
 
+**If it settles a design decision:**
+
+- [ ] The rule is in `DESIGN.md`, the reasoning is in an ADR, and `drawing-board/` is trimmed to a pointer — all in this PR (ADR 0023)
+- [ ] The ADR alone answers "why not the other option" — it may cite research, but a reader who cannot open that file still understands the choice
+
 **If it changes `docs/framedata_schema.md`:**
 
 - [ ] `schema_version` bumped and both consumers updated in this PR (AGENTS.md rule 5)
