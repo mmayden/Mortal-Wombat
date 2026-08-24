@@ -59,6 +59,22 @@ TEST_CASE("Up starts a jump") {
     CHECK(state.fighters[0].y == Fixed::from_int(GROUND_Y));
 }
 
+TEST_CASE("A crouching fighter can jump without releasing down") {
+    // The SOCD case. A keyboard or leverless player holds Down to crouch and
+    // presses Up to jump without letting go, which a gamepad cannot produce.
+    // Before Up priority this resolved to neutral and the jump never came out.
+    GameState state = fighting_state();
+
+    advance_frame(state, data(), pair_with(held(Button::Down), NEUTRAL), NO_INPUT);
+    REQUIRE(state.fighters[0].state == FighterState::Crouch);
+
+    const InputFrame down_and_up = input_with(held(Button::Down), Button::Up);
+    advance_frame(state, data(), pair_with(down_and_up, NEUTRAL),
+                  pair_with(held(Button::Down), NEUTRAL));
+
+    CHECK(state.fighters[0].state == FighterState::JumpStartup);
+}
+
 TEST_CASE("The fighter stays grounded through jump startup") {
     // The commitment window. A fighter in startup is still a grounded target,
     // which is what makes a jump something an opponent can react to.
