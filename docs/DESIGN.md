@@ -1,14 +1,23 @@
 # Mortal Wombat — Design Document
 
 >
-> **§4.1 and §4.3 are settled and binding.** §4.2, §4.4, §4.5 and §4.6 are
-> **still under revision** — do not build to them. Work in progress lives in
-> `drawing-board/RULESET.md`, which graduates into this section when complete.
+> **Status by section**, so nobody has to guess which parts are safe to build to.
 >
-> The Mortal Kombat II basis this section was originally written against has
-> been dropped (ADR 0018). Everything else in this document stands: §1, §2,
-> §3 (feel — the anti-drift anchor), §5, §6, §8, §9 and §10.
-> **Date:** 2026-08-22
+> | Section | State |
+> |---|---|
+> | §1 §2 §3 §5 §6 §8 §9 §10 | **Binding.** §3 carries the thesis and is the anti-drift anchor. |
+> | §4.1 §4.2 §4.3 | **Binding.** §4.1 is ADR 0021. |
+> | §4.4 | **Binding in shape, provisional in numbers** — tune freely, re-record replays in the same commit. |
+> | §4.5 | **Superseded and must be re-authored** — it predates six buttons. Do not build to it. |
+> | §4.6 | **Direction binding, numbers open.** ADR 0020. |
+> | §4.7 | **Void**, kept only for the record. |
+> | §7 | **Non-binding by its own terms** — recorded to keep scope pressure off v1. |
+>
+> Mechanics still being decided live in `drawing-board/RULESET.md` and graduate
+> into §4 as they settle. `ROADMAP.md` owns how far along each one is — this
+> document deliberately carries no status.
+>
+> **Date:** revised 2026-08-24 (originally 2026-08-22)
 > **Purpose:** This is a *constraints* document, not a pitch. It exists so that
 > any contributor — human or agent — makes decisions compatible with everyone
 > else's. Where something is genuinely undecided it is marked **TODO**, and
@@ -55,6 +64,15 @@ both defensible, the one that makes that question sharper wins. A mechanic that
 lets a player escape a bad commitment cheaply is working against the game, no
 matter how well it works elsewhere.
 
+**How this sits with §10.** Two rules in this document resolve ambiguity and
+they answer different halves of the question. §3 decides *what a mechanic is
+for*; §10 decides *how elaborate it is allowed to be*. Run §3 first: an option
+that does not sharpen the question is out regardless of how simple it is. Among
+the options that survive, **§10 breaks the tie, and it breaks it toward
+simpler.** A mechanic that serves the thesis is not thereby licensed to be
+complicated — the thesis is the reason to build something, never the excuse to
+build more of it.
+
 ### What that means structurally
 
 **Neutral is a distinct phase, not a continuous surface.** There is a state of
@@ -94,7 +112,7 @@ is a bad game.
 
 ## 4. Mechanical specification (v1)
 
-### 4.1 Controls — settled
+### 4.1 Controls — settled (ADR 0021)
 
 **Six attack buttons and four directions.** Blocking is a direction, not a
 button.
@@ -184,7 +202,23 @@ in the same commit as the change.
 | Round timer | 5400 frames (90s) |
 | Rounds to win | 2 |
 
-### 4.5 Starting frame data
+### 4.5 Starting frame data — ⚠️ SUPERSEDED
+
+**This table predates ADR 0021 and must be re-authored. Do not build to it.**
+
+It describes a four-attack scheme: there is no medium punch and no medium kick
+in it, because when it was written there were no medium buttons. §4.1 is the
+binding control spec, and it requires six.
+
+What that costs is roughly eight new move definitions — MP and MK, standing and
+crouching, for two characters — each needing hitbox geometry that has to be
+*seen* to be reviewed. The jump attack shipped with its hitbox at standing-punch
+height and could not touch anyone from any range at any timing, because the
+numbers are plausible in a text file. So `tools/framedata_editor/` comes first;
+`ROADMAP.md` sequences it.
+
+The old table is kept below for the frame values, which are still a reasonable
+starting shape for light and heavy. The move *set* is what is wrong.
 
 Per character, v1. Twelve moves total.
 
@@ -202,7 +236,45 @@ Per character, v1. Twelve moves total.
 chosen over a quarter-circle. Simpler to parse, simpler to execute, and
 period-appropriate.
 
-### 4.6 Cut from v1 — ⚠️ UNDER REVISION
+### 4.6 System mechanics — direction settled, numbers open
+
+**These four follow from the thesis in §3 and are recorded by ADR 0020.** The
+*choice* is settled and is not reopened by tuning. Every number in them is still
+open, and `drawing-board/RULESET.md` tracks what is left to pin down.
+
+They are here rather than in the drawing board because they now constrain what
+else may be built — which is the line between a proposal and a rule.
+
+**One active defence: the Just Defend / instant block family.** A tighter timing
+window on an action the defender is already performing. Not a parry.
+
+The reason is the failure state. A missed Just Defend leaves you *having
+blocked*; a missed parry leaves you *hit*. The first is a discipline reward, the
+second is a second guess layered on top of the first — and under rollback, where
+a defender may be reacting to a frame that gets re-simulated, a mechanic whose
+failure is catastrophic punishes the network rather than the player.
+
+**Exactly one commitment release, and it is expensive.** General purpose rather
+than situational, so players find their own applications — that is the property
+that makes the admired version admired. Priced so that buying out of a mistake
+is itself a real commitment.
+
+One, not one per situation. A second mechanic in an occupied role does not add
+depth; it splits the importance of the role between two things (ADR 0019).
+
+**Meter does three jobs, not five.** A multi-use resource is only as deep as the
+gap between its best and second-best use, and keeping that gap honest is
+permanent work, not a launch decision. One developer with no live-service patch
+cadence has to be able to audit it by hand. Which three is open.
+
+**The combo cap is hard, not soft.** A game whose whole question is *"was that
+worth committing to?"* cannot answer *"yes, it won the round outright."* Scaling
+that merely discourages length leaves the ceiling where it was. Where the cap
+sits, and what shape it takes, is open.
+
+---
+
+### 4.7 The old cut list — ⚠️ VOID, kept for the record
 
 **This list is void as written and is not binding.** It was drawn up when the
 game had no meter, no active defence and no commitment release, and several
@@ -311,9 +383,11 @@ The prototype README hints that Wisdom leads "a gang of evil Wombatants",
 which would make Wisdom the antagonist. That is a hint, not a decision, and it
 is recorded here so nobody re-derives it as fact.
 
-One open question the names raise: DESIGN §4.5 gives both characters an
-identical twelve-move set, which is correct for v1 scope. Whether Frenchy and
-Wisdom eventually differ mechanically is a post-v1 question (§7), not a v1 one.
+One open question the names raise: both characters get the **same** move set in
+v1, which is correct for v1 scope — two characters exist to prove the engine
+feels good, not to prove a matchup. Whether Frenchy and Wisdom eventually differ
+mechanically is a post-v1 question (§7). The size of that shared set follows
+from §4.1's six buttons and is being re-authored; §4.5 is superseded.
 
 ### 5.5 TODO — stage design
 
@@ -336,7 +410,8 @@ will not help.
 
 ### Definition of done for v1
 
-1. Two characters with the full §4.5 moveset
+1. Two characters with the full v1 moveset — every §4.1 button, standing and
+   crouching, plus a jump attack and a special
 2. Block, hitstun, blockstun, knockdown, wakeup all correct
 3. Best-of-three rounds with timer and win conditions
 4. Local versus on two gamepads
@@ -388,17 +463,28 @@ Permanent. Changing these requires an ADR superseding this section.
 
 Mortal Kombat is Warner Bros. property. This project uses **no** MK characters,
 names, assets, sound, or trade dress. "Mortal Wombat" is a parody title over an
-original cast in a similar mechanical style.
+original cast.
+
+**The title is the only thing that refers to Mortal Kombat.** The mechanical
+inheritance it once implied was dropped by ADR 0018, so the game is no longer
+"MK-like" in any sense a reader should carry into a design decision — §4.1's
+six buttons and hold-back blocking are the opposite of what that lineage
+specified. Anyone reasoning from the name is reasoning from a pun.
 
 Mechanics are not copyrightable; specific characters and assets are. The
 fighting engine is identical either way.
 
 ---
 
-## 10. The rule that resolves ambiguity
+## 10. The tiebreaker
 
 **When a design question is unclear, choose the simpler option and the one that
 makes the game more readable to a new player.**
+
+**This runs second.** §3 asks what a mechanic is *for* and eliminates anything
+that does not sharpen the game's question. This section then picks among what
+survives, and it picks the simpler one. Serving the thesis is a reason to build
+something; it is never a licence for that something to be complicated.
 
 This project's purpose is to build a fighting game engine well. Mechanical
 depth is not the goal. Simplicity is the constraint that makes finishing

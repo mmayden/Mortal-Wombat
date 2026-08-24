@@ -1,9 +1,12 @@
 # Mortal Wombat
 
-A 2D one-on-one fighting game in the mechanical style of *Mortal Kombat II* —
-five buttons, a dedicated block button, fixed jump arcs, best-of-three rounds.
-The cast are wombats and the tone is deadpan; the fighting system plays
-completely straight.
+A 2D one-on-one fighting game: six attack buttons, hold back to block, fixed
+jump arcs, best-of-three rounds. The cast are wombats and the tone is deadpan;
+the fighting system plays completely straight.
+
+The whole design answers one question — **"was that worth committing to?"**
+Neutral is a distinct phase, and leaving it costs something. You chose a button,
+at a distance, at a moment, and you live with it.
 
 Under the hood it is a deterministic fixed-point simulation running at a fixed
 60Hz, with all match state in one flat memcpy-able struct, architected for
@@ -56,17 +59,16 @@ persistent directory to avoid re-downloading across build trees.
 | `ctest --preset debug` | All of the above | < 5 min |
 
 The game runs: `build/debug/bin/mortal_wombat`. Two fighters walk, crouch,
-block, and attack with all eight ground normals; hits connect, deal damage, and
-apply hitstun and blockstun; rounds resolve on KO or timeout. `F1` shows the
-hitbox overlay.
+block, jump and attack; hits connect, deal damage, and apply hitstun and
+blockstun; rounds resolve on KO or timeout. `F1` shows the hitbox overlay.
 
-Not built yet: the special-move input parser, knockdown and wakeup, and throws.
+**The design is ahead of the build**, deliberately — six attack buttons and
+hold-back blocking are decided (ADR 0021) and the code still implements the
+earlier four-attacks-plus-block-button scheme.
 
-**The design is ahead of the build.** The mechanical ruleset is being redesigned
-— six attack buttons, hold back to block, two control schemes — and the code
-still implements the earlier four-attacks-plus-block-button scheme. See
-[ROADMAP.md](ROADMAP.md) for the gap and [drawing-board/RULESET.md](drawing-board/RULESET.md)
-for what is decided.
+**[ROADMAP.md](ROADMAP.md) is the only place that says how far along anything
+is.** It is not repeated here, because a status kept in two files is a status
+that disagrees with itself within a month.
 
 `--frames N` runs N simulation frames and exits, so CI can boot the real binary
 headless via `SDL_VIDEODRIVER=dummy`; `--screenshot PATH` captures the final
@@ -127,5 +129,7 @@ The one rule everything follows from:
 
 Mortal Kombat is Warner Bros. property. This project uses no MK characters,
 names, assets, sound, or trade dress. "Mortal Wombat" is a parody title over an
-original cast in a similar mechanical style. Mechanics are not copyrightable;
-specific characters and assets are.
+original cast. The title is the only reference to it — the mechanical
+inheritance it once implied was dropped (ADR 0018), and the game's controls are
+now the opposite of what that lineage specified. Mechanics are not
+copyrightable; specific characters and assets are.

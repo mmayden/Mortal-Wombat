@@ -2,12 +2,20 @@
 
 ## Project
 
-Mortal Wombat is a 2D one-on-one fighting game in the mechanical style of
-*Mortal Kombat II* — five buttons, a dedicated block button, fixed jump arcs,
-best-of-three rounds. It is written in orthodox C++ on SDL3, with a
-deterministic fixed-point simulation at a fixed 60Hz that is architected for
-rollback netcode from day one. The v1 target is two complete characters that
-feel good to play, offline, rendered as colored rectangles.
+Mortal Wombat is a 2D one-on-one fighting game — six attack buttons, hold back
+to block, fixed jump arcs, best-of-three rounds. It is written in orthodox C++
+on SDL3, with a deterministic fixed-point simulation at a fixed 60Hz that is
+architected for rollback netcode from day one. The v1 target is two complete
+characters that feel good to play, offline, rendered as colored rectangles.
+
+**The design answers one question: *"was that worth committing to?"*** Neutral
+is a distinct phase and leaving it is priced (`DESIGN.md` §3, ADR 0020). That
+sentence resolves design ambiguity the way the sim boundary below resolves
+technical ambiguity.
+
+It is **not** an MK-like game. The title is a pun; the mechanical inheritance it
+once implied was dropped by ADR 0018 and the controls are now the opposite of
+what it specified. Do not reason from the name.
 
 ## Commands
 
@@ -32,10 +40,11 @@ does that for you; every command below is run through it.
 Controls, keyboard: P1 `WASD` + `F G C V` + `B`. P2 arrows + numpad
 `4 5 1 2` + `0`. `ESC` quits, `F1` toggles the debug overlay.
 
-**These are the OLD controls and do not match the design.** `DESIGN.md` §4.1 now
-specifies six attack buttons with hold-back blocking; the build still has four
-attacks plus a block button. See `ROADMAP.md` — reconciling them is the first
-implementation task once the ruleset settles.
+**These are the OLD controls and do not match the design.** `DESIGN.md` §4.1
+and ADR 0021 specify six attack buttons with hold-back blocking; the build still
+has four attacks plus a block button. `ROADMAP.md` sequences the reconciliation
+— note it is a content change as well as an input change, since medium punch and
+medium kick do not exist in the move data at all.
 
 Gamepads are supported and hot-pluggable; the first pad connected becomes
 player one. Punches on the left face pair (X/Y), kicks on the right (A/B),
@@ -50,10 +59,8 @@ possible because it has no platform dependency at all. `--frames` exists so CI
 can boot the real binary too: set `SDL_VIDEODRIVER=dummy` and it runs on a
 machine with no display.
 
-**Not built yet:** the special-move input parser (`B,F+HP`), knockdown and
-wakeup, and throws. Fighters walk, crouch, block, attack with all eight ground
-normals, take damage, and suffer hitstun and blockstun; rounds resolve on KO or
-timeout.
+**`ROADMAP.md` owns what is built and what is not.** It is not repeated here —
+this file tells you how to work, that one tells you what to work on.
 
 `F1` toggles the hitbox overlay — blue hurtboxes, red hitboxes (filled while
 active), yellow pushboxes. It is the fastest way to answer "why did that
@@ -133,15 +140,18 @@ Below the boundary, these are build-breaking errors, not style preferences:
 
 - `docs/MECHANICS.md` — what the mechanics mean, in plain language. Read this
   before using fighting-game vocabulary with anyone.
-- `docs/DESIGN.md` — what the game is, how it must feel, what is cut from v1.
-  **§4 is currently under revision and is NOT binding** — see the notice at the
-  top of that file, and `drawing-board/RULESET.md` for what has been decided.
-  §3 is the anti-drift anchor for any judgment call about feel.
+- `docs/DESIGN.md` — what the game is, how it must feel, what v1 means.
+  **The notice at the top of that file gives the binding status of every
+  section** — most of §4 is binding; §4.5 is superseded and §4.7 is void. Read
+  it rather than assuming either way. §3 is the anti-drift anchor for any
+  judgment call about feel, and §10 breaks ties among options that survive it.
 - `docs/decisions/README.md` — the ADR index. Settled questions;
   **these do not get relitigated.**
   ADRs 0001–0013 cover language, determinism, platform, rendering, entity
   model, physics, netcode, transport, data format, build, testing, support
-  libraries, and art pipeline.
+  libraries, and art pipeline. 0014–0017 cover process and scope. **0018–0021
+  are the current design basis** — MK2 dropped, how to borrow from other games,
+  the thesis, and the control scheme.
 - `docs/ARCHITECTURE.md` — module map, dependency rules, and the
   "to add a thing of type X, touch exactly these files" paths.
 - `docs/CONVENTIONS.md` — naming, error handling, logging, commit format.

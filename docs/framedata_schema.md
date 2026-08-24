@@ -87,7 +87,7 @@ below, which correspond one-to-one with the `MoveId` enum in
 `src/sim/framedata.h`. An unrecognised key is a load-time error, not a warning:
 a typo would otherwise leave a character silently missing a move.
 
-| Key | DESIGN.md §4.5 row |
+| Key | Move |
 |---|---|
 | `low_punch` | LP |
 | `high_punch` | HP |
@@ -102,12 +102,18 @@ a typo would otherwise leave a character silently missing a move.
 
 **All ten are required.** A file missing one fails to load.
 
-> **Open design question.** DESIGN.md §4.5 says "Twelve moves total" while its
-> table enumerates the ten above. The table is treated as the specification,
-> because it is the part carrying actual numbers. The candidate readings —
-> per-button jump attacks (thirteen) or split jump punch and kick (eleven) —
-> match the prose no better, so this is left for a design decision rather than
-> guessed at.
+> **This move set is out of date with the design.** `DESIGN.md` §4.1 and
+> ADR 0021 specify six attack buttons — light, medium and heavy in punch and
+> kick — so `medium_punch`, `medium_kick` and their crouching variants are
+> missing here and in both character files. Adding them is a **schema change**:
+> new required keys, so the version below gets bumped and every character file
+> updated in the same commit.
+>
+> It has not been done yet because the hitbox geometry has to be *seen* to be
+> reviewed, and `ROADMAP.md` sequences `tools/framedata_editor/` ahead of it.
+>
+> The older "twelve or ten moves?" ambiguity is gone: §4.5 is superseded, and
+> the count now follows from the button set rather than from prose.
 
 ```toml
 [moves.high_punch]

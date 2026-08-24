@@ -17,13 +17,22 @@ independently on the same root axes, which is why they are treated as root.
 
 ## Where the settled decisions live
 
-**Decisions 1 to 5 have graduated. `DESIGN.md` §4.1 is now the specification and
-the only place the rules are stated.** What follows is the *reasoning* behind
-them, which a specification should not carry — kept because knowing why a
-decision was made is what stops it being re-argued.
+**Everything settled has graduated out of this file.** `DESIGN.md` is the
+specification and the only place the rules are stated:
 
-If this file and `DESIGN.md` ever disagree about what a rule *is*, `DESIGN.md`
-is right and this file is stale.
+| Settled | Now specified in | Recorded by |
+|---|---|---|
+| Decisions 1–5 — hold-back, grounded, 1v1, six buttons, two schemes | `DESIGN.md` §4.1 | ADR 0021 |
+| Decision 0 — rollback netcode | `DESIGN.md` §6 (out of v1 DoD), ARCHITECTURE | ADR 0007 |
+| The thesis | `DESIGN.md` §3 | ADR 0020 |
+| The four it decided — Just Defend, one release, three meter jobs, hard combo cap | `DESIGN.md` §4.6 | ADR 0020 |
+
+What stays here is the *reasoning* behind those, which a specification should
+not carry — kept because knowing why a decision was made is what stops it being
+re-argued — plus the decisions still open.
+
+**If this file and `DESIGN.md` ever disagree about what a rule *is*,
+`DESIGN.md` is right and this file is stale.**
 
 ## Decided — reasoning
 
@@ -104,6 +113,9 @@ layer. The only built thing any of this touches is the block input.
 ---
 
 ### 0. Rollback netcode is required (confirmed)
+
+*Numbered 0 because it was confirmed after 1–3 but constrains all of them — it is
+the precondition, not the fourth decision.*
 
 Not a mechanic, but it constrains every mechanic below, so it is recorded here
 rather than left as an assumption.

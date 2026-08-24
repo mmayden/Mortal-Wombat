@@ -41,7 +41,7 @@ C:/Users/mj/AppData/Roaming/Python/Python310/Scripts/clang-format.exe
 ## The workflow is gated, including for you
 
 `main` is protected with `enforce_admins: true`. **You cannot push to `main`.**
-Every change goes through a PR that passes six checks: three platform builds,
+Every change goes through a PR that passes seven checks: three platform builds,
 the desync comparison, the sim-boundary script, and clang-format.
 
 ```
@@ -162,45 +162,29 @@ The single rule everything resolves against:
 
 ---
 
-## State of the build
+## What this file does not own
 
-**Working:** fixed-point sim at 60Hz, jumping with fixed arcs and jump attacks, seeded RNG, input-as-data, fixed-timestep
-loop with interpolation, SDL3 window and rendering, keyboard and gamepad input,
-TOML frame data for Frenchy and Wisdom, walking, crouching, blocking, all eight
-ground normals, hit detection, damage, hitstun, blockstun, pushbox separation,
-round flow, the `F1` hitbox overlay, per-state fighter tinting, a deadzone camera, and
-`--input-test` for checking which device produced which input.
+Two sections used to live here that belong elsewhere, and keeping local copies
+is precisely how four documents ended up disagreeing about what was built.
 
-**Not built:** the special-move input parser (`B,F+HP`), knockdown and wakeup
-(two of the sixteen states in DESIGN.md §4.2 are still unreachable), throws,
-audio, netcode, and every tool under `tools/`.
+**State of the build → [`ROADMAP.md`](ROADMAP.md).** What works, what does not,
+and what is unvalidated. One of those is worth repeating because it is a trap
+rather than a status: **the gamepad path has never had a pad connected to it on
+this machine.** It compiles and it correctly detects zero pads. Do not describe
+it as working.
 
-**Unvalidated:** the gamepad path compiles and detects zero pads correctly, but
-no pad has ever been connected to this machine. Do not describe it as working.
+**Open questions → [`drawing-board/RULESET.md`](drawing-board/RULESET.md)** for
+mechanics still being decided, and `ROADMAP.md` for what they block. The rule
+that governed the old list still stands and is the reason to point at all:
 
-**Nothing is animated.** Fighter state is shown by tint, an extended limb while
-attacking, and a guard plate while blocking. DESIGN.md §5.1 asks for a debug
-text label instead; there is no font path yet (ADR 0012 puts Dear ImGui in the
-debug UI), so the tinting substitutes for that line rather than replacing it.
+> **Do not invent an answer.** If a design document does not specify a number,
+> it goes in the `PROVISIONAL` block in `src/sim/constants.h` with a note saying
+> what still needs deciding. That block should shrink, never grow.
 
----
+The one open question that is genuinely this file's business, because it is
+about how work gets verified here rather than about the game:
 
-## Open questions — do not invent answers to these
-
-Each is flagged in code or docs where it bites. They need a human decision.
-
-1. **The move count.** `DESIGN.md` §4.5 says "Twelve moves total"; its table
-   lists ten. The table is implemented because it carries the numbers.
-2. **`DESIGN.md` §5.4** still has silhouette, special move, and personality as
-   TODO for both characters, and says not to invent them. This gates the
-   special-move parser: a special that "fits the character" needs a character.
-3. **`DESIGN.md` §5.5**, the stage, is untouched TODO.
-4. **Every hitbox coordinate is provisional.** `DESIGN.md` specifies fighter
-   height and nothing else about shape. The stack decision says build
-   `tools/framedata_editor/` *before* authoring content; the current numbers
-   exist only to reach the first connecting hit.
-5. **The `PROVISIONAL` block in `src/sim/constants.h`** is the list of engine
-   values no design document specifies. It should shrink, never grow.
-6. **Nobody has played it.** Feel is the one thing the test suite structurally
-   cannot check, and `BLUEPRINT.md` calls the sixty-second manual play the
-   primary regression gate for it.
+**Nobody has played it.** Feel is the one thing the test suite structurally
+cannot check, and `BLUEPRINT.md` makes the sixty-second manual play the primary
+regression gate for it. Every number in the `PROVISIONAL` block is a guess until
+someone does.
