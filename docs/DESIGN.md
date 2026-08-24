@@ -1,19 +1,13 @@
 # Mortal Wombat — Design Document
 
-> **Status:** ⚠️ **§4 IS UNDER REVISION AND IS NOT BINDING.**
 >
-> The mechanical specification in §4 was written against a Mortal Kombat II
-> basis, which has been dropped. The project is being redesigned around a
-> deliberately chosen set of mechanics rather than one game's inheritance.
+> **§4.1 and §4.3 are settled and binding.** §4.2, §4.4, §4.5 and §4.6 are
+> **still under revision** — do not build to them. Work in progress lives in
+> `drawing-board/RULESET.md`, which graduates into this section when complete.
 >
-> **Do not build to §4.1–§4.6 until this notice is removed.** Work in progress
-> is in `drawing-board/`, and `drawing-board/RULESET.md` records what has been
-> decided so far.
->
-> **Still binding, and unaffected:** §1 (what the game is), §2 (core loop),
-> §3 (feel — the anti-drift anchor), §5.3 (visual tone), §6 (scope ceiling and
-> the definition of done), §8 (non-goals), §9 (IP), §10 (resolve ambiguity
-> toward simplicity).
+> The Mortal Kombat II basis this section was originally written against has
+> been dropped (ADR 0018). Everything else in this document stands: §1, §2,
+> §3 (feel — the anti-drift anchor), §5, §6, §8, §9 and §10.
 > **Date:** 2026-08-22
 > **Purpose:** This is a *constraints* document, not a pitch. It exists so that
 > any contributor — human or agent — makes decisions compatible with everyone
@@ -24,11 +18,11 @@
 
 ## 1. The game in three sentences
 
-Mortal Wombat is a 2D one-on-one fighting game in the mechanical style of
-*Mortal Kombat II* — five buttons, a dedicated block button, fixed jump arcs,
-best-of-three rounds. It is a comedy fighter: the cast are wombats, and the
-tone is deadpan rather than gritty. The v1 target is two complete characters
-that feel good to play, offline, with rollback-ready architecture.
+Mortal Wombat is a 2D one-on-one fighting game: six attack buttons, hold back
+to block, grounded neutral, best-of-three rounds. It is a comedy fighter — the
+cast are wombats and the tone is deadpan rather than gritty — built on a
+deterministic simulation for rollback netplay. The v1 target is two complete
+characters that feel good to play.
 
 ---
 
@@ -49,10 +43,12 @@ unlocks in v1.
 **This section is the anti-drift anchor. Read it before making any judgment
 call about feel.**
 
-The feel target is *deliberate and weighty*, not fast and flowing. MK2's
-defining property is that committing to an action means committing — jumps
-have fixed arcs you cannot alter mid-air, big attacks have long recovery, and
-whiffing a heavy is genuinely punishing. This is the feel we want.
+The feel target is *deliberate and weighty*, not fast and flowing. Committing
+to an action means committing: jumps have fixed arcs you cannot alter mid-air,
+big attacks have long recovery, and whiffing a heavy is genuinely punishing.
+
+This is the anti-drift anchor. When a mechanical decision is unclear, the
+question is which option better serves it.
 
 **We are NOT building:**
 - A fast, cancel-heavy combo game (Street Fighter, Marvel, modern MK)
@@ -75,24 +71,56 @@ is a bad game.
 
 ## 4. Mechanical specification (v1)
 
-### 4.1 Controls
+### 4.1 Controls — settled
 
-Five buttons, MK-style:
+**Six attack buttons and four directions.** Blocking is a direction, not a
+button.
 
-| Button | Name |
+| | Light | Medium | Heavy |
+|---|---|---|---|
+| **Punch** | LP | MP | HP |
+| **Kick** | LK | MK | HK |
+
+On a controller that is four face buttons plus two shoulders, which is the
+conventional layout and needs no special hardware.
+
+**Hold back to block.** Because *back* is relative to the opponent's position,
+an attack that changes sides mid-animation forces the defender to reverse their
+input. That is a crossup, and it is an entire axis of offence that a block
+button deletes by giving every attack the same defensive answer.
+
+**Directions resolve by SOCD rules**, because a keyboard and a leverless
+controller can hold opposing directions at once where a stick cannot:
+
+| Both held | Result |
 |---|---|
-| LP | Low Punch |
-| HP | High Punch |
-| LK | Low Kick |
-| HK | High Kick |
-| BL | **Block** |
+| Up + Down | **Up wins.** A player crouching who presses up means to jump. |
+| Left + Right | **Neutral.** |
 
-Plus four directions.
+**Two control schemes, chosen per player before a match.**
 
-**Block is a button, not hold-back.** This is a deliberate MK inheritance and
-it is also mechanically simpler: there is no ambiguity between walking backward
-and blocking, which removes an entire class of edge cases from the state
-machine.
+*Classic* uses all six buttons with motion inputs for specials. *Modern* uses
+light, medium and heavy plus a dedicated Special button, performing specials as
+a direction plus Special.
+
+Modern is a **pure input adapter over one canonical action set** — the
+simulation holds one set of move properties and never learns which scheme
+produced an input. There is no damage penalty. The cost of the simpler scheme is
+that it cannot express every action, which is a real cost that needs no
+bookkeeping.
+
+The one exception, and the rule that governs it: **if a scheme removes a
+capability it needs no tax; if it grants one, it must be taxed** — and the tax is
+paid in frames, not damage. A one-button command grab is strictly better than a
+motion one, so it costs startup. A damage penalty would be invisible during
+play and teach nothing; two extra startup frames change which situations the
+move works in, which a player can see.
+
+**Auto-combos are scripted canonical inputs**, not authored sequences. Pressing
+light repeatedly performs the same moves the player would perform manually, in
+order. This adds no move data, inherits combo scaling automatically, can never
+be stronger than the manual route because it *is* the manual route, and teaches
+that route by performing it.
 
 ### 4.2 Fighter states
 
@@ -151,10 +179,20 @@ Per character, v1. Twelve moves total.
 chosen over a quarter-circle. Simpler to parse, simpler to execute, and
 period-appropriate.
 
-### 4.6 Explicitly cut from v1
+### 4.6 Cut from v1 — ⚠️ UNDER REVISION
 
-Do not build these. Do not architect around them beyond what ADR 0009's data
-format already permits.
+**This list is void as written and is not binding.** It was drawn up when the
+game had no meter, no active defence and no commitment release, and several
+entries were cut as consequences of a design that has since been dropped
+(ADR 0018).
+
+Combo strings and cancels in particular are now open rather than excluded — a
+combo system is implied by decisions already taken — and throws are back under
+consideration, because hold-back blocking is free and always available, so a
+defender who simply holds back needs an answer.
+
+`drawing-board/RULESET.md` tracks what is actually decided. The list below is
+kept for the record only:
 
 - Juggle system
 - Combo strings and cancels

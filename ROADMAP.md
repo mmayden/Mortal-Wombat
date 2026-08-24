@@ -55,12 +55,39 @@ until this settles**. Work lives in `drawing-board/`:
 - `RULESET.md` — decisions made and the order of what is next
 - `2d-fighter-mechanics-deep-dive.md`, `2d-fighters-breakdown.txt` — research
 
-**Settled so far:** grounded, one fighter per side, hold back to block. That is
-the Street Fighter II / King of Fighters shape.
+**Settled so far:** rollback required; hold back to block; grounded; one fighter
+per side; six attack buttons; Up-priority SOCD; Classic and Modern schemes, with
+Modern a pure input remap over one canonical action set and auto-combos as
+scripted canonical inputs.
+
+**Not yet settled, and it gates the rest:** the *thesis* — the single question
+the game asks. The research is explicit that the thesis decides the remaining
+mechanics, and picking them without one produces a game full of individually
+good mechanics that answers nothing.
 
 Everything built survives it — determinism, movement, jump arcs, hit resolution,
 stun, rounds, the whole test layer. The only built thing affected is the block
 input.
+
+### The design is now ahead of the build
+
+This is the important thing to know when reading anything below. Decided but not
+implemented:
+
+| Decided | Built today |
+|---|---|
+| Six attack buttons | Four, plus a block button |
+| Hold back to block | Block is a button |
+| Two control schemes | One |
+| Input history in `GameState` | Only the current and previous frame |
+
+**Reconciling this is the first implementation task once the ruleset settles**,
+and it is one change rather than four: the input layer, the block condition at
+hit resolution, and an input buffer. It invalidates every replay recording,
+which is expected — they encode the old input semantics.
+
+Nothing else in the simulation is affected. Movement, jump arcs, hit resolution,
+stun, pushboxes and round flow are all mechanically neutral (ADR 0018).
 
 **The build items below are paused where they depend on unsettled mechanics.**
 Knockdown and wakeup in particular is now a *design* decision first: the deep

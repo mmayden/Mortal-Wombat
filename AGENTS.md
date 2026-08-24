@@ -29,8 +29,13 @@ does that for you; every command below is run through it.
 | Headless boot (N sim frames) | `mortal_wombat.exe --frames 600` |
 | Capture a frame | `mortal_wombat.exe --frames 200 --screenshot out.bmp` |
 
-Controls, keyboard: P1 `WASD` + `F G C V` + `B` to block. P2 arrows + numpad
-`4 5 1 2` + `0` to block. `ESC` quits, `F1` toggles the debug overlay.
+Controls, keyboard: P1 `WASD` + `F G C V` + `B`. P2 arrows + numpad
+`4 5 1 2` + `0`. `ESC` quits, `F1` toggles the debug overlay.
+
+**These are the OLD controls and do not match the design.** `DESIGN.md` §4.1 now
+specifies six attack buttons with hold-back blocking; the build still has four
+attacks plus a block button. See `ROADMAP.md` — reconciling them is the first
+implementation task once the ruleset settles.
 
 Gamepads are supported and hot-pluggable; the first pad connected becomes
 player one. Punches on the left face pair (X/Y), kicks on the right (A/B),

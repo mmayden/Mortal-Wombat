@@ -311,7 +311,7 @@ coming up.
 |---|---|
 | Walk forward and back, at different speeds | built |
 | Crouch | built |
-| Block (a button, not holding back) | built |
+| Block | built, **but as a button** — the design now says hold back (§4.1) |
 | Eight ground attacks (4 standing, 4 crouching) | built |
 | Jumping with fixed arcs, three directions | built |
 | Jump attack | built — only recently able to hit anything |
