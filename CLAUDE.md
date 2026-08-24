@@ -42,7 +42,8 @@ C:/Users/mj/AppData/Roaming/Python/Python310/Scripts/clang-format.exe
 
 `main` is protected with `enforce_admins: true`. **You cannot push to `main`.**
 Every change goes through a PR that passes seven checks: three platform builds,
-the desync comparison, the sim-boundary script, and clang-format.
+the desync comparison, the release-determinism build, the sim-boundary script,
+and clang-format.
 
 ```
 git checkout -b feat/whatever
