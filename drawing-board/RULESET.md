@@ -257,18 +257,72 @@ absent — listed separately under controller support. One structure serves both
 
 ---
 
-#### Two questions Modern leaves open
+#### 5a. Modern is a pure remap. No damage tax.
 
-**Is Modern a pure remap, or its own balance?** If it only translates inputs,
-the simulation never learns which scheme a player used and the two are exactly
-equivalent in power. SF6 does not do this — its assisted specials deal less
-damage, which is a deliberate trade for easier execution. That choice makes the
-scheme a *simulation* input rather than a presentation detail, and it means
-per-scheme move properties.
+The simulation holds **one canonical action set**, and a control scheme is an
+input adapter over it. The sim never learns which scheme produced an input.
 
-**How much content do auto-combos add?** They are authored sequences, so they
-are frame data, on top of the eighteen normals per character that six buttons
-already implies.
+**Why no damage penalty.** It would make the scheme a simulation input rather
+than a presentation detail, and it forks the single source of truth ADR 0009
+established: every move property in `data/characters/*.toml`, every validation
+rule, every test asserting "high punch does 8", and the schema contract with the
+frame-data editor would need a scheme qualifier. The balance surface roughly
+squares — with twenty characters, a matchup matrix goes from four hundred
+entries to sixteen hundred, and every claim about a move becomes two claims.
+
+The return is close to nothing. The reported community verdict is that the
+damage penalty is barely felt, while losing access to half the normals is what
+actually limits the simpler scheme at higher levels. That is full engineering
+and balance cost for something nobody experiences.
+
+**The tax is option breadth, and it is automatic.** A scheme that cannot express
+an action pays for its simplicity by not having that action. No data, no
+bookkeeping, self-evident to the player.
+
+#### 5b. The rule for the exception, and it is a small one
+
+> **If a scheme removes a capability it needs no tax. If it grants one, it must
+> be taxed.**
+
+A one-button command grab is not a worse version of a motion command grab — it
+is strictly better. Same for charge moves performed without charging. Those are
+the only places a scheme-aware property is warranted, and there should be a
+handful of them rather than a global multiplier.
+
+**Tax frames, not damage.** A damage penalty is invisible during play and
+teaches nothing. Two extra startup frames change which situations the move works
+in — visible, situational, and a real reason to learn the harder input. This is
+also the `DESIGN.md` §3 argument: readability is the anchor.
+
+#### 5c. Auto-combos are scripted canonical inputs
+
+Pressing light repeatedly performs the same moves the player would perform
+manually, in order — the scheme queues real inputs rather than triggering an
+authored sequence.
+
+- **No new move data.** No animations to tune, no separate scaling curve, no
+  corner cases to author.
+- **Inherits the combo system for free**, including scaling. It can never be
+  stronger than the manual route, because it *is* the manual route.
+- **Self-teaching.** The player watches the route they should learn, performed
+  correctly, every time they mash.
+
+The alternative — an authored sequence with its own properties — teaches a habit
+that has to be unlearned later, which makes it a plateau rather than a ramp. It
+also costs a full combo route per character, maintained through every balance
+change.
+
+**And it is nearly free for us architecturally.** A queue of canonical inputs is
+just input: it flows through the same history buffer motion inputs already
+require. No new category of state to snapshot and restore for rollback.
+
+#### One question Modern leaves open
+
+**Which layer is being simplified?** Simplifying inputs while leaving the system
+mechanics untouched is reported to be the worst of both — the simplified scheme
+still meets the same wall, just with fewer options in hand. Whatever the hardest
+system mechanic turns out to be, Modern has to have an answer for it or the
+scheme is only half a ramp.
 
 ---
 

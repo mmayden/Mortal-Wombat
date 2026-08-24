@@ -60,8 +60,13 @@ block, and attack with all eight ground normals; hits connect, deal damage, and
 apply hitstun and blockstun; rounds resolve on KO or timeout. `F1` shows the
 hitbox overlay.
 
-Not built yet: the special-move input parser, knockdown and wakeup, and
-throws.
+Not built yet: the special-move input parser, knockdown and wakeup, and throws.
+
+**The design is ahead of the build.** The mechanical ruleset is being redesigned
+— six attack buttons, hold back to block, two control schemes — and the code
+still implements the earlier four-attacks-plus-block-button scheme. See
+[ROADMAP.md](ROADMAP.md) for the gap and [drawing-board/RULESET.md](drawing-board/RULESET.md)
+for what is decided.
 
 `--frames N` runs N simulation frames and exits, so CI can boot the real binary
 headless via `SDL_VIDEODRIVER=dummy`; `--screenshot PATH` captures the final
