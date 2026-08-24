@@ -160,29 +160,48 @@ it means.
 
 **What this project does today, and where it is wrong:**
 
-| Input | Current behaviour | Standard behaviour |
+| Input | Behaviour | Status |
 |---|---|---|
-| Left + Right | Neutral | Neutral, or last-input-wins. **Ours is acceptable.** |
-| Up + Down | Neutral | **Up priority.** Ours is non-standard. |
+| Left + Right | Neutral | Accepted scheme. Last-input-wins is the alternative and needs input history the sim does not keep. **Still open.** |
+| Up + Down | **Up priority** | **Fixed.** Was neutral, which made a real input do nothing. |
 
-The Up + Down case is a real defect for the hardware just requested. A leverless
-player crouch-blocking holds Down; to jump they press Up without releasing Down.
-Under our rule that resolves to neutral and **the fighter simply does not
-jump**. Under Up priority — which is what essentially every major fighting game
-does — they jump.
+The Up + Down case was a live defect, and not a hypothetical one about hardware
+nobody owns yet — **it was reachable from the keyboard the game already ships
+with.** Measured before the fix:
 
-It cannot be found by testing with a pad, because a pad cannot produce the
-input. That is exactly why it needs to be a stated requirement rather than
-something discovered.
+```
+holding Down alone      -> Crouch        correct
+Down + Up together      -> Idle          wrong; should be JumpStartup
+Up alone                -> JumpStartup   correct
+```
 
-Changing it alters `InputFrame` semantics, so every replay recording is
-invalidated and must be re-recorded. That is expected and correct.
+A player crouch-blocking holds Down; to jump they press Up without releasing it.
+Neutral is neither a crouch nor a jump, so the fighter just stood there.
+
+A gamepad cannot produce the input — a d-pad pivots, a stick has one position —
+which is why it survived every play session. Fixed to Up priority, with unit
+coverage for the resolution itself and a jump test for the crouch-to-jump case
+that was actually broken.
+
+All nine replay recordings hashed unchanged, because no scenario presses Up and
+Down together. The fix is strictly additive.
 
 **The rest of what "SF6-like controller support" means here:**
 
 - Leverless devices, arcade sticks and pads all reaching the sim as the same
   bitfield. Input-as-data (ADR 0002) already guarantees this — the sim cannot
   tell what produced an input, which is the point.
+- **Six attack buttons fit a standard pad comfortably**, and this is unrelated to
+  the SOCD question above. The conventional mapping, which is what Street
+  Fighter uses on a controller:
+
+  | | Light | Medium | Heavy |
+  |---|---|---|---|
+  | Punch | Square / X | Triangle / Y | R1 / RB |
+  | Kick | Cross / A | Circle / B | R2 / RT |
+
+  Four face buttons plus two shoulders. Nothing about a six-button layout needs
+  special hardware.
 - Full button remapping. Needs a UI and a settings file; neither exists.
 - An input buffer, so a slightly early press still comes out. Standard modern
   practice and currently absent.
@@ -202,7 +221,7 @@ Next up, from the deep dive's §6:
 
 | # | Decision | Why it is there |
 |---|---|---|
-| 5 | **SOCD scheme for horizontal (neutral vs last-input-wins)** | Up priority is settled as standard; horizontal is genuinely contested among leverless players. Small, and it gates re-recording the replays. |
+| 5 | **SOCD scheme for horizontal (neutral vs last-input-wins)** | Vertical is settled and fixed. Horizontal is genuinely contested among leverless players, and last-input-wins would need input history the sim does not currently keep. |
 | 6 | **Simplified control scheme? (SF6 Modern style)** | An accessibility mechanic, not hardware support. The deep dive's §5 argues execution accessibility and system accessibility are different problems. |
 | 7 | **Attack heights (high / mid / low / overhead) and stance blocking** | Hold-back only pays off with a high/low axis alongside left/right. Follows directly from decision 1. |
 | 8 | **Knockdown → okizeme loop** | The deep dive calls it "the engine; everything else decorates it". Already a v1 definition-of-done line. |

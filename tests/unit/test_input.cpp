@@ -77,11 +77,31 @@ TEST_CASE("Edge detection compares against the previous frame") {
     }
 }
 
-TEST_CASE("Opposing directions resolve to neutral") {
-    // Physically reachable on a keyboard and on a worn d-pad. Resolving it in
-    // one place means the state machine never sees the contradiction.
+TEST_CASE("Opposing horizontal directions resolve to neutral") {
+    // Physically reachable on a keyboard and on a leverless controller, where
+    // each direction is its own button. Resolving it in one place means the
+    // state machine never sees the contradiction.
+    //
+    // Neutral is one of the accepted SOCD schemes for the horizontal axis; the
+    // alternative used by some games is last-input-wins, which needs input
+    // history the sim deliberately does not keep.
     CHECK(input_horizontal(make({Button::Left, Button::Right})) == 0);
-    CHECK(input_vertical(make({Button::Up, Button::Down})) == 0);
+}
+
+TEST_CASE("Up beats Down when both are held") {
+    // NOT symmetric with the horizontal rule, and deliberately so.
+    //
+    // Resolving this pair to neutral made a real input do nothing: a player
+    // crouch-blocking holds Down, and to jump they press Up without releasing
+    // it. Neutral is neither a crouch nor a jump, so the fighter just stood
+    // there. Up priority is what essentially every fighting game does.
+    //
+    // Unreachable with a gamepad -- a d-pad pivots and a stick has one position
+    // -- but reachable from the keyboard the game already ships with.
+    CHECK(input_vertical(make({Button::Up, Button::Down})) == -1);
+    CHECK(input_vertical(make({Button::Up})) == -1);
+    CHECK(input_vertical(make({Button::Down})) == 1);
+    CHECK(input_vertical(NEUTRAL) == 0);
 }
 
 TEST_CASE("Single directions resolve to a sign") {

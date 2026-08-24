@@ -81,16 +81,27 @@ constexpr int32_t input_horizontal(InputFrame input) {
     return right ? 1 : -1;
 }
 
+// Up wins when both are held. This is SOCD resolution -- Simultaneous Opposing
+// Cardinal Directions -- and it is not symmetric with the horizontal rule.
+//
+// A d-pad pivots and an analog stick has one position, so neither can report Up
+// and Down at once. A keyboard can, because the keys are independent, and so can
+// a leverless controller, where every direction is its own button.
+//
+// Resolving to neutral made a real input do nothing. A player crouch-blocking
+// holds Down; to jump they press Up without releasing Down. Under a neutral rule
+// that is neither a crouch nor a jump, and the fighter just stands there. Up
+// priority is what essentially every fighting game does, for exactly this case.
+//
+// It could not be found with a gamepad, because a gamepad cannot produce the
+// input -- but it was reachable from the keyboard the game already ships with.
 constexpr int32_t input_vertical(InputFrame input) {
-    const bool up = input_held(input, Button::Up);
-    const bool down = input_held(input, Button::Down);
-    if (up == down) {
-        return 0;
-    }
     // Returns +1 for Down and -1 for Up, matching sim screen space where -y is
-    // up (ARCHITECTURE.md 3). Both-held resolves to neutral, same as the
-    // horizontal rule.
-    return down ? 1 : -1;
+    // up (ARCHITECTURE.md 3).
+    if (input_held(input, Button::Up)) {
+        return -1;
+    }
+    return input_held(input, Button::Down) ? 1 : 0;
 }
 
 // Both players' input for one frame — the complete input to advance_frame.
