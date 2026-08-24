@@ -15,6 +15,28 @@ goes stale.
 | Style, naming, error handling, commits | [docs/CONVENTIONS.md](docs/CONVENTIONS.md) |
 | Settled decisions — **not up for re-argument** | [docs/decisions/](docs/decisions/README.md) |
 
+## Who owns what
+
+**One document owns each fact. Everything else points at it.** A second copy of
+a rule is a copy that goes stale, and this project has already had three
+documents quietly disagreeing about what was cut from v1.
+
+| Fact | Owner | Everyone else |
+|---|---|---|
+| What the game is, and how it must feel | `docs/DESIGN.md` §1–§3 | reference |
+| The mechanical rules, once settled | `docs/DESIGN.md` §4 | reference |
+| Mechanics still being decided, and why | `drawing-board/RULESET.md` | reference |
+| What v1 *means* | `docs/DESIGN.md` §6 | reference — and it carries no status |
+| How far along each part is | `ROADMAP.md` | reference |
+| What the words mean | `docs/MECHANICS.md` | vocabulary only, no policy, no status |
+| How the code is shaped | `docs/ARCHITECTURE.md` | reference |
+| Settled technical decisions | `docs/decisions/` | never restate, never edit a merged one |
+| The rules of working here | `AGENTS.md` | reference |
+| Environment quirks and traps | `CLAUDE.md` | reference |
+
+Two documents say "start here", and both are right about different questions:
+**`ROADMAP.md` for what to work on, `AGENTS.md` for how to work.**
+
 ## The loop
 
 ```bash

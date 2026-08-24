@@ -73,9 +73,10 @@ struct HitboxSpan {
     Box box;
 };
 
-// Capacity per move. Four is enough for a v1 moveset with no multi-hits
-// (DESIGN.md 4.6 cuts juggles and combo strings); the loader rejects a move
-// that exceeds it rather than silently dropping boxes.
+// Capacity per move. Four is enough while moves are single-hit, which is the
+// current behaviour rather than a settled rule -- multi-hit moves are
+// undecided (ADR 0018). The loader rejects a move that exceeds this rather
+// than silently dropping boxes.
 inline constexpr int32_t MAX_HITBOXES_PER_MOVE = 4;
 
 struct MoveData {

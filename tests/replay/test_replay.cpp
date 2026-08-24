@@ -109,9 +109,9 @@ TEST_CASE("The combat recordings actually connect") {
     const Expectation expectations[] = {
         {"punch_connects", true},
         {"mutual_pressure", true},
-        // Blocked hits deal no damage (DESIGN.md 4.6 cuts chip damage), so this
-        // one asserts the opposite: the attacks land on a block and take
-        // nothing off.
+        // Blocked hits currently deal no damage, so this one asserts the
+        // opposite: the attacks land on a block and take nothing off. If chip
+        // damage is ever added, this expectation changes with it.
         {"attack_into_block", false},
     };
 

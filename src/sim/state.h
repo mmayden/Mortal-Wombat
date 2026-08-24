@@ -88,9 +88,10 @@ struct Fighter {
     // once per active frame -- an 8-damage HP would take 24 health over its
     // three active frames.
     //
-    // DESIGN.md 4.6 cuts multi-hit moves from v1, so one hit per move is the
-    // whole rule. Cleared when a new move starts, not when the move ends,
-    // because the fighter can be interrupted out of a move at any point.
+    // One hit per move is the current rule. Multi-hit moves are undecided
+    // rather than excluded (ADR 0018). Cleared when a new move starts, not
+    // when the move ends, because the fighter can be interrupted out of a
+    // move at any point.
     int32_t hit_already_landed;
 };
 

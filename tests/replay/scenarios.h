@@ -122,8 +122,8 @@ inline InputPair walk_in_and_punch(int32_t frame) {
 }
 
 // The same approach, but player two holds block throughout. Pins down that a
-// blocked hit deals no damage (DESIGN.md 4.6 cuts chip damage) while still
-// applying blockstun.
+// blocked hit deals no damage -- the current behaviour, with chip damage
+// undecided -- while still applying blockstun.
 inline InputPair attack_into_block(int32_t frame) {
     InputFrame p1 = NEUTRAL;
     if (frame < APPROACH_UNTIL) {
