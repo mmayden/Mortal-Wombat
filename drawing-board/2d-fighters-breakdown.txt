@@ -1,0 +1,1616 @@
+# tactiq.io free youtube transcript
+# Every Fighting Game Type Explained
+# https://www.youtube.com/watch/b4Kc1p6Iat8
+
+00:00:00.000 [Music]
+00:00:03.439 when Riot revealed the Gameplay trailer
+00:00:05.240 for its upcoming fighting game 2x KO a
+00:00:08.000 user on Reddit described the game as a
+00:00:09.679 Tekken like which caused the collective
+00:00:11.400 face paling of fighting game fans it was
+00:00:13.719 like someone saw these spring rolls and
+00:00:15.639 called them burritos burritos well
+00:00:18.119 there're spring rolls Tekken and 2x KO
+00:00:20.640 are obviously different to fighting game
+00:00:22.320 players but it's not surprising how
+00:00:24.160 these games could seem similar to the
+00:00:25.840 lay person look at how many have a
+00:00:28.119 character select screen a side view
+00:00:30.000 angle of both players facing each other
+00:00:31.960 and life bars depleting towards the
+00:00:33.719 center until someone is koed Win enough
+00:00:36.399 rounds and win the match how can these
+00:00:38.600 games be all that different if so many
+00:00:40.360 share these fundamental characteristics
+00:00:43.000 but the same can be said about a genre
+00:00:44.640 of music like rock wait a minute this
+00:00:47.800 sounds like rock and ol roll rock music
+00:00:51.120 mostly has some combination of electric
+00:00:53.160 guitars Bas drum kits and around 3 to
+00:00:56.160 five members but everyone knows punk
+00:00:58.320 rock is not the same as blues Rock which
+00:01:00.559 is not the same as technical death metal
+00:01:02.960 there are so many different types of
+00:01:04.438 rock music now but if you go back in
+00:01:06.560 time you can trace its roots down to the
+00:01:08.799 father of rock and roll Chuck Berry if
+00:01:11.799 you were try to try and give Rock and
+00:01:13.360 Roll Another name you might call it
+00:01:14.799 Chuck
+00:01:17.600 Berry many artists contributed to the
+00:01:19.960 birth of rock but chuckberry is
+00:01:22.000 described as the one who came closest to
+00:01:24.040 putting all the essential pieces
+00:01:25.520 together thus forming an archetype so to
+00:01:28.600 with fighting games if you go go back
+00:01:30.280 far enough you can find its archetype
+00:01:32.640 Street Fighter 2 the world warrior in
+00:01:36.159 1991 yes it was inspired by many iconic
+00:01:38.880 fighting games before it but they also
+00:01:40.840 served as prototypes that laid the
+00:01:42.560 groundwork for what Street Fighter 2
+00:01:44.280 would become do you karate champ in 1984
+00:01:48.680 brought forward the 1v1 side view
+00:01:50.439 martial arts game but its clunky double
+00:01:52.640 joystick gameplay did not hold up over
+00:01:55.079 time Yar Kung Fu had health bars and
+00:01:58.119 multiple characters but it was sad
+00:02:00.119 single player only and even with all the
+00:02:02.280 lasting Innovations Street Fighter 1 had
+00:02:04.600 it still did not let you select a
+00:02:06.600 character these games were popular and
+00:02:09.000 sold well but none would get close to
+00:02:11.160 the impact and success of Street Fighter
+00:02:13.080 2 which would go on to sell over 22
+00:02:15.480 million copies across platforms it just
+00:02:18.280 had the right combination of design and
+00:02:20.319 gameplay that became the basis for so
+00:02:22.120 many fighting games going forward
+00:02:23.720 including major titles being made today
+00:02:26.400 so what exactly are these design and
+00:02:28.239 gameplay elements that made Street 2 so
+00:02:30.640 successful that it transformed the
+00:02:32.080 arcade culture from one of getting
+00:02:33.720 personal high scores into one of beating
+00:02:35.680 a human opponent you
+00:02:38.680 win well for starters obviously a versus
+00:02:41.800 mode having the objective b to mess up
+00:02:44.200 another human player is what largely
+00:02:46.040 distinguish the fighting game genre from
+00:02:47.680 the single player and Co-op beat him up
+00:02:49.879 genres it's why people were confused
+00:02:52.040 when sefue got nominated for best
+00:02:53.879 fighting game at the game awards what
+00:02:55.879 the holy dumb excuse me if there were a
+00:02:59.080 classification Tre for fighting games
+00:03:00.879 Post Street Fighter 2 the fundamental
+00:03:03.159 characteristic at the top should be a
+00:03:05.000 versus mode from here we Branch off into
+00:03:07.480 two categories archetypal and hybrid or
+00:03:10.640 if you prefer traditional and
+00:03:12.840 non-traditional or I don't know classic
+00:03:15.519 and
+00:03:18.280 modern like many games before it Street
+00:03:21.080 Fighter 2 was a 2d fighting game with a
+00:03:23.080 side perspective where both characters
+00:03:24.920 are always facing each other this means
+00:03:27.120 that the character movement is described
+00:03:28.840 as moving backwards and forwards as
+00:03:30.720 opposed to merely left and right because
+00:03:33.120 it's a 2d game you cannot evade attacks
+00:03:35.519 by moving to the third dimension any
+00:03:37.360 more than the Original Pac-Man could
+00:03:38.959 jump over ghosts this is why these NPCs
+00:03:42.080 can be so chill when a fight is
+00:03:43.920 happening right in front of them they
+00:03:45.799 know they'll never get hit modern
+00:03:48.120 versions of these games might have 3D
+00:03:50.080 models and environments but if the gamep
+00:03:52.079 Play Still takes place in those two
+00:03:53.599 Dimensions you still have a 2d fighting
+00:03:55.760 game though some will call them
+00:03:57.959 2.5d but while you cannot evade by
+00:04:00.640 moving into the third dimension you can
+00:04:02.760 evade by going up really high so
+00:04:05.599 characters jumped higher than their own
+00:04:07.480 height making the combat look like cir
+00:04:10.000 toay making use of the eight-way
+00:04:12.200 joystick of Viera up was neutral jump up
+00:04:14.840 forward was forward jump and up back was
+00:04:16.880 back jump each of the three-way jumps
+00:04:19.120 are at fixed Heights trajectories and
+00:04:21.720 distances per character hold forward to
+00:04:24.080 walk forward hold back to walk backwards
+00:04:26.479 and hold down to crouch simple enough
+00:04:29.440 but the the directionals also control
+00:04:31.360 the blocking you hold back to block
+00:04:34.120 which is the same input to walk
+00:04:35.560 backwards and hold down back to crouch
+00:04:37.800 block if you've noticed all the jumping
+00:04:40.080 and blocking are done on the eight-way
+00:04:41.720 joystick this is because the creator of
+00:04:43.759 Street Fighter 1 tekashi nishiyama
+00:04:46.080 wanted the six button game in an era
+00:04:48.160 where two or three was the norm he would
+00:04:50.639 argue that a six button game wouldn't be
+00:04:52.600 too complicated if all the buttons did
+00:04:54.759 the same thing attack nishiyama got his
+00:04:58.160 way and Street Fighter would have no
+00:05:00.199 jump button and no block button for over
+00:05:02.720 three decades in counting but there is
+00:05:05.199 an unintentional consequence of a hold
+00:05:07.080 back to block system which had become a
+00:05:08.960 major part of the archetypal 2D fighting
+00:05:11.000 game to this
+00:05:14.320 day the problem or feature of hold back
+00:05:17.639 to block is that the input for back
+00:05:19.720 changes depending on if your opponent is
+00:05:21.560 to your right or your left if your
+00:05:23.919 opponent is to your right you hold left
+00:05:26.000 to block if they're to your left you
+00:05:28.039 hold right to block simp Le enough but
+00:05:31.080 which way should you hold here to block
+00:05:33.199 left or right it's hard to know which
+00:05:35.600 direction is back if you don't know if
+00:05:37.479 your opponent will be to your right or
+00:05:39.199 your left in this case you must hold
+00:05:41.800 right to block because the opponent ends
+00:05:43.520 up to your left when the attack connects
+00:05:46.240 tricky but that's what makes it so good
+00:05:48.880 an attack that suddenly requires you to
+00:05:50.479 switch blocking direction to defend is
+00:05:52.600 called a crossup so the first guy I ever
+00:05:55.080 saw do crossups his name was Tony Tui I
+00:05:58.400 was doing cross-ups myself
+00:06:00.160 but didn't even know I was doing it I
+00:06:01.800 just do that for whatever reason if I
+00:06:03.280 jumped into somebody really deep all of
+00:06:05.520 a sudden the guy couldn't block it a big
+00:06:07.199 part of fighting games is to make your
+00:06:08.560 opponent defend incorrectly by mixing
+00:06:10.800 them up which is unsurprisingly called
+00:06:12.960 the mixup but more specifically in this
+00:06:15.240 case a left right mixup I always want to
+00:06:17.520 see this stuff on ESPN let's get rid of
+00:06:21.599 the spelling be already I don't care
+00:06:23.919 about kids memorizing words out of a
+00:06:26.240 dictionary there's no resets in the
+00:06:28.280 dictionary there no cross up and
+00:06:30.120 spelling but it's hard to cross someone
+00:06:32.319 up when they're a moving Target luckily
+00:06:34.960 Street Fighter 2 also introduced
+00:06:36.759 knockdowns which rendered a player
+00:06:38.400 immobile but invulnerable until they got
+00:06:40.919 up again with the opponent on the ground
+00:06:43.240 you can get in position to plan your
+00:06:44.840 mixup if it hits like this there's a
+00:06:47.520 small window where you can score another
+00:06:49.319 free hit afterwards before the game will
+00:06:51.319 let your opponent block this glitch is
+00:06:53.880 what we now know as a combo from here
+00:06:56.840 you can do a special attack before your
+00:06:58.400 attack animation finish and get a third
+00:07:00.800 free hit game is starting to look busted
+00:07:03.280 now look at this janky animation
+00:07:05.120 transition starting another move before
+00:07:07.360 the previous one finishes its animation
+00:07:09.639 is called cancelling a staple feature of
+00:07:11.800 the 2D fighting game archetype and
+00:07:13.759 extremely impossible in real life Street
+00:07:16.520 Fighter 2 lead designer Akira nishitani
+00:07:18.879 said we thought this was quite
+00:07:20.440 interesting and it didn't seem to cause
+00:07:22.160 any bugs so we decided it could be a
+00:07:24.120 feature to expand the game playay so
+00:07:26.520 another genre defining accident this
+00:07:28.720 whole glitch fills attack sequence where
+00:07:30.560 you planned your left right mixup feels
+00:07:32.319 like you were setting your opponent up
+00:07:34.039 which is exactly why they're called
+00:07:36.360 setups you but the Left Right mixup
+00:07:39.319 would not have worked if the game did
+00:07:40.759 not have hold back the block and used
+00:07:42.639 the block button instead this is what
+00:07:44.720 Mortal Kombat did in
+00:07:48.300 [Music]
+00:07:51.800 1992 when blocking is done with a button
+00:07:54.319 instead of a direction there is no left
+00:07:56.440 or right blocking to worry about meaning
+00:07:58.360 no Left Right mixup game to be had
+00:08:00.800 whether scorpion throws his spear or
+00:08:02.560 does his Sid switching teleport punch
+00:08:04.599 the answer is the same block button this
+00:08:07.120 would actually be a nightmare to deal
+00:08:08.800 with if you had to hold back to block
+00:08:10.879 because you'd have to walk backwards to
+00:08:12.400 block Spear and forwards to block
+00:08:14.360 teleport punch but funny enough this
+00:08:16.800 nightmare came true when scorpion became
+00:08:18.800 a guest character in Injustice nether
+00:08:21.240 realm Studios first fold back to block
+00:08:23.080 fighting game how can you say that this
+00:08:25.520 move has been T down look at it it's
+00:08:28.440 ridiculous F the rules of the game this
+00:08:31.520 became a great example of a guest
+00:08:33.200 character bringing over their abilities
+00:08:35.080 into a host world only to harass its
+00:08:37.120 people with neverbe seen technology
+00:08:39.919 basically what I call the Predator
+00:08:41.519 effect calls for tournament bans and
+00:08:43.640 Nerfs would reach game director Ed Boon
+00:08:45.839 on social media where he acknowledged
+00:08:47.720 the issue and promised changes a glance
+00:08:50.279 at the 15-page thread on the Mortal
+00:08:52.200 Kombat Forum test your m.com shows how
+00:08:54.640 divided people were when they found out
+00:08:56.440 Injustice would be a hold back to block
+00:08:58.360 game Mortal combat is unique for being a
+00:09:01.040 major OG 2D fighting game that is not
+00:09:03.279 hold back to block its rock music
+00:09:05.440 equivalent would be Elvis a major OG
+00:09:08.279 rock artist who stood out from the
+00:09:09.800 others by doing his own thing and taking
+00:09:12.240 the performative aspects to the next
+00:09:16.920 level but even without a left right
+00:09:19.120 mixup game you can still have the high
+00:09:20.959 low mixup game the question of whether
+00:09:22.959 you should stand block or Crouch block
+00:09:25.079 also known as blocking high or low the
+00:09:28.000 rule established by Street Fighter to
+00:09:29.800 was that blocking high will defend
+00:09:31.440 against High attacks and jumping attacks
+00:09:33.600 but lose to low attacks which makes
+00:09:35.760 intuitive sense look how vulnerable
+00:09:37.640 those ankles are and blocking low will
+00:09:39.920 defend against both low attacks and high
+00:09:42.000 attacks but will lose to Jumping attacks
+00:09:44.200 not as intuitive but that's the rule
+00:09:46.399 still used today but high low Mix-Ups in
+00:09:48.959 Street Fighter 2 weren't so scary
+00:09:50.920 because Crouch block covered all attacks
+00:09:52.640 on the ground and jumping attacks were
+00:09:54.640 easy to react to with stand block
+00:09:56.720 because everyone jumped so damn high but
+00:09:59.160 there was a downside of Crouch blocking
+00:10:01.279 which was that you couldn't move so a
+00:10:03.480 spacing game was played where you try to
+00:10:05.240 tag your walking opponent with a quick
+00:10:07.079 and long low attack while avoiding or
+00:10:09.320 blocking dares one of the earliest
+00:10:11.360 examples of footsies the Strategic
+00:10:13.320 combat focused on movement and attack
+00:10:15.160 ranges but even still Crouch blocking
+00:10:17.839 was really effective so they had to add
+00:10:19.959 a couple things that could beat blocking
+00:10:21.880 namely throws and Chip damage from
+00:10:23.800 blocked special attacks but as you can
+00:10:25.920 see Street Fighter had a this beat that
+00:10:28.399 but that beats this this kind of rock
+00:10:30.360 paper scissors gameplay but with every
+00:10:32.360 choice contingent on timing and spacing
+00:10:35.240 Tomo taught me a method called the
+00:10:38.120 TDR timing distance and reactions but a
+00:10:41.720 way to bypass this spacing game on the
+00:10:43.720 ground is to do a jumping attack but the
+00:10:46.120 downside is that you cannot Block in the
+00:10:48.200 air making it risky a big part of the
+00:10:50.639 game was to make people impatiently jump
+00:10:52.760 at you so you can strike them out of the
+00:10:54.399 air also known as an anti-air what an
+00:10:57.079 anti-air for the uppercut this is how
+00:10:59.440 the game of fireballs and uppercuts
+00:11:00.959 became Central to its gameplay Street
+00:11:03.360 Fighter 2's combat schematic became the
+00:11:05.360 foundation of the 2D fighting game and
+00:11:07.399 has been used in countless titles but
+00:11:09.880 like with anything the archetype would
+00:11:11.800 evolve and in the early days much of it
+00:11:14.160 was thanks to SNK who posted the makers
+00:11:16.639 of Street Fighter 1 tekashi nishiyama
+00:11:19.120 and Hiroshi
+00:11:22.060 [Music]
+00:11:23.639 Matsumoto while Capcom focused on
+00:11:25.839 refining Street Fighter 2 gameplay with
+00:11:27.720 all its bazillion updates SNK was
+00:11:30.320 working on new fighting game franchises
+00:11:32.440 and innovating like crazy matsumoto's
+00:11:35.440 art of fighting in 1992 would introduce
+00:11:37.959 meter super moves taunting and dashing
+00:11:41.160 where you tap forward or back twice for
+00:11:43.279 quick burst of movement Street Fighter
+00:11:45.320 would add all these mechanics to its
+00:11:46.800 core gameplay much later in '93
+00:11:49.839 weapon-based fighting game Samurai
+00:11:51.240 Showdown introduced running tap for
+00:11:53.480 twice and hold something Mortal Kombat
+00:11:55.680 would again add a button for back dash
+00:11:58.079 and run would become standard in many
+00:11:59.880 fighting games going forward but not all
+00:12:02.320 Innovations stuck around nishiyama's
+00:12:04.639 fatal Fury was the most experimental at
+00:12:06.560 the time with its kind of 3D two-lane
+00:12:08.800 battle system pulled down forward to
+00:12:10.680 crouch walk and a 2V1 co-op mode that
+00:12:13.079 made the good guys look like
+00:12:15.170 [Music]
+00:12:20.519 bullies nevertheless with so many
+00:12:22.760 fighting game characters under their
+00:12:24.079 belt SNK made a crossover game called
+00:12:26.760 The King of Fighters 94 this introduced
+00:12:29.480 the Team Battle system where each player
+00:12:31.240 picks a team of three characters and the
+00:12:33.279 order in which they appear when a
+00:12:35.360 character's life bar is depleted the
+00:12:37.240 next character on the team takes over
+00:12:39.279 the player who can eliminate all three
+00:12:40.800 of their opponent's characters wins the
+00:12:42.480 game as their new flagship fighting game
+00:12:44.720 SNK would continue to add features in
+00:12:46.880 each iteration kof94 introduced spot
+00:12:49.880 dodging a way to Dodge in place for a
+00:12:51.760 moment to avoid attacks a kind of a
+00:12:53.880 pseudo Dodge into the third dimension in
+00:12:56.639 kf95 they experimented with the option
+00:12:58.880 to do a longer three-way jump and fatal
+00:13:01.240 Fury 3 experimented with the short hop
+00:13:03.560 by kf96 you could do a running short hop
+00:13:06.399 called a hyper hop which allowed for
+00:13:08.360 some sneaky high low Left Right Mix-Ups
+00:13:10.839 combine this with rolling an invasion
+00:13:12.639 mechanic that goes through fireballs and
+00:13:14.279 people and you've essentially got the
+00:13:15.959 control scheme for what we know as King
+00:13:17.839 of Fighters gameplay tons of new
+00:13:19.959 movement and jumping options added to
+00:13:21.800 the 2D archetype I think what makes K
+00:13:24.320 unique in the current ERA of fighting
+00:13:26.079 games is that its movement options are
+00:13:28.040 kind of like a happy medium between what
+00:13:30.040 you would find in Old Street Fighter and
+00:13:31.880 also in anime air Dashers would not like
+00:13:33.800 there's a run option which increases the
+00:13:36.360 speed of regular interactions several
+00:13:38.440 different kinds of jumps that all have
+00:13:40.120 strengths and weaknesses and classically
+00:13:42.279 also just really good
+00:13:46.440 buttons in contrast modern Street
+00:13:48.920 Fighter at the core still uses controls
+00:13:50.920 from Street Fighter 2 but with forward
+00:13:53.040 and back dashing added from three
+00:13:55.040 onwards yes Street Fighter games have
+00:13:57.360 had mechanics like long jump parries
+00:13:59.920 custom Combos and focus attack but these
+00:14:02.360 act more like guest mechanics that
+00:14:03.800 change from game to game which is why
+00:14:05.720 each Street Fighter iteration is so
+00:14:07.600 different yet so familiar at the same
+00:14:09.720 time but the thing that binds Street
+00:14:11.839 Fighter kof and other SNK games together
+00:14:15.079 is the rule that you cannot Block in the
+00:14:17.199 air this keeps players closer to the
+00:14:19.399 ground which is why there should be a
+00:14:20.959 subcategory for Grounded fighting games
+00:14:23.480 a great example of a grounded fighting
+00:14:25.240 game is Capcom versus SNK 2 which lets
+00:14:28.279 you choose which mechanics you want your
+00:14:30.000 character to have through its Groove
+00:14:31.759 system it merges and compresses
+00:14:34.320 basically a decade of fighting game
+00:14:36.199 history into one game and tries to
+00:14:38.560 create all these different mechanics or
+00:14:40.519 permutations of mechanics from each
+00:14:42.880 game's original series to make those
+00:14:45.160 characters feel like they could be at
+00:14:46.600 home you can play with SNK style systems
+00:14:49.639 like with a spot Dodge or with rolling
+00:14:51.920 with short hop you can play with charge
+00:14:54.000 style meter or the stock style meter you
+00:14:56.920 get a rage gauge and kid group that's
+00:14:58.800 kind of of like uh Sam shows but with
+00:15:01.240 just defen that makes it feel a little
+00:15:02.880 bit like gar marker the Wolves but you
+00:15:05.000 can also play Capcom characters in those
+00:15:07.519 SNK systems and you can kind of mix and
+00:15:09.519 match to really get something that feels
+00:15:11.399 like it's what you
+00:15:13.880 want p number one USA player at this
+00:15:21.360 moment after Super Street Fighter 2
+00:15:23.519 turbo was released in 1994 Capcom
+00:15:26.279 finally started to flex their own
+00:15:27.639 Innovations with dark star ERS their
+00:15:29.600 first Post Street Fighter 2 fighting
+00:15:31.240 game it would introduce a third type of
+00:15:33.480 blocking hold back to block in the air
+00:15:36.959 but there was a caveat air blocking
+00:15:38.959 could only block jumping attacks not
+00:15:41.120 attacks from the ground which includes
+00:15:43.120 uppercuts this kind of partial air
+00:15:45.160 blocking was found in Street Fighter
+00:15:46.519 Alpha and more recently the grand blue
+00:15:48.519 versus Series in terms of offense
+00:15:50.759 darkstalkers implemented A Primitive
+00:15:52.560 form of chain combos where Loosely
+00:15:54.480 dialed in series of buttons would
+00:15:55.959 magically do a combo a departure from
+00:15:58.199 the strictor link based combo timings of
+00:16:00.199 Street Fighter and kof like games it was
+00:16:02.920 around this time when combos were being
+00:16:04.480 recognized by both the players and the
+00:16:06.319 developers and combo Mania had hit a
+00:16:08.440 peak with the release of Killer Instinct
+00:16:10.399 a game with a unique combo system that
+00:16:12.040 allowed you to do some that exceeded 10
+00:16:14.399 20 or even 30 hits during a match but
+00:16:17.600 with great combos comes great one-sided
+00:16:19.720 gameplay so they also Incorporated a way
+00:16:22.000 to stop your opponent's combo in the
+00:16:23.680 middle of it the combo breaker combo
+00:16:27.199 breaker but preferences for combo
+00:16:29.399 breaker system can vary and typically
+00:16:31.519 SNK and Capcom fighting games tend not
+00:16:33.920 to have them but while Capcom says no to
+00:16:36.600 combo breakers they were completely okay
+00:16:38.920 with adding dashing darkstalkers was the
+00:16:41.199 first Capcom game to add dashing for the
+00:16:43.720 entire cast but these were no ordinary
+00:16:46.319 dashes and they varied from character to
+00:16:48.240 character some would hop slide or even
+00:16:51.199 fly like Morgan but Lord Raptor would go
+00:16:54.079 one step further and break the laws of
+00:16:56.120 physics by performing the first Dash in
+00:16:58.480 the air air we'd also see cartoon
+00:17:00.959 physics in World Heroes where the two
+00:17:02.800 Ninjas performed the first fighting game
+00:17:04.679 double jump in
+00:17:06.240 1992 but how absurd would it be if
+00:17:08.799 everyone could air Dash and double jump
+00:17:11.000 what if everyone could also do chain
+00:17:12.679 combos What If people could block
+00:17:14.760 anything in the air without caveats it
+00:17:17.400 wouldn't be absurd it would just be
+00:17:20.970 [Music]
+00:17:21.980 [Applause]
+00:17:23.199 anime Guilty Gear in 1998 would have air
+00:17:26.559 Dash double jumps and true air blocking
+00:17:28.600 for everyone opening up way more
+00:17:30.640 interactions in the air and truly
+00:17:32.559 distinguishing itself from its grounded
+00:17:34.400 counterparts this new type of 2D
+00:17:36.480 holdback to block game was called anime
+00:17:39.440 or sometimes air Dasher as a side note
+00:17:42.160 the anime fighting game type mostly
+00:17:43.720 refers to the gameplay not just the
+00:17:45.559 Aesthetics some anime looking games are
+00:17:47.679 known to have more grounded gameplay I'm
+00:17:49.760 looking at you Grand blue and dnf duel
+00:17:52.440 anyways in Guilty Gear X2 onwards they
+00:17:54.880 added a clever combo breaker system
+00:17:56.640 called burst which became a defining
+00:17:58.480 mechanic of the series it's clever
+00:18:01.080 because you can only do it when your
+00:18:02.320 gauge is full which means there are
+00:18:04.320 times a player can do their combo
+00:18:06.200 uninterrupted times when they can enjoy
+00:18:08.320 the counterplay of breaking the combo or
+00:18:10.640 times when they counter the counterplay
+00:18:12.520 by baiting burst and starting another
+00:18:14.799 combo this time uninterruptible these
+00:18:17.440 big brain mechanics are common in anime
+00:18:19.840 games and it's where you can find the
+00:18:21.480 most creative and nerdiest systems akin
+00:18:23.760 to what you'd find in a collectible card
+00:18:25.679 game in undernight inbirth this grind
+00:18:28.240 grid gauge measures who has the most
+00:18:29.960 grid blocks by the time this ring-shaped
+00:18:31.960 meter is full which then puts that
+00:18:34.120 player into a vorpal state which
+00:18:35.880 increases damage by 10% and gives them
+00:18:38.480 access to chain shift would you like to
+00:18:40.360 learn more here's 27 tutorials and a PhD
+00:18:43.480 when you're done how about a game with
+00:18:45.240 such long unbreakable combos that
+00:18:47.280 players have time to take selfies while
+00:18:49.120 they're getting hit anime games take the
+00:18:51.320 2D archetype and bring it up to 11
+00:18:53.799 visually mechanically and musically if
+00:18:57.000 Street Fighter 2 is Chuck Barry anime
+00:18:59.320 games might be progressive metal you
+00:19:01.840 know they used to tell us our songs were
+00:19:03.440 way too long we used weird time
+00:19:05.720 signatures and there were too many
+00:19:07.159 guitar solos in fact this song is in 178
+00:19:10.039 so try to tap your foot to it but uh we
+00:19:13.200 just wanted Grammy so I'm glad we did
+00:19:14.840 listen but Capcom had been building up
+00:19:16.799 to their own anime like game or more
+00:19:19.159 precisely a superhero comic like
+00:19:23.640 game right after darkstalkers Capcom
+00:19:26.280 released X-Men Children of the atom
+00:19:28.200 which introd ruce their take on
+00:19:29.880 universal super jumps instead of making
+00:19:32.000 a longer fixed jump Arc like in King of
+00:19:33.919 Fighters super jumps and X-Men went
+00:19:36.039 really high like so high they had to
+00:19:38.480 draw twice as much stage background
+00:19:40.320 vertically they even made an indicator
+00:19:42.320 for the other player that was off the
+00:19:43.840 screen below but it wasn't just the jump
+00:19:46.400 height that was unique super jumps also
+00:19:48.600 let you drift your character left and
+00:19:50.240 right in the air for the first time kind
+00:19:52.480 of like you do in Platformers you could
+00:19:54.640 also do multiple attacks in one jump and
+00:19:57.200 characters like storm had an8 air Dash
+00:19:59.440 and Sentinel could literally fly combine
+00:20:02.240 this with the fact that you can block
+00:20:03.760 anything in the air you wonder why even
+00:20:06.400 be on the ground they'll just be
+00:20:08.200 susceptible to higho Mix-Ups anyways in
+00:20:10.799 the air there is no standing or
+00:20:12.640 crouching state so there are no high low
+00:20:14.919 mixups to worry about holding up back to
+00:20:17.320 jump and AIR block because you're too
+00:20:19.000 chicken to deal with a high low mixup on
+00:20:20.840 the ground is called chicken blocking
+00:20:23.480 but this made air combat so good that
+00:20:25.520 they also improved ground Mobility with
+00:20:27.360 dashes that you could cancel into other
+00:20:29.280 commands you could even Dash and cancel
+00:20:31.679 into another Dash which is known as wave
+00:20:33.880 dashing allowing players to move
+00:20:35.679 extremely quickly on the ground but with
+00:20:38.039 movement blocking and multiple attacks
+00:20:40.120 all available while super jumping you
+00:20:42.120 ultimately got a lot more battles in the
+00:20:44.039 air like a superhero comic book this
+00:20:47.039 type of fighting game alone would be
+00:20:48.600 enough to distinguish itself from other
+00:20:50.440 genres but this series of games was just
+00:20:53.120 getting started they just for the theb
+00:20:59.880 in 1996 Capcom would release X-Men
+00:21:02.400 versus Street Fighter which would become
+00:21:04.200 one of the first tag team fighting games
+00:21:06.200 not to be confused with the existing
+00:21:07.919 Team Battle system in K which only
+00:21:10.480 switches characters when one gets
+00:21:12.200 eliminated attack fighter lets you
+00:21:14.120 switch between your selected characters
+00:21:16.039 with a command and depending on the game
+00:21:18.559 you can even fight simultaneously with
+00:21:20.559 some limitations but what really changed
+00:21:23.159 everything was Marvel versus Capcom 2
+00:21:25.520 which let you call out your teammate to
+00:21:27.120 briefly assist you in the fight F also
+00:21:29.400 simply known as calling an assist again
+00:21:32.200 SNK Had A Primitive version of this back
+00:21:34.640 in kf94 where you could call in a
+00:21:36.799 teammate only if you were stunned or in
+00:21:38.960 a hold but in Marvel you could call an
+00:21:41.480 assist almost any time you're able to
+00:21:43.440 attack allowing for some oppressive
+00:21:45.400 offense and combos like how do you block
+00:21:47.919 when your opponent hits you jumping
+00:21:49.640 while their assist hits you low at the
+00:21:51.640 same time if perfectly synced it's
+00:21:54.559 theoretically an unblockable to give the
+00:21:57.159 defender a chance against the this kind
+00:21:58.960 of oppressive offense there was a
+00:22:00.880 mechanic that pushed your opponent away
+00:22:02.799 while blocking called push block but the
+00:22:06.000 downside of having multiple characters
+00:22:07.799 on screen at once is that you can also
+00:22:10.240 get them all killed at once when two
+00:22:12.799 characters of the same team are caught
+00:22:14.640 in a deadly combo it's ironically called
+00:22:17.120 a happy birthday oh my
+00:22:22.080 goodness happy birthday
+00:22:25.550 [Music]
+00:22:28.640 X
+00:22:31.960 Factor and in the rare case it's three
+00:22:34.600 characters it's called a Merry Christmas
+00:22:37.120 giving new meaning to the joy of giving
+00:22:39.600 oh my goodness is this a that was a
+00:22:41.159 Merry Christmas well I ain't seen a
+00:22:42.840 Merry Christmas in years Marvel vs
+00:22:45.400 Capcom 2 would establish itself as an
+00:22:47.520 archetype for 2D tag Fighters which
+00:22:49.679 became known as a versus game but this
+00:22:52.320 tag system is also seen in games like
+00:22:54.120 skull girls Blaze Blue Cross tag battle
+00:22:56.799 and Dragon Ball Fighters which are
+00:22:58.520 varying blends of versus and Anime if
+00:23:01.159 you look at the three subcategories of
+00:23:02.840 the 2D hold back to block games you can
+00:23:05.279 notice there's a gradation that goes
+00:23:06.919 from you sure you want to jump all the
+00:23:09.320 way to why the hell are you not jumping
+00:23:11.880 the archetypal 2D fighting game evolved
+00:23:14.080 to go more upwards makes sense because
+00:23:16.720 you certainly can't go into the
+00:23:18.720 background but what if you
+00:23:22.360 could rewind back to 1993 and you have
+00:23:25.640 Virtual Fighter the first 3D 3D fighting
+00:23:28.200 game with actual polygons and a 3D
+00:23:30.600 camera at first glance it looks like a
+00:23:32.760 2d fighting game just with 3D Graphics
+00:23:35.400 but this is no 2.5d game the background
+00:23:38.360 is now empty because it now has become
+00:23:40.279 part of the playing field in terms of
+00:23:42.200 fighting games and gaming in general it
+00:23:44.520 was revolutionary there's an old game
+00:23:46.840 faq's guide from 1994 that describes it
+00:23:49.600 best take a look at this I found this on
+00:23:52.640 the internet different is good with the
+00:23:55.520 release of their first ever fighting
+00:23:56.960 game Sega has broken new ground by
+00:23:59.000 designing the only current martial arts
+00:24:00.840 game whose draw isn't violence or the
+00:24:03.200 ever popular magic moves but whose draw
+00:24:05.559 is realism fluidity of motion and
+00:24:08.080 genuine martial arts techniques but this
+00:24:10.240 focus on realism and genuine martial
+00:24:12.120 arts also affected the game play Walk
+00:24:14.559 speeds were more realistic attacks had
+00:24:16.559 way more frames of animation and high
+00:24:18.480 jumping became much less effective to
+00:24:20.520 the point where 3D fighting games
+00:24:21.919 eventually phased them out this
+00:24:23.799 basically eliminated the Left Right
+00:24:25.240 mixup game and like Mortal Kombat 3D
+00:24:27.720 fighting games focused on the high low
+00:24:29.559 mixup there it is it's ARS is your Tek
+00:24:33.520 seven Champion the high low blocking
+00:24:35.520 rules are similar to 2D games except
+00:24:37.760 that Highs are now always duable and
+00:24:39.960 jumping attacks are now called mids they
+00:24:42.520 changed the name because in 3D games
+00:24:44.720 most attacks that beat Crouch blocking
+00:24:46.679 could now be done from the ground moves
+00:24:49.360 like gut punches knees and hop kicks
+00:24:51.679 became typical indicators of mid attacks
+00:24:54.120 and Virtual Fighter suddenly made it
+00:24:55.640 extremely dangerous to crouch block
+00:24:57.559 because you cannot react to most mid
+00:24:59.399 attacks like you can with cir the solay
+00:25:01.600 jumping attacks in later 3D fighting
+00:25:03.840 games these mids could launch you and
+00:25:05.919 lead to a Juggle combo easily doing 40%
+00:25:08.679 or more damage whether they knew it or
+00:25:11.080 not the mid would become a game changer
+00:25:13.840 over time more and more 2D fighting
+00:25:15.840 games started to have mid attacks of
+00:25:17.440 their own called overheads with a visual
+00:25:19.679 cue of an attack hitting downwards or
+00:25:21.760 hopping attack but they generally aren't
+00:25:23.799 as scary as mids in 3D games because
+00:25:26.559 Crouch blocking became so risky it
+00:25:28.720 became overall safer to stand block
+00:25:30.840 which is the opposite of 2D hold back to
+00:25:32.919 block games but the high low Mix-Ups get
+00:25:35.520 even harder to block because Virtual
+00:25:37.240 Fighter allowed you to press certain
+00:25:38.799 sequences of buttons which would
+00:25:40.360 activate a flurry of attacks that can be
+00:25:42.000 a mix of high low and yes mid attacks
+00:25:45.919 these are called attack strings and
+00:25:47.679 recognizing these patterns can help you
+00:25:49.360 defend against them but with so many
+00:25:51.320 strings in variations you're bound to
+00:25:53.279 get hit by something this is the Hyo
+00:25:55.760 mix-up game of the archetypal 3D fighter
+00:25:58.520 and in a way there are a lot of
+00:26:00.000 parallels to Modern Mortal Kombat which
+00:26:02.279 also has attack strings with mids and a
+00:26:04.159 Juggle Centric combo system but Mortal
+00:26:06.600 Kombat is a 2d game what was it that
+00:26:08.799 made Virtual Fighter play like a 3D game
+00:26:11.159 not just look like
+00:26:13.919 it in 2D fighting games you cannot hit a
+00:26:16.799 knockdown opponent by default the attack
+00:26:19.240 just goes through them this was likely
+00:26:21.440 preferable to being able to always hit
+00:26:23.480 them which would lack any meaningful
+00:26:25.120 counterplay unless you had some kind of
+00:26:27.120 shrimping mechanic or or let everyone
+00:26:29.240 move like Aki but in a 3D game like
+00:26:31.880 Virtual Fighter they allow you to hit
+00:26:33.760 down opponents because the counterplay
+00:26:35.799 is simple and elegant side roll into the
+00:26:38.559 background or foreground this paved the
+00:26:40.960 way for the sophisticated getup games 3D
+00:26:43.080 games are known for and over time 2D
+00:26:45.520 games started to add more get up options
+00:26:47.360 to have more counterplay against setups
+00:26:49.840 but the lateral movement in Virtual
+00:26:51.159 Fighter could only be done when knocked
+00:26:53.039 down and side stepping in a 3D game
+00:26:55.039 wouldn't appear until Tekken 2 but only
+00:26:57.720 one character had it okay so Tekken 2
+00:27:00.360 was a 3D game obviously but it didn't
+00:27:02.360 actually have 3D movement the only
+00:27:03.919 person who could actually do uh a side
+00:27:06.760 step was kazuya it's called the misstep
+00:27:09.240 and all you do is do forward neutral and
+00:27:10.840 it like that it'll move in and out you
+00:27:13.360 can't really control the the direction
+00:27:15.640 of it it'll it'll just randomly either
+00:27:17.240 go right or left but he was the first
+00:27:19.320 one to do it side dodging as a universal
+00:27:21.720 mechanic was introduced in battle arena
+00:27:23.679 toshinden in 1995 with this rolling move
+00:27:27.200 in '96 Sid stepping appeared in Virtual
+00:27:29.399 Fighter 3 using a new Dodge button in
+00:27:32.120 '97 Tekken 3 got tap up or down to S
+00:27:34.960 side step and has had it since in '98
+00:27:37.720 soulcaliber introduced its distinctive
+00:27:39.880 eight-way run system where you can move
+00:27:41.600 freely in eight directions on the ground
+00:27:44.320 even with lateral movement the
+00:27:45.640 characters would still automatically
+00:27:47.120 face each other and the camera would
+00:27:48.760 lock on to the side perspective though
+00:27:51.080 sometimes the cameraman needed to be
+00:27:52.480 fired the ability to move laterally gave
+00:27:55.200 players two new ways to avoid attacks
+00:27:57.600 side step left and side step right in a
+00:28:00.159 way this kind of replaced the role of
+00:28:01.840 jumping high to avoid attacks in 2D
+00:28:04.000 games which is evidenced by 3D games
+00:28:06.360 phasing out its Moon jumping jumping in
+00:28:08.679 3D games evolved into realistic jump
+00:28:10.600 Heights with the purpose of going over
+00:28:12.159 low attacks but not mids or highs
+00:28:14.679 further expanding its high low gameplay
+00:28:17.080 but in one of the most controversial
+00:28:18.559 examples of the Predator effect in
+00:28:20.159 Tekken 7 guest character Akuma uses his
+00:28:23.240 2D Street Fighter jump to go over Chin's
+00:28:25.480 otherwise safe mid attack and a 95 %
+00:28:28.760 damage combo I can't believe what we're
+00:28:30.919 seeing look at the life bomb that was
+00:28:33.000 the first time where people really
+00:28:34.600 started talking about Akuma before like
+00:28:36.360 the pakistanis came around you know and
+00:28:38.519 I think that moment in itself just shows
+00:28:41.000 just how dumb Akuma was if we being
+00:28:43.960 honest having access to tools like jump
+00:28:46.960 which unfortunately crushes highs mids
+00:28:49.799 and lows I think that's just not fair at
+00:28:51.919 all and again It Breaks the Rules the
+00:28:54.159 fundamental rules of teken I'm Vincent
+00:28:56.440 super auma they call me I'll let you
+00:28:59.000 guess what character I play Akuma is
+00:29:01.159 built around having great lows and not
+00:29:04.600 so good mids right he obviously he's got
+00:29:06.960 good mids but it's the lows that are the
+00:29:09.679 real problem so you have to duck more in
+00:29:11.880 2D games most of your time blocking is
+00:29:14.880 crouching and you only get up for
+00:29:16.320 overheads but in Tekken it's the
+00:29:18.440 opposite where you're standing and it's
+00:29:21.320 the lows where you make the read or
+00:29:22.919 react in D you should not lose for
+00:29:25.480 simply holding back and I think that's
+00:29:26.880 the problem with a Akuma if you just
+00:29:28.399 hold back you're going to die and
+00:29:30.559 there's no other character like that
+00:29:32.039 besides the 2DS of course and that's not
+00:29:34.159 Tekken in my eyes I think he would be
+00:29:36.799 less hated probably still hated but less
+00:29:39.080 hated if he was just a brand new uh
+00:29:42.000 Tekken character the fact that he's a
+00:29:43.720 guest you know people are kind of
+00:29:44.720 xenophobic in that way I guess cuz right
+00:29:46.760 now they feel like they're Justified oh
+00:29:48.840 he's got nothing to do in Tekken I mean
+00:29:51.320 yeah but it's been 6 years get over it I
+00:29:53.399 think I've just gotten used to it at
+00:29:54.600 this point I've been told many times by
+00:29:56.640 people oh all you got to do is back to
+00:29:58.200 versus Akuma I think that's great advice
+00:30:00.159 as well I should back dash to the wall
+00:30:01.600 where I get killed for holding back
+00:30:03.080 great advice guys thank you very much oh
+00:30:05.320 no
+00:30:06.640 SP my God it's the Joker while the 3D
+00:30:11.000 fighting game has become its own sub
+00:30:12.720 genre it's difficult to make further
+00:30:14.640 subcategories because there are not
+00:30:16.519 nearly as many 3D games as there are 2D
+00:30:19.080 games and the major 3D franchises are
+00:30:21.480 distinct enough to just be their own
+00:30:23.519 thing in a way Virtual Fighter can be
+00:30:25.799 likened to Buddy Holly who's every man
+00:30:28.000 Persona brought a realism to rock and
+00:30:29.880 roll while also pioneering new recording
+00:30:32.240 techniques like double tracking to give
+00:30:34.200 a more three-dimensional
+00:30:38.679 Sound by the late '90s the market was
+00:30:41.279 saturated with fighting games that were
+00:30:42.960 based on both the 2D and 3D archetypes
+00:30:46.000 so naturally there would be games that
+00:30:47.600 combined aspects of both in 1997 Capcom
+00:30:51.559 released rival schools which had the
+00:30:53.480 familiar gameplay of 2D games like high
+00:30:56.159 jumping magic moves and special attack
+00:30:58.639 cancels but it also allowed you to S
+00:31:00.559 side step into the background like in a
+00:31:02.600 3D game but these games were not very
+00:31:05.240 common and even fighting layer which
+00:31:07.399 started its series with this kind of
+00:31:09.320 gameplay ended up shifting over to a
+00:31:11.440 more conventional 2.5d fighting game
+00:31:14.120 though it looks like they're going back
+00:31:16.279 there isn't a particular term for games
+00:31:18.279 that play like 2D fighting games while
+00:31:20.279 utilizing a 3D plane so for now I'll
+00:31:23.159 just call them 5D fighting games because
+00:31:25.519 2 + 3 = 5 I don't know maybe it'll
+00:31:28.639 become a thing when Tekken Cross Street
+00:31:30.399 Fighter comes out we we had teken
+00:31:35.240 cross get out but there also isn't a
+00:31:39.120 term for a fighting game where you can
+00:31:40.919 jump downwards there's a game called
+00:31:43.919 antiny of common flowers based on the
+00:31:46.240 too universe that allows you to do a
+00:31:48.360 three-way jump upwards or downwards with
+00:31:51.000 the middle of the screen being the quote
+00:31:52.760 unquote ground that somehow is a center
+00:31:55.320 of gravity with the characters floating
+00:31:57.120 in the air
+00:31:58.360 this means you can do an instant
+00:31:59.840 downback jump Forward Air Dash cross up
+00:32:02.480 just imagine a 5D version of this game
+00:32:05.360 at the other end there are also Ultra
+00:32:07.120 minimalist fighting games like dive kick
+00:32:09.240 that only uses two buttons and has no
+00:32:11.559 blocking all these games take an
+00:32:13.440 assortment of aspects of all the
+00:32:15.320 categories to concoct something unique
+00:32:17.639 while still being based on the archetype
+00:32:20.120 these games are to fighting games what
+00:32:22.240 platypuses are to mammals and so we have
+00:32:24.799 the archetypal other category if you've
+00:32:27.440 made it this far congrats this covers
+00:32:29.880 all the fighting game types based on the
+00:32:31.480 archetype but there's still another half
+00:32:33.639 of the fighting game tree where things
+00:32:35.279 get really
+00:32:38.080 interesting one day game designer
+00:32:40.240 Masahiro Sakurai was at an arcade
+00:32:42.639 destroying someone in King of Fighters
+00:32:44.960 but when he found out the players on the
+00:32:46.399 other side were a couple who had no idea
+00:32:48.559 what they were doing he felt terrible it
+00:32:51.080 inspired him to make an accessible
+00:32:52.480 fighting game called Super Smash
+00:32:54.240 Brothers released in
+00:32:55.760 1999 this game was also a a 2d game with
+00:32:58.559 a side perspective but it deviated so
+00:33:00.720 much from the original fighting game
+00:33:02.000 archetype that people wondered if it
+00:33:03.720 could even be called a fighting game the
+00:33:06.000 most obvious difference is the
+00:33:07.320 percentage system and stocks instead of
+00:33:09.519 Life bars and rounds the goal is to
+00:33:11.760 knock your opponent off the edge of the
+00:33:13.240 screen to eliminate their stocks and
+00:33:15.519 hitting them increases their percentage
+00:33:17.399 which increases how far they get knocked
+00:33:19.399 back but the combat itself also takes a
+00:33:22.080 very different approach remember all
+00:33:24.159 that talk about crossups left right and
+00:33:26.320 high low mixups scare mids overheads and
+00:33:29.320 chicken blocking in Smash none of that
+00:33:31.880 exists because there is no autof facing
+00:33:34.120 and the game's controls are indifferent
+00:33:35.880 to what side you're on you just move
+00:33:38.200 left and right instead of forwards and
+00:33:40.240 backwards which allows you to attack
+00:33:42.200 away from your opponent which would be
+00:33:44.000 impossible in a 2d hold back to block
+00:33:46.320 game smash also replaced the high low
+00:33:48.760 blocking game with this intuitive
+00:33:50.360 shielding system holding the shield
+00:33:52.440 button will activate a protective bubble
+00:33:54.519 that covers your entire body until it
+00:33:56.639 shrinks the exposed parts of the body
+00:33:58.880 are then vulnerable this is much more
+00:34:01.279 intuitive than explaining to someone why
+00:34:03.399 this is a high attack you also don't
+00:34:05.559 have to explain motion inputs because
+00:34:07.320 smash did away with them in favor of a
+00:34:09.399 special attack button that does
+00:34:10.918 different things depending on what
+00:34:12.560 direction you're holding if you've
+00:34:14.359 noticed the way smash works is like the
+00:34:16.520 many sidescrolling Platformers you've
+00:34:18.280 played before but also like Platformers
+00:34:20.960 the control you have over running and
+00:34:22.679 jumping is unlike anything in the
+00:34:24.280 archetypal games even Marvel in addition
+00:34:27.199 to double jumping drifting and short
+00:34:29.320 hoing you can choose to fall Faster by
+00:34:31.480 tapping down you can also control the
+00:34:34.000 trajectory of your character when
+00:34:35.719 getting knocked around which is known as
+00:34:37.839 directional influence holding on ding in
+00:34:41.000 so he doesn't get pushed off and all
+00:34:42.679 this is done with the 360° analog stick
+00:34:45.599 which is more directions than eight
+00:34:47.560 blasting off at a protractor measured
+00:34:51.320 angle this level of control is why
+00:34:53.480 actions per minute enters the
+00:34:54.800 conversation in Smash at the highest
+00:34:56.918 levels especially in melee it's no
+00:34:59.560 wonder smash players call hold back to
+00:35:01.480 block games traditional but as different
+00:35:04.000 as smash is from the 2D and 3D fighting
+00:35:06.320 game archetypes smash has mechanics
+00:35:08.520 inspired by those games like short hop
+00:35:11.000 attacks roll which makes you briefly
+00:35:13.240 invincible and spot Dodge which are all
+00:35:15.720 mechanics found in King of Fighters the
+00:35:18.720 most similar game in terms of movement
+00:35:20.440 is probably KF where you have a lot of
+00:35:23.520 different types of hops like you have
+00:35:25.000 the short hop full jump Dash hyper hop
+00:35:27.320 and a jump in can be minus or plus
+00:35:30.040 depending on exactly when you time it
+00:35:31.440 stuff like that has
+00:35:34.230 [Applause]
+00:35:35.280 no Leen is our Evo 2018 Super Smash
+00:35:40.000 Brothers Melee Champion hi I'm lein I'm
+00:35:42.880 a fighting game/ smash player if you
+00:35:45.240 think those they're different but I'm
+00:35:47.000 mostly known for Smash and more recently
+00:35:49.560 um through Dragon Ball and guil to gear
+00:35:51.359 strive I've been known more as a
+00:35:52.440 fighting game player as well this is two
+00:35:54.520 different evil titles in two different
+00:35:56.280 fighting games like can we talk about
+00:35:57.920 Rari I Amir I think a lot of traditional
+00:36:00.680 fighting game players think that smash
+00:36:02.240 you know like has very different
+00:36:03.599 mechanics and stuff like that the step
+00:36:05.800 from like a street fighter or a Guilty
+00:36:08.720 Gear or Tekken to smash is probably not
+00:36:11.359 nearly as big as they think they can
+00:36:13.720 sometimes have pretty similar decision
+00:36:15.440 making a lot of the hit lag block stun a
+00:36:18.280 lot of the grab versus blocking whiff
+00:36:20.680 punishing and movement and all that
+00:36:23.720 stuff it really exists in Smash it just
+00:36:25.760 has different forms and I think that's
+00:36:27.640 the same thing for like you know how
+00:36:29.520 smash a few traditional fighting games a
+00:36:31.000 lot of them were like oh my God you're
+00:36:32.440 blocking forever is there any real
+00:36:34.119 counterplay maybe you don't Shield as
+00:36:36.359 much in like for as long sequences but
+00:36:38.640 it's not that different from someone who
+00:36:40.880 gets Edge carded for 30 seconds and then
+00:36:42.599 barely makes it back that said though I
+00:36:45.200 think it does take a long time to get
+00:36:47.400 used to the other if you're used to one
+00:36:49.839 now over two decades old there are many
+00:36:52.119 platform fighting games made by Indie
+00:36:53.720 developers and large Studios alike and
+00:36:56.200 major tournaments like gen is that
+00:36:58.200 specialize in these games without a
+00:37:00.480 doubt the platform fighter deserves its
+00:37:02.400 own subcategory under hybrid The Rock
+00:37:05.240 equivalent here would be the Beasty Boys
+00:37:07.680 who combined hip hop with rock music
+00:37:09.960 inspiring a new sound that would explode
+00:37:11.880 in the 9s to the consternation of
+00:37:17.240 purists so platform fighting games are a
+00:37:19.880 thing but what about fighting game
+00:37:22.520 Platformers before smash there was a
+00:37:24.640 game called Mortal Kombat mythology
+00:37:26.319 Subzero a sides scrolling platformer
+00:37:28.560 game that took place in the Mortal
+00:37:30.200 Kombat universe it was a cool idea but
+00:37:33.200 they forced the archetypal 2D fighting
+00:37:34.839 game controls in a sidescrolling
+00:37:36.560 platformer game which ended up being a
+00:37:38.800 hilarious mess they kept the three-way
+00:37:41.040 jump motion inputs and backwards and
+00:37:43.200 forwards walking but because it's a
+00:37:45.359 platformer you sometimes have to walk in
+00:37:47.680 the other direction to get somewhere
+00:37:49.839 their solution a turn around
+00:37:53.560 button the fighting game platformer
+00:37:55.640 never took off and mortal combat
+00:37:57.920 mythologies became its own thing but
+00:38:00.440 that's not always bad all sorts of
+00:38:02.480 unlikely genres have cross over into
+00:38:04.480 fighting game territory with great
+00:38:06.280 results Buster Groove is a 1V one rhythm
+00:38:08.920 game where you can attack your opponent
+00:38:10.839 and they can attempt to dodge puzzle
+00:38:13.079 games have versus modes where you can
+00:38:14.760 give your opponent garbage tennis games
+00:38:16.880 can have supers and so can pong you can
+00:38:19.480 PVP in MOA or action RPGs and of course
+00:38:23.440 there's maiden and spell a 1v1 bullet
+00:38:26.000 hell game these games might not have any
+00:38:28.400 martial arts combat but they have other
+00:38:30.480 elements of the archetype that give
+00:38:32.160 those games their fighting gaminess and
+00:38:34.079 the most fighting gamy thing of all is a
+00:38:36.680 1v1 Zero Sum versus mode because each of
+00:38:39.800 these hybrid games are so unique without
+00:38:42.119 the constellation of varieties that
+00:38:43.680 platform Fighters have they belong in
+00:38:45.839 the hybrid other category but I argue
+00:38:48.359 there's also a genre crossover game
+00:38:50.280 where you are undeniably in a martial
+00:38:52.119 arts fight more so than in any of the
+00:38:54.520 games I mentioned these games Focus so
+00:38:57.079 much unrealism they don't play much like
+00:38:59.280 the archetypal fighting games at all and
+00:39:01.440 have things like one hit kills in the
+00:39:03.440 case of Bushido Blade and even doctors
+00:39:05.760 who can stop fights in EA UFC yes
+00:39:09.359 there's a doctor mechanic the crossover
+00:39:12.040 genre here is Similator and if you doubt
+00:39:14.760 there should be a distinction between a
+00:39:16.280 typical fighting game and a fighting
+00:39:17.680 simulator consider the difference
+00:39:19.400 between Gran Turismo a game that has
+00:39:21.560 turned players into actual professional
+00:39:23.319 race car drivers and Mario Kart a racing
+00:39:25.960 game where you can turn into a bullet
+00:39:28.359 the difference is that fighting Sims are
+00:39:30.160 not nearly as common so off to the other
+00:39:32.800 category they go but there is one more
+00:39:36.240 fighting game hybrid type that deserves
+00:39:38.359 its own subcategory the arena
+00:39:43.200 fighter one of the biggest things in
+00:39:45.240 common archetypal fighting games have
+00:39:46.880 with smash is that these games all use a
+00:39:49.200 side view perspective so what happens if
+00:39:52.040 you don't in 1993 Sega released a game
+00:39:55.280 called Dark Edge which was an early
+00:39:57.000 attempt at an 8-way movement 3D fighting
+00:39:59.280 game with 2D Sprites but the camera did
+00:40:02.079 not rotate with the players this caused
+00:40:04.800 all sorts of problems one of which was
+00:40:07.000 players bodies obscuring the opponent
+00:40:09.560 they hilariously kept hold back the
+00:40:11.400 block which meant if you're in the
+00:40:13.040 background you could hold up the block
+00:40:15.240 and do half circle downward special
+00:40:17.119 moves good luck doing an upside down SNK
+00:40:19.839 motion from each Direction the fact that
+00:40:22.359 you could reposition and attack upwards
+00:40:24.400 and downwards complete with matching
+00:40:26.240 Sprites was not novel but the 8-way free
+00:40:29.160 ground movement had been around forever
+00:40:31.160 in the form of wrestling games and Co-op
+00:40:33.200 beat him up games in the80s later SNK
+00:40:36.240 took this control scheme added Left
+00:40:38.520 Right autof facing and made the fighting
+00:40:40.560 game aggressors of dark combat which
+00:40:42.960 even flexes its free ground movement
+00:40:45.119 before the fight starts it's starting to
+00:40:47.040 feel like there's nothing SNK hasn't
+00:40:49.200 thought
+00:40:50.480 of you win but you still can't attack
+00:40:54.119 upwards and downwards so it wasn't until
+00:40:56.319 3D engines with polygons when this could
+00:40:58.640 be done convincingly and so we got airu
+00:41:02.000 a polygonal fighting game with free
+00:41:03.599 ground movement and Final Fantasy s
+00:41:05.640 characters the camera is higher this
+00:41:07.599 time to prevent characters obscuring
+00:41:09.359 each other and the characters can face
+00:41:11.240 any direction to autof face you must
+00:41:13.839 hold down the guard button which locks
+00:41:15.800 onto your opponent kind of like a 3D
+00:41:17.680 Zelda game but they ambitiously kept the
+00:41:20.400 high low blocking system where you could
+00:41:22.240 block Low by either holding guard and
+00:41:24.280 being still or block High by either
+00:41:26.720 holding guard guard while moving or
+00:41:28.839 standing still without holding guard did
+00:41:31.319 you get all that while seriously unique
+00:41:33.839 and sophisticated it's hard not to feel
+00:41:36.400 like they shoehorned this archetypal 3D
+00:41:38.720 fighting game system into an arena
+00:41:40.520 perspective just imagine if Zelda had
+00:41:42.839 highs lows and mids like hold back to
+00:41:45.720 block in Dark Edge it just didn't catch
+00:41:48.000 on but a year later Capcom simplified
+00:41:50.960 things with the game Power Stone which
+00:41:52.760 had no blocking and no locking on but it
+00:41:55.599 didn't need blocking because the free
+00:41:57.319 ground movement with jumping gave many
+00:41:59.079 ways to dodge and without autof faing
+00:42:01.720 people had to aim their attacks oh no
+00:42:04.720 these games have a sort of isometric
+00:42:06.680 perspective where the camera has a
+00:42:08.040 limited range of movement and rotation
+00:42:10.720 it's like playing a fighting game in a
+00:42:12.720 diarama what's a diarama but Arena
+00:42:15.720 Fighters like Naruto Ultimate ninj Storm
+00:42:18.200 have a camera that moves much more
+00:42:19.760 freely and rotates around the arena
+00:42:22.079 players have free ground movement and
+00:42:23.960 attacking makes you automatically face
+00:42:25.599 your opponent but while a free roaming
+00:42:27.760 camera lets you see your favorite
+00:42:29.160 characters in all sorts of cool angles
+00:42:31.760 it also means the whims of the cameraman
+00:42:34.040 will determine who will have the more
+00:42:35.760 favorable perspective and which
+00:42:37.720 direction on your controller will go
+00:42:39.480 forward it seems unpredictable but I'm
+00:42:42.160 sure someone out there has found the
+00:42:43.839 best strategies to make the camera work
+00:42:45.720 in their favor but the arena fighter
+00:42:48.079 Dragon Ball Budokai Tenkaichi solves
+00:42:50.480 this issue by giving both players their
+00:42:52.359 own third person over the- shoulder
+00:42:54.400 perspective but of course this requires
+00:42:56.720 both play players to have their own
+00:42:58.040 screens or play split screen but we've
+00:43:01.240 now come a long way from the original
+00:43:02.760 archetype and are getting into the
+00:43:04.200 perspectives of other wellestablished
+00:43:05.720 genres like third person
+00:43:10.559 shooters both third person shooters and
+00:43:13.000 third person fighting games have
+00:43:14.559 missiles or missil like attacks but only
+00:43:17.119 the third person shooter focuses on
+00:43:19.319 firearms firearms are antithetical to
+00:43:21.720 martial arts combat for obvious reasons
+00:43:24.440 these weapons have practically unlimited
+00:43:26.119 reach and speed fire instantly and
+00:43:28.880 bullets are unblockable and undodgeable
+00:43:31.359 unless you're in The Matrix Firearms
+00:43:34.119 make distance and speed irrelevant so
+00:43:36.359 much so that pistols in shooting games
+00:43:38.480 often function more like barcode
+00:43:40.040 scanners than actual guns firing
+00:43:43.480 bullets this is called Hit scan and you
+00:43:46.240 can see this in action if you go frame
+00:43:48.119 by frame on a valorant match the kill
+00:43:50.680 indicator appears the moment the player
+00:43:52.839 clicks the mouse even before the
+00:43:55.359 animation of the enemy getting shot Shot
+00:43:58.040 Firearms work in tactical Shooters
+00:44:00.160 because aiming is a fundamental skill in
+00:44:02.160 them but in fighting games aim has never
+00:44:04.559 been the dominant skill because these
+00:44:06.559 games already do most of the aiming for
+00:44:08.800 you third person fighting games like
+00:44:10.720 Gundam versus and for Honor have lock on
+00:44:13.559 systems and in the case of arms the
+00:44:15.839 players are always facing each other and
+00:44:18.440 if you think about it fighting games
+00:44:20.079 taking place in two Dimensions is a form
+00:44:22.480 of auto aim because there is no third
+00:44:25.000 dimension in which to miss your attacks
+00:44:27.440 a fighting game where you pit two
+00:44:28.800 players in an arena with guns that
+00:44:30.640 automatically aim at each other would
+00:44:32.480 not be much of a game at all even beam
+00:44:35.359 attacks and pistols in Marvel vs Capcom
+00:44:37.599 games have significant startup
+00:44:39.119 animations and travel time they are not
+00:44:41.680 even close to instantaneous but in a
+00:44:44.359 genre to genre case of the Predator
+00:44:46.160 effect Guilty Gear strive introduced
+00:44:48.240 happy chaos who brought with him an
+00:44:50.160 actual hit scanning pistol that fires
+00:44:52.480 instantly and aims automatically
+00:44:55.240 seriously with a pistol draw on you can
+00:44:57.680 fire at any range fire while running and
+00:45:00.160 jumping and even while punching and
+00:45:03.440 kicking oh wow gets the reload this is
+00:45:06.200 dangerous how do you get in but the
+00:45:08.400 caveats are you need concentration meter
+00:45:10.720 to use it you need to reload you cannot
+00:45:13.800 block with the pistol drawn while your
+00:45:15.880 opponent can block the bullets and the
+00:45:18.040 reticle needs time to lock on but if you
+00:45:21.000 hit your opponent with a water balloon
+00:45:22.720 the reticule will lock on quicker until
+00:45:24.839 they get dry again this was definitely a
+00:45:27.480 bold character design that is totally
+00:45:29.559 anime but just appreciate what it took
+00:45:31.839 to make the gun balanced it was
+00:45:34.200 controversial because you cannot react
+00:45:36.280 to an attack that happens instantly
+00:45:38.559 keeping your distances futile when an
+00:45:40.480 attack has unlimited range and there's
+00:45:42.720 not much the time when the goal is to
+00:45:44.920 shoot first it upsets Tomo her's
+00:45:47.680 fighting aim notion of TDR timing
+00:45:50.640 distance and reactions know what moves
+00:45:53.200 will Counterattack from a given distance
+00:45:55.760 once you got the timing and distance
+00:45:57.440 down you can concentrate on the r
+00:45:59.960 reaction this is why fighting games tend
+00:46:02.160 to stick to projectiles and martial arts
+00:46:04.960 and it's why so many of these games use
+00:46:06.680 the side perspective it's simply the
+00:46:08.960 best angle to gauge the speed and range
+00:46:11.240 of the huge variety of moves that each
+00:46:13.359 character has making it the go-to
+00:46:15.599 perspective of competitive play this is
+00:46:18.480 not to say the perspectives used by
+00:46:20.400 Arena Fighters are not suited for
+00:46:22.359 competition it's just that it makes the
+00:46:24.520 gameplay take a huge departure from both
+00:46:26.599 the archetypal games and platform
+00:46:28.720 Fighters anyone who has played both
+00:46:30.720 sidescroller and 3D Mario games knows
+00:46:33.160 how different they can be but regardless
+00:46:35.800 Arena Fighters are fighting games if not
+00:46:37.920 just for the fact that they are more
+00:46:39.520 that than anything else and ultimately
+00:46:42.359 they literally brought fresh New
+00:46:44.040 Perspectives to an old genre either by
+00:46:46.599 using one camera angle or by giving each
+00:46:49.240 player their own angle and just like
+00:46:51.480 that this completes the fighting game
+00:46:53.160 tree an interesting thing to note about
+00:46:55.240 this tree is that Dragon Ball has a game
+00:46:57.760 from every category except one but just
+00:47:01.280 to be complete what about the first
+00:47:03.400 person fighting game there are novelty
+00:47:05.520 modes in fighting games that have tried
+00:47:07.400 this but you'll soon realize one you
+00:47:09.839 can't see your own character which is
+00:47:12.079 sad and moves like rolling or spinning
+00:47:14.680 kicks will probably just make you throw
+00:47:16.559 up unless your body can rotate without
+00:47:19.000 your head like Exorcist Ryu the closest
+00:47:22.319 thing is maybe chivalry which allows you
+00:47:24.640 to play in both third and first person
+00:47:26.599 mode modes but here's the thing there is
+00:47:29.520 no lock on system so is this a first-
+00:47:32.160 person fighting game with swords or a
+00:47:34.440 first person shooter without guns at
+00:47:37.119 this point we're hitting the limits of
+00:47:39.000 what we can confidently call a fighting
+00:47:40.680 game so we'll just leave this to the
+00:47:42.599 scientists this might all seem like an
+00:47:45.040 ultra nerdy exercise in making genre
+00:47:47.440 classifications for something already so
+00:47:49.319 Niche but it particularly matters in
+00:47:51.559 fighting games because the sheer number
+00:47:53.160 of games and game types create a diverse
+00:47:55.599 culture Not So Different from rock music
+00:47:58.240 like a music festival the biggest
+00:47:59.839 tournaments host a variety of fighting
+00:48:01.599 games with multiple stages and people
+00:48:03.800 choose what they want to watch and play
+00:48:06.640 many people like to play multiple games
+00:48:08.720 but some might only deeply care about
+00:48:10.480 one some people only like the old games
+00:48:12.559 of a series and some feel the latest is
+00:48:14.920 greatest there are communities within
+00:48:17.160 communities that have strong feelings
+00:48:18.880 about game mechanics franchises and yes
+00:48:22.280 popularity in 2002 Nickelback got rocks
+00:48:25.280 thrown at them for playing at a metal
+00:48:26.920 Festival by a few audience members that
+00:48:28.800 did not take kindly to their type of
+00:48:30.839 music see I have no idea what we were
+00:48:33.599 doing there and it was just a horrible
+00:48:36.000 horrible mistake in their defense uh if
+00:48:39.000 I went to a metal festival I wouldn't
+00:48:40.400 want to see nickel either this isn't to
+00:48:42.400 say Guilty Gear fans are going to start
+00:48:44.280 throwing rocks at smash players but it's
+00:48:46.559 good to know a little bit about the
+00:48:47.839 audience you're speaking to that was one
+00:48:49.960 that our manager got spanked for a heavy
+00:48:51.480 hard it's like what were we doing here
+00:48:52.880 dude why did you why the why the did you
+00:48:55.119 you know were we playing in Portugal
+00:48:56.200 with a bunch of met bands you know and
+00:48:57.920 he's just like sorry I didn't know it's
+00:48:59.520 like well you need to
+00:49:03.680 know so if spring rolls are not burritos
+00:49:06.640 and 2x KO is not a Tekken like what is
+00:49:09.559 2x KO actually like there's no question
+00:49:12.760 it lands somewhere between the versus
+00:49:14.640 and Anime archetypes which means it's an
+00:49:17.079 archetypal 2D hold back to block game
+00:49:19.680 with left right and high low mixups in
+00:49:22.440 addition to the standard three-way jump
+00:49:24.640 each character can do a super jump like
+00:49:26.720 in K except the game lets you slightly
+00:49:29.200 drift in the air like in versus games
+00:49:32.119 you can block anything in the air and
+00:49:33.960 some characters have jump modifiers like
+00:49:35.839 AR's air Dash and ekko's forward hop the
+00:49:39.119 game also allows both dashing and
+00:49:41.280 running but like in versus games you can
+00:49:43.440 wave Dash making for extremely fast and
+00:49:46.000 expressive ground movement but the
+00:49:48.040 biggest versus element in 2x KO is that
+00:49:50.799 it's a tag fighter where you must select
+00:49:53.000 two characters like the title of the
+00:49:55.400 game suggests the go is to KO both
+00:49:57.760 characters of the opposing team the tag
+00:50:00.480 system Blends versus game rules with
+00:50:02.599 those of Tekken Tag games like in versus
+00:50:05.359 games your partner can be used as an
+00:50:07.200 assist by holding a direction and
+00:50:09.079 tapping the tag button which can help
+00:50:11.240 you or hurt you if you get happy
+00:50:13.839 birthday but like in Tech and tag games
+00:50:16.319 switching characters does not bring them
+00:50:18.280 in attacking and you can also do a tag
+00:50:20.799 launcher that switches characters so
+00:50:22.559 they can take over your combo 2x KO also
+00:50:25.920 lets you switch to the character that is
+00:50:27.559 assisting you in what's called handshake
+00:50:29.680 tag something we've seen in the anime
+00:50:31.599 fighter Blaze Blue Cross tag battle but
+00:50:34.319 if you choose the freestyle fuse you can
+00:50:36.359 switch back again to the other character
+00:50:38.640 allowing for some serious bullying this
+00:50:41.400 allows for some oppressive high low and
+00:50:43.480 left right mixup potential and Sean made
+00:50:45.839 sure to show me by challenging me to
+00:50:47.880 games of bet you can't block
+00:50:52.480 this oh you low that time
+00:50:56.760 oh what
+00:50:58.559 what so you got to guess but there are
+00:51:01.640 defensive options too when blocking you
+00:51:04.240 can Dash forward to do a Marvel like
+00:51:06.079 push block but there's a new mechanic
+00:51:07.960 where you can also Dash backwards to do
+00:51:10.000 an escape called retreating guard but
+00:51:12.680 this one can be beaten by lows so don't
+00:51:14.760 be predictable there's also a Parry if
+00:51:17.240 you'd like a higher risk higher reward
+00:51:19.359 option as for combo breakers there is a
+00:51:22.079 burst-like mechanic called Dynamic save
+00:51:24.400 that lets you break out of Combos and
+00:51:26.079 switch characters and for getting
+00:51:28.160 knocked down you have multiple get up
+00:51:30.160 options including an attack with brief
+00:51:32.359 invulnerability but be careful as it can
+00:51:34.680 be punished if blocked but the most
+00:51:36.880 novel feature is the duo mode where one
+00:51:38.880 team can be controlled by two players
+00:51:40.880 making 2v2 matches possible for a total
+00:51:43.559 of four players we've seen Street
+00:51:45.680 Fighter cross Tekken do something like
+00:51:47.359 this but only the point character could
+00:51:49.319 summon their partner this led to the
+00:51:51.640 infamous moment during Evo 2012 when
+00:51:54.119 Mike Ross wasn't allowed to play for an
+00:51:55.920 entire round
+00:51:57.200 wow that's incredible Mich Ross did not
+00:52:00.240 get to play 2x KO will let the player
+00:52:03.319 off screen play by letting them assist
+00:52:06.000 and dynamic save and with handshake tag
+00:52:08.559 and tag launchers there will be many
+00:52:10.520 more ways of switching between players
+00:52:13.000 but this will also demand a new level of
+00:52:15.000 coordination that fighting game players
+00:52:16.920 have not had to do as you can see this
+00:52:19.799 is not a simple game anime and Versa
+00:52:22.520 style games almost never are but what it
+00:52:24.960 does try to do is make learn learning
+00:52:26.799 and playing it as accessible as possible
+00:52:29.640 the button layout has light medium and
+00:52:31.559 heavy attacks which can be pressed in
+00:52:33.319 sequence to perform a chain combo which
+00:52:35.640 can be cancelled into a special attack
+00:52:37.680 which is done by pressing a special
+00:52:39.400 attack button just like we've seen in
+00:52:41.599 Smash and yes there are Auto combos like
+00:52:44.359 in Dragon Ball Fighters if you choose
+00:52:46.000 the pulse fuse but instead of just
+00:52:47.880 mashing one attack button to do a combo
+00:52:50.160 you can Mash on your own combination to
+00:52:52.079 do different combos but the most
+00:52:54.160 accessible thing of all is that it will
+00:52:56.200 be free to play making it much easier to
+00:52:58.799 convince your friends to get into it and
+00:53:00.880 the roll back net code will make the net
+00:53:02.599 play as smooth as possible so if 2x KO
+00:53:06.480 were a band I think it would be pfia and
+00:53:10.160 not just because the character select
+00:53:11.480 music sounds like them and not because
+00:53:13.520 both have names that are generic
+00:53:15.000 descriptors of their respective Fields
+00:53:17.599 Pia Blends the technicality of
+00:53:19.520 progressive metal with the sounds of EDM
+00:53:22.240 Jimmy Hendrick hip hop and even K-pop to
+00:53:25.280 make something complex yet accessible
+00:53:27.440 for modern times just like how 2x KO
+00:53:30.160 keeps the intricacy of anime and versus
+00:53:32.319 style games while making it approachable
+00:53:34.200 for newcomers instead of abandoning what
+00:53:36.760 made their Traditions great they tweak
+00:53:39.119 or tone down just the aspects that scare
+00:53:41.599 people away what is tweaked of course
+00:53:44.400 never comes without controversy pfia
+00:53:47.000 guitarist Tim Henson got in some heat
+00:53:48.960 for calling a classic guitar technique a
+00:53:51.240 boomer bend it describes a very specific
+00:53:53.680 guitar bending lick commonly used in
+00:53:55.559 music from the' 60s and 70s the age of
+00:53:57.680 the baby
+00:53:59.700 [Music]
+00:54:01.799 boomer and the 2x KO equivalent of this
+00:54:04.760 would be the removal of motion inputs or
+00:54:07.400 I guess in this case Millennial inputs
+00:54:10.000 but this concept goes all the way back
+00:54:11.760 to Rising Thunder which was made by
+00:54:13.680 radiant entertainment who were later
+00:54:15.520 acquired by Riot games to make 2x KO
+00:54:18.920 there's a pretty active dialogue and has
+00:54:20.599 been for years among fighting game
+00:54:22.040 players about accessibility and is it
+00:54:24.200 good is it bad and usually talk about it
+00:54:26.960 as a zero sum game like if you're going
+00:54:28.520 to make the game easier then it's going
+00:54:30.359 to be worse for good players uh we try
+00:54:33.160 to think about it in terms of fun once
+00:54:35.119 you get into the fun of understanding
+00:54:36.760 what a fighting game really is about the
+00:54:38.640 mind reading and the high stake sort of
+00:54:40.880 fast-paced Poker of like like that's
+00:54:43.160 addictive and we want to like bring that
+00:54:44.839 fun to as many people as possible by
+00:54:47.599 removing maybe the things that make
+00:54:49.079 fighting games kind of scary but aren't
+00:54:50.839 core to like real fight game of
+00:54:52.200 experience and another one is like it's
+00:54:54.160 just more fun I think to do things with
+00:54:56.200 your your friends it took us a while to
+00:54:58.000 sort of embrace like teamwork but once
+00:55:00.079 we did and we we found ways to like
+00:55:02.520 still have the carry aspect of like oh
+00:55:04.680 all the pressure is on me but I can
+00:55:06.440 bring a friend along and we can like
+00:55:08.079 have teamwork moments um that's when the
+00:55:10.119 game started really to get fun while
+00:55:12.119 still having like a real hopefully
+00:55:13.520 endless Mastery curve we want this to be
+00:55:15.000 a game that you can play for literally
+00:55:16.880 thousands of hours and still discover
+00:55:18.599 new things special thanks to Ben Hy and
+00:55:21.640 everyone at Bay Area Riot for all your
+00:55:23.839 support this was Gerald from Cory gaming
+00:55:26.480 thanks for
+00:55:31.200 watching this video is sponsored by
+00:55:33.640 hitbox the fighting game controller that
+00:55:35.480 started the leverless Revolution and
+00:55:37.599 became an archetype for them by
+00:55:39.520 replacing the 8-way joystick with four
+00:55:41.440 ergonomically placed arcade buttons
+00:55:43.640 there's much less travel distance and
+00:55:45.480 exertion required to make the same
+00:55:47.240 inputs there are also new techniques
+00:55:49.480 that even make use of the right hand to
+00:55:51.640 do things that would be impossible on
+00:55:53.280 controllers with joysticks this is the
+00:55:55.960 fast this Dragon there's such an
+00:55:58.559 advantage to using a hitbox that people
+00:56:00.480 have jokingly referred to it as the
+00:56:02.400 cheat box but the thing is it's
+00:56:04.799 tournament legal which is why top
+00:56:06.599 players like Daigo toito super Akuma and
+00:56:09.559 kanano are using hit boxes to compete
+00:56:12.000 and win Majors these days pad and stick
+00:56:14.839 are pretty much on the same level but
+00:56:16.839 above those is the hitbox you have the
+00:56:19.880 advantages of both you get the flat
+00:56:22.000 layout for your buttons like on Stick
+00:56:23.920 which is a lot better to access
+00:56:25.200 everything the problem with stick though
+00:56:26.799 it's it's very precise but slow you have
+00:56:29.039 to move your whole wrist and even then
+00:56:31.680 where's the diagonal on Stick where's
+00:56:33.839 the down where's the forward and where's
+00:56:35.799 the down forward but uh yeah if you want
+00:56:38.319 to do a down forward you just press two
+00:56:39.640 buttons here the hitbox layout and
+00:56:41.839 design has become a standard because
+00:56:43.680 it's a culmination of many iterations of
+00:56:45.839 prototypes by its Founders who are two
+00:56:48.000 brothers who just wanted more consistent
+00:56:49.880 inputs in Marvel vs Capcom 2 when they
+00:56:52.920 brought their homemade prototypes to
+00:56:54.280 SoCal regionals in 2010 it sparked
+00:56:57.000 enough interest for them to get
+00:56:58.200 interviewed about it and suddenly there
+00:57:00.119 was a demand the way we differ from like
+00:57:02.480 key sticks they call I'm worried the
+00:57:04.000 difference is they got the upkey right
+00:57:05.839 here but you can't do any complicated
+00:57:07.960 movements like in Marvel you can't do
+00:57:09.520 try jumps you can't titig knee anything
+00:57:11.760 yeah thanks for the interview we we
+00:57:13.039 didn't expect anybody to really uh latch
+00:57:15.359 on to these they kept refining the
+00:57:17.039 layout until it became the standard we
+00:57:18.960 recognize today a lot of people don't
+00:57:21.359 know where all the leverless stuff came
+00:57:22.960 from and it's uh it came from the garage
+00:57:25.760 20 10 starting point was uh used to be a
+00:57:28.799 stenographer so I took Steno ink on my
+00:57:30.640 fingers and I wanted it to be ergonomic
+00:57:32.760 and efficient right so got it to match
+00:57:34.799 as close as I could pinkies didn't work
+00:57:36.559 out so hot but uh this started as up and
+00:57:39.039 then I moved it over to here personally
+00:57:40.880 on The Wire because it was so much more
+00:57:42.599 intuitive for me to think of as a jump
+00:57:43.960 button so that's kind of where the next
+00:57:45.760 ones come along of me and Sean's next
+00:57:47.960 revision this was the first right thumb
+00:57:49.799 jump so it's left down right up and then
+00:57:52.760 a b c d so for tatsunoko so he got to
+00:57:55.000 your assist this was Sean's version for
+00:57:58.079 scr20 the Hulk box right spray painted
+00:58:01.359 he liked the right thumb jump as well so
+00:58:03.480 this is more of like a standard six
+00:58:04.760 button with the left down right he
+00:58:06.280 wanted something big and girthy kind of
+00:58:07.799 like a mo stick these were like the
+00:58:09.640 first tournament hit boxes that we
+00:58:11.559 actually competed in and started getting
+00:58:12.960 results these are labor of love you can
+00:58:15.200 see this one is 003 right I think two
+00:58:19.920 either died or or uh we just ripped it
+00:58:22.079 apart and cannibalize it that's most
+00:58:23.559 likely so this is number four and then
+00:58:27.000 finally it turned into the hitbox layout
+00:58:29.039 cuz uh Marvel 3 was coming out and we
+00:58:31.160 needed to finish it and that was kind of
+00:58:32.880 blown up on YouTube so we had a bunch of
+00:58:34.599 people wanting us to make them for them
+00:58:36.440 since we liked right thumb but we knew
+00:58:38.240 left thumb is intuitive to a lot more
+00:58:40.119 people we brought it together so he
+00:58:41.760 could use either thumb and it made total
+00:58:44.680 sense but maybe you're an old school
+00:58:46.599 player or just enjoy playing on
+00:58:48.559 joysticks hitbox also makes the crossup
+00:58:51.400 which has a lever but also another set
+00:58:53.559 of cardinal directions for the right
+00:58:55.440 hand how is this tournament legal you
+00:58:57.680 might ask because pad is legal and it
+00:59:00.240 too has multiple sets of usable cardinal
+00:59:02.839 directions adding buttons to controllers
+00:59:05.119 has always been a thing but with the
+00:59:06.880 crossup you have it from the get-go but
+00:59:09.559 maybe you want to add buttons to your
+00:59:11.200 existing controller but do not want to
+00:59:13.000 drill holes hitboxes latest Innovation
+00:59:15.640 is the combo extension which is
+00:59:17.319 basically two buttons in one but the
+00:59:19.599 extra button simply rests on top of the
+00:59:21.640 controller you can get really creative
+00:59:23.799 with this and make your dream layout
+00:59:25.559 without doing irreversible mods I put
+00:59:28.319 mine here so I can comfortably do
+00:59:30.160 forward- cancel Crouch Block in 2x KO
+00:59:33.839 they also have buttons without the
+00:59:35.359 extension called combo which are Super
+00:59:38.160 customizable and all their buttons come
+00:59:40.280 in three different sensitivities to
+00:59:41.920 match your playing style you can even
+00:59:44.160 add your own custom artwork and for all
+00:59:46.799 your smash players out there there's the
+00:59:48.920 Smashbox if any of this interests you
+00:59:51.400 check out hitbox arcade.com or check out
+00:59:53.680 one of their booths at fighting game
+00:59:55.160 tournaments thanks for watching and see
+00:59:57.200 you next video
+01:00:00.720 [Music]
+01:00:06.670 [Music]

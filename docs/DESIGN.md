@@ -1,6 +1,19 @@
 # Mortal Wombat — Design Document
 
-> **Status:** v1 constraints — binding
+> **Status:** ⚠️ **§4 IS UNDER REVISION AND IS NOT BINDING.**
+>
+> The mechanical specification in §4 was written against a Mortal Kombat II
+> basis, which has been dropped. The project is being redesigned around a
+> deliberately chosen set of mechanics rather than one game's inheritance.
+>
+> **Do not build to §4.1–§4.6 until this notice is removed.** Work in progress
+> is in `drawing-board/`, and `drawing-board/RULESET.md` records what has been
+> decided so far.
+>
+> **Still binding, and unaffected:** §1 (what the game is), §2 (core loop),
+> §3 (feel — the anti-drift anchor), §5.3 (visual tone), §6 (scope ceiling and
+> the definition of done), §8 (non-goals), §9 (IP), §10 (resolve ambiguity
+> toward simplicity).
 > **Date:** 2026-08-22
 > **Purpose:** This is a *constraints* document, not a pitch. It exists so that
 > any contributor — human or agent — makes decisions compatible with everyone
