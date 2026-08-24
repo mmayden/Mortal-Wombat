@@ -93,6 +93,39 @@ layer. The only built thing any of this touches is the block input.
 
 ---
 
+### 0. Rollback netcode is required (confirmed)
+
+Not a mechanic, but it constrains every mechanic below, so it is recorded here
+rather than left as an assumption.
+
+**What it locks in.** ADR 0002 (deterministic fixed-point simulation) and ADR
+0005 (flat, trivially-copyable `GameState`) become non-negotiable rather than
+merely chosen. ADR 0007 already says as much: the netcode *library* is the most
+replaceable decision in the stack, while getting 0002 or 0005 wrong is a
+rewrite. Both are already built and proven — the simulation is byte-identical
+across Linux, Windows and macOS, and identical between debug and release.
+
+**What it means for the decisions below.** Rollback re-simulates recent frames
+whenever a remote input arrives late, so:
+
+- **Tight timing windows behave differently online.** A parry with a two-frame
+  window is a different mechanic under rollback than in local play, because the
+  defender is reacting to a picture that may be corrected. Active defence
+  (decision 6) has to be chosen with that in mind — window size is a netcode
+  decision as much as a design one.
+- **State size is a running cost.** `GameState` is copied on every rollback,
+  potentially several times a frame. This is another argument for the 1v1 choice
+  already made, and against systems that add many simultaneous entities.
+- **Nothing may depend on wall-clock time or unsynchronised randomness.** The
+  sim boundary already enforces this mechanically.
+
+**Transport is still open.** ADR 0008 defers internet play behind an interface.
+"Multiplayer compatible" is satisfied by the architecture; actually shipping
+online play needs NAT traversal or a relay, which is a distribution decision
+that has not been made.
+
+---
+
 ## Open, in decision order
 
 Next up, from the deep dive's §6:
@@ -108,11 +141,17 @@ Next up, from the deep dive's §6:
 | 10 | **Combo determinism cap** | Decide before shipping, not in a patch. |
 | 11 | **System count audit** | Count the pairwise interactions a new player must hold. |
 
+## Dissolved by the redesign
+
+Questions that were blocking work under the old basis and no longer exist:
+
+- **"Twelve or ten moves?"** `DESIGN.md` §4.5's prose and its table disagreed.
+  The moveset is being redesigned, so the mismatch is moot.
+- **"Does the special spawn a projectile?"** Depends on specials that have not
+  been designed yet. Returns as part of decision 7.
+
 ## Still unanswered from earlier
 
-- **Is rollback netcode still a goal?** It is the reason for most of the
-  architecture. Nothing decided so far changes that, but it should be confirmed
-  rather than assumed.
 - **Selectable rulesets as a long-term mode.** CvS2's Groove system is the
   precedent, and it varied *leaf* axes only — every Groove was hold-back,
   grounded, 1v1. That is the rule: modes may vary leaf axes; root axes are the
