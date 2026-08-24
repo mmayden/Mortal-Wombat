@@ -43,12 +43,35 @@ unlocks in v1.
 **This section is the anti-drift anchor. Read it before making any judgment
 call about feel.**
 
-The feel target is *deliberate and weighty*, not fast and flowing. Committing
-to an action means committing: jumps have fixed arcs you cannot alter mid-air,
-big attacks have long recovery, and whiffing a heavy is genuinely punishing.
+### The thesis — the one question the game asks
 
-This is the anti-drift anchor. When a mechanical decision is unclear, the
-question is which option better serves it.
+> ## *"Was that worth committing to?"*
+
+Every exchange is that question. You chose a button, at a distance, at a moment,
+and you are now living with it.
+
+**This is the test every mechanical decision has to pass.** When two options are
+both defensible, the one that makes that question sharper wins. A mechanic that
+lets a player escape a bad commitment cheaply is working against the game, no
+matter how well it works elsewhere.
+
+### What that means structurally
+
+**Neutral is a distinct phase, not a continuous surface.** There is a state of
+the match where nobody is committed — both fighters moving, looking for an
+opening — and leaving it is a decision with a price. Attacking is how you leave
+neutral, and if you leave it wrongly you should be punished for it.
+
+This is a real fork in the genre and it is chosen deliberately. Street Fighter 6
+takes the other branch: a whiffed poke and a full mixup are one input and some
+meter apart, which makes neutral and offence a single continuous surface. That
+is a legitimate design and it sells enormously. It is not this game.
+
+### The feel that follows
+
+The feel target is *deliberate and weighty*, not fast and flowing. Jumps have
+fixed arcs you cannot alter mid-air, big attacks have long recovery, and
+whiffing a heavy is genuinely punishing.
 
 **We are NOT building:**
 - A fast, cancel-heavy combo game (Street Fighter, Marvel, modern MK)

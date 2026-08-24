@@ -32,6 +32,7 @@ record of what was believed, and why, is most of the value.
 | 0017 | Readability work is in scope; art is not (clarifies 0013) | [0017](0017-readability-is-not-art.md) |
 | 0018 | **The Mortal Kombat II basis is dropped** (supersedes the MK2 framing) | [0018](0018-mk2-basis-dropped.md) |
 | 0019 | **Adopt properties, not mechanics** — how to learn from other games | [0019](0019-adopt-properties-not-mechanics.md) |
+| 0020 | **The thesis: "Was that worth committing to?"** — neutral is a distinct phase | [0020](0020-thesis-commitment.md) |
 
 ADRs 0001–0013 live in one file because they were decided together, as the
 project's founding stack decision. That file also carries the scope tier, the
