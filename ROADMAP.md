@@ -50,8 +50,9 @@ the status.** Numbering matches that list.
 ## Design phase — the basis is settled, the details are not
 
 The mechanical basis was redesigned and has **landed in `DESIGN.md`**. The
-notice at the top of that file gives the binding status of every section; §4.5
-is superseded and §4.7 is void, and everything else in §4 binds.
+notice at the top of that file gives the binding status of every section. §4.5
+is half superseded — its move list is dead, its frame values are what the game
+runs on — and §4.7 is void. Everything else in §4 binds.
 
 Remaining detail work lives in `drawing-board/`:
 
@@ -61,12 +62,16 @@ Remaining detail work lives in `drawing-board/`:
 **The thesis is settled:** *"Was that worth committing to?"* — neutral is a
 distinct phase, and leaving it is a priced decision (`DESIGN.md` §3, ADR 0020).
 
-**Settled and recorded as ADRs:** rollback required; hold back to block;
-grounded; one fighter per side; six attack buttons; Up-priority SOCD; Classic
-and Modern schemes, with Modern a pure input remap over one canonical action set
-and auto-combos as scripted canonical inputs (ADR 0021). Plus the four the
-thesis decided — Just Defend over parry, one commitment release, three meter
-jobs, a hard combo cap (`DESIGN.md` §4.6).
+**Settled, and every one recorded as an ADR:**
+
+| Decision | ADR |
+|---|---|
+| Rollback netcode is required | 0007 |
+| The thesis, and the four it decided — Just Defend over parry, one commitment release, three meter jobs, a hard combo cap | 0020 |
+| Hold back to block; six attack buttons; Up-priority SOCD; Classic and Modern schemes; input history | 0021 |
+| No air blocking — grounded; one fighter per side | 0022 |
+
+`drawing-board/RULESET.md` has the table pointing at where each is specified.
 
 **Still open:** six of the sixteen ruleset decisions, listed in
 `drawing-board/RULESET.md`. Their *direction* is now constrained by §3, which is

@@ -8,7 +8,7 @@
 > | §1 §2 §3 §5 §6 §8 §9 §10 | **Binding.** §3 carries the thesis and is the anti-drift anchor. |
 > | §4.1 §4.2 §4.3 | **Binding.** §4.1 is ADR 0021. |
 > | §4.4 | **Binding in shape, provisional in numbers** — tune freely, re-record replays in the same commit. |
-> | §4.5 | **Superseded and must be re-authored** — it predates six buttons. Do not build to it. |
+> | §4.5 | **Half superseded.** Its *move list* predates six buttons and is dead; its *frame values* are live and are what the game currently runs on. |
 > | §4.6 | **Direction binding, numbers open.** ADR 0020. |
 > | §4.7 | **Void**, kept only for the record. |
 > | §7 | **Non-binding by its own terms** — recorded to keep scope pressure off v1. |
@@ -37,8 +37,8 @@ characters that feel good to play.
 
 ## 2. Core loop
 
-Two fighters face each other on a single-screen stage. Each has a health bar
-and a round timer. Players attack, block, and jump to reduce the opponent's
+Two fighters face each other on a single-screen stage — **one per side, no tag
+and no assists** (ADR 0022). Each has a health bar and a round timer. Players attack, block, and jump to reduce the opponent's
 health to zero. First to win two rounds wins the match. A round ends on KO or
 on timer expiry, in which case the fighter with more remaining health wins.
 
@@ -176,6 +176,9 @@ Knockdown · Wakeup · Win · Lose
 
 ### 4.3 Movement constraints
 
+- **No air blocking.** A fighter in the air cannot block anything, so jumping
+  is a committed gamble. This is a root axis and it forecloses the air-dasher
+  family deliberately (ADR 0022).
 - **Fixed jump arcs.** Trajectory is committed at takeoff. No air control, no
   double jump, no air dash, no jump cancel.
 - Three jump types, determined at takeoff: neutral, forward, backward.
@@ -202,23 +205,29 @@ in the same commit as the change.
 | Round timer | 5400 frames (90s) |
 | Rounds to win | 2 |
 
-### 4.5 Starting frame data — ⚠️ SUPERSEDED
+### 4.5 Starting frame data — ⚠️ HALF SUPERSEDED
 
-**This table predates ADR 0021 and must be re-authored. Do not build to it.**
+**Read this before using the table. Half of it is dead and half of it is live,
+and which half you are looking at matters.**
 
-It describes a four-attack scheme: there is no medium punch and no medium kick
-in it, because when it was written there were no medium buttons. §4.1 is the
-binding control spec, and it requires six.
+| | |
+|---|---|
+| **The move list is dead** | It describes a four-attack scheme — no medium punch, no medium kick, because there were no medium buttons when it was written. §4.1 is the binding control spec and it requires six. **Do not treat this list as the moveset.** |
+| **The frame values are live** | Startup, active, recovery, damage, hitstun and blockstun are what `data/characters/*.toml` currently ships and what the replay recordings encode. `ARCHITECTURE.md`, `framedata_schema.md` and `MECHANICS.md` all cite them, correctly. **Tune them freely** — they were always marked as starting points, and §4.4's re-record rule applies. |
 
-What that costs is roughly eight new move definitions — MP and MK, standing and
-crouching, for two characters — each needing hitbox geometry that has to be
-*seen* to be reviewed. The jump attack shipped with its hitbox at standing-punch
+The distinction matters because four other documents point here for numbers. A
+blanket "superseded" would have told those readers to ignore values the game is
+actually running on.
+
+Closing the dead half costs roughly eight new move definitions — MP and MK,
+standing and crouching, for two characters — each needing hitbox geometry that
+has to be *seen* to be reviewed. The jump attack shipped with its hitbox at standing-punch
 height and could not touch anyone from any range at any timing, because the
 numbers are plausible in a text file. So `tools/framedata_editor/` comes first;
 `ROADMAP.md` sequences it.
 
-The old table is kept below for the frame values, which are still a reasonable
-starting shape for light and heavy. The move *set* is what is wrong.
+The table below is therefore kept, not archived. Its light and heavy rows remain
+the live starting shape; medium has no row yet because medium has no data yet.
 
 Per character, v1. Twelve moves total.
 
@@ -387,7 +396,8 @@ One open question the names raise: both characters get the **same** move set in
 v1, which is correct for v1 scope — two characters exist to prove the engine
 feels good, not to prove a matchup. Whether Frenchy and Wisdom eventually differ
 mechanically is a post-v1 question (§7). The size of that shared set follows
-from §4.1's six buttons and is being re-authored; §4.5 is superseded.
+from §4.1's six buttons and is being re-authored; §4.5's move list is
+superseded, though its frame values are still live.
 
 ### 5.5 TODO — stage design
 

@@ -21,6 +21,11 @@ goes stale.
 a rule is a copy that goes stale, and this project has already had three
 documents quietly disagreeing about what was cut from v1.
 
+The split that is easiest to get wrong: **`DESIGN.md` says what a rule is, the
+ADR says why.** When a decision graduates out of `drawing-board/`, its reasoning
+moves into the ADR and the drawing board keeps a pointer — in the same commit,
+or you have created the duplication rather than resolved it (ADR 0023).
+
 | Fact | Owner | Everyone else |
 |---|---|---|
 | What the game is, and how it must feel | `docs/DESIGN.md` §1–§3 | reference |
@@ -30,7 +35,8 @@ documents quietly disagreeing about what was cut from v1.
 | How far along each part is | `ROADMAP.md` | reference |
 | What the words mean | `docs/MECHANICS.md` | vocabulary only, no policy, no status |
 | How the code is shaped | `docs/ARCHITECTURE.md` | reference |
-| Settled technical decisions | `docs/decisions/` | never restate, never edit a merged one |
+| **Why** any settled decision was made — design or technical | `docs/decisions/` | never restate, never edit a merged one (ADR 0023) |
+| Research inputs, and decisions not yet made | `drawing-board/` | kept permanently; merged ADRs cite these paths, so they must not move |
 | The rules of working here | `AGENTS.md` | reference |
 | Environment quirks and traps | `CLAUDE.md` | reference |
 
