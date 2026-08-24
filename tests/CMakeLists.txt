@@ -47,7 +47,12 @@ mw_add_test_tier(unit
     unit/test_combat.cpp
     unit/test_jump.cpp
     unit/test_input_isolation.cpp
-    unit/test_jump_attack_reach.cpp)
+    unit/test_jump_attack_reach.cpp
+    unit/test_camera.cpp)
+
+# The camera is render-layer code, so the unit tier needs it linked explicitly.
+# Everything else in this tier reaches the sim through mw_sim alone.
+target_link_libraries(mw_test_unit PRIVATE mw_render_camera)
 
 # Tier 3 — smoke: boot, run 600 ticks, assert no crash and no runaway state.
 mw_add_test_tier(smoke

@@ -49,15 +49,38 @@ void camera_update(Camera& camera, const mw::sim::GameState& previous,
         camera.initialized = true;
     }
 
-    // Follow only far enough to pull a fighter back inside the margin. Both
-    // clamps can fire at once when the fighters are further apart than the
-    // deadzone; the second wins, which keeps the fighter being pushed toward
-    // the right edge visible.
-    if (leftmost - camera.x < CAMERA_EDGE_MARGIN) {
-        camera.x = leftmost - CAMERA_EDGE_MARGIN;
-    }
-    if (rightmost - camera.x > screen_width - CAMERA_EDGE_MARGIN) {
-        camera.x = rightmost - (screen_width - CAMERA_EDGE_MARGIN);
+    // The two requirements, as an interval of acceptable camera positions:
+    // keep the right fighter inside the right margin, and the left fighter
+    // inside the left margin.
+    const float at_least = rightmost - (screen_width - CAMERA_EDGE_MARGIN);
+    const float at_most = leftmost - CAMERA_EDGE_MARGIN;
+
+    if (at_least <= at_most) {
+        // Both fit. Move only as far as needed, which is what makes this a
+        // deadzone: inside it the view does not budge at all, so an idle
+        // fighter holds exactly still on screen.
+        if (camera.x < at_least) {
+            camera.x = at_least;
+        }
+        if (camera.x > at_most) {
+            camera.x = at_most;
+        }
+    } else {
+        // They are further apart than the margins allow, so one requirement
+        // must give. Split the difference and centre.
+        //
+        // The previous version applied both clamps in order and let the second
+        // win, which always sacrificed the LEFT fighter. Measured: player one
+        // backing away walked off the left edge of the screen after about
+        // three and a half seconds while player two sat pinned at the right.
+        // It was invisible in review because each clamp is correct alone, and
+        // invisible in play to whoever happened to be on the right.
+        //
+        // Centring cannot keep both on screen once they are more than a screen
+        // apart -- nothing can, without zooming, which SDL_Renderer scaling
+        // would have to do at the whole-frame level (ADR 0016). What it does
+        // guarantee is that the cost falls on both players equally.
+        camera.x = (leftmost + rightmost) * 0.5f - screen_width * 0.5f;
     }
 
     if (camera.x < furthest_left) {

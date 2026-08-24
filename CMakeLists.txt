@@ -242,15 +242,30 @@ endif()
 # code, and ADR 0001 restricts it to the documented C++ subset. Only tests and
 # tools get the full language.
 # ---------------------------------------------------------------------------
+# The camera, alone in the render layer, touches no SDL -- it is pure arithmetic
+# over two fighter positions. Splitting it out makes it testable, which the rest
+# of the render layer is not.
+#
+# It is here because a camera defect was reported twice by a human and could not
+# be checked by anything: AGENTS.md rule 6 says every behaviour change needs a
+# test, and the render layer had quietly been outside that rule.
+add_library(mw_render_camera STATIC
+    src/render/camera.cpp)
+
+target_link_libraries(mw_render_camera
+    PUBLIC mw_sim
+    PRIVATE mw_warnings mw_no_exceptions)
+
+target_include_directories(mw_render_camera PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
 add_executable(mortal_wombat
     src/main.cpp
     src/platform/platform.cpp
-    src/render/camera.cpp
     src/render/renderer.cpp
     src/render/sprite.cpp)
 
 target_link_libraries(mortal_wombat
-    PRIVATE mw_sim mw_data mw_warnings mw_no_exceptions SDL3::SDL3)
+    PRIVATE mw_sim mw_data mw_render_camera mw_warnings mw_no_exceptions SDL3::SDL3)
 
 # WIN32_EXECUTABLE is deliberately OFF: the game logs to stdout and a console
 # is wanted during development. Flip it when there is something to ship.

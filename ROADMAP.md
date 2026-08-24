@@ -249,6 +249,7 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Camera, second fix | Backing away walked you off the left edge; the render layer had no tests at all |
 | Jump attack fix | It could not hit anyone; three files shared one wrong assumption |
 | Playtest guide | `docs/PLAYTEST.md` — what to look for and what each answer unblocks |
 | Process automation | `tools/verify.ps1`, pre-push hook, PR template, Dependabot, weekly CI |
