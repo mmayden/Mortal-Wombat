@@ -5,14 +5,14 @@
 
 #include <toml++/toml.hpp>
 
-namespace mw::data {
+namespace ds::data {
 namespace {
 
-using mw::sim::Box;
-using mw::sim::CharacterData;
-using mw::sim::HitboxSpan;
-using mw::sim::MoveData;
-using mw::sim::MoveId;
+using ds::sim::Box;
+using ds::sim::CharacterData;
+using ds::sim::HitboxSpan;
+using ds::sim::MoveData;
+using ds::sim::MoveId;
 
 // docs/framedata_schema.md, Version history. Bumping the schema means bumping
 // this and updating tools/framedata_editor/ in the same commit (AGENTS.md
@@ -22,7 +22,7 @@ constexpr int64_t SUPPORTED_SCHEMA_VERSION = 1;
 
 // Table key for each MoveId, in enum order. The loader and the editor both
 // address moves by these strings, so they are part of the schema contract.
-constexpr const char* MOVE_KEYS[mw::sim::MOVE_COUNT] = {
+constexpr const char* MOVE_KEYS[ds::sim::MOVE_COUNT] = {
     "low_punch",         "high_punch",      "low_kick",         "high_kick",   "crouch_low_punch",
     "crouch_high_punch", "crouch_low_kick", "crouch_high_kick", "jump_attack", "special",
 };
@@ -127,11 +127,11 @@ std::string path_stem(const std::string& path) {
     return path.substr(start, end - start);
 }
 
-bool copy_name(const std::string& value, char (&out)[mw::sim::MAX_NAME_LENGTH], const char* what,
+bool copy_name(const std::string& value, char (&out)[ds::sim::MAX_NAME_LENGTH], const char* what,
                std::string& error) {
-    if (value.size() + 1 > static_cast<size_t>(mw::sim::MAX_NAME_LENGTH)) {
+    if (value.size() + 1 > static_cast<size_t>(ds::sim::MAX_NAME_LENGTH)) {
         error = std::string(what) + " is longer than " +
-                std::to_string(mw::sim::MAX_NAME_LENGTH - 1) + " characters";
+                std::to_string(ds::sim::MAX_NAME_LENGTH - 1) + " characters";
         return false;
     }
     std::memset(out, 0, sizeof(out));
@@ -192,9 +192,9 @@ bool load_move(const toml::table& table, const char* key, MoveData& out, std::st
         error = prefix + ": needs at least one hitbox (rule 5)";
         return false;
     }
-    if (hitboxes->size() > static_cast<size_t>(mw::sim::MAX_HITBOXES_PER_MOVE)) {
+    if (hitboxes->size() > static_cast<size_t>(ds::sim::MAX_HITBOXES_PER_MOVE)) {
         error =
-            prefix + ": more than " + std::to_string(mw::sim::MAX_HITBOXES_PER_MOVE) + " hitboxes";
+            prefix + ": more than " + std::to_string(ds::sim::MAX_HITBOXES_PER_MOVE) + " hitboxes";
         return false;
     }
 
@@ -237,12 +237,12 @@ bool load_move(const toml::table& table, const char* key, MoveData& out, std::st
             error = where + ".frames is inverted (first > last)";
             return false;
         }
-        if (span.first_frame < mw::sim::move_first_active_frame(out) ||
-            span.last_frame > mw::sim::move_last_active_frame(out)) {
+        if (span.first_frame < ds::sim::move_first_active_frame(out) ||
+            span.last_frame > ds::sim::move_last_active_frame(out)) {
             error = where + ".frames [" + std::to_string(span.first_frame) + ", " +
                     std::to_string(span.last_frame) + "] falls outside the active window [" +
-                    std::to_string(mw::sim::move_first_active_frame(out)) + ", " +
-                    std::to_string(mw::sim::move_last_active_frame(out)) + "] implied by startup " +
+                    std::to_string(ds::sim::move_first_active_frame(out)) + ", " +
+                    std::to_string(ds::sim::move_last_active_frame(out)) + "] implied by startup " +
                     std::to_string(out.startup) + " and active " + std::to_string(out.active) +
                     " (rule 6)";
             return false;
@@ -275,14 +275,14 @@ const char* load_result_name(LoadResult result) {
 
 const char* move_key(MoveId move) {
     const int32_t index = static_cast<int32_t>(move);
-    if (index < 0 || index >= mw::sim::MOVE_COUNT) {
+    if (index < 0 || index >= ds::sim::MOVE_COUNT) {
         return "<invalid>";
     }
     return MOVE_KEYS[index];
 }
 
 MoveId move_id_from_key(const std::string& key) {
-    for (int32_t i = 0; i < mw::sim::MOVE_COUNT; ++i) {
+    for (int32_t i = 0; i < ds::sim::MOVE_COUNT; ++i) {
         if (key == MOVE_KEYS[i]) {
             return static_cast<MoveId>(i);
         }
@@ -377,8 +377,8 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
 
     // Speeds are authored as raw i32.16, which is why the schema documents them
     // in 1/65536ths rather than as decimals.
-    character.walk_forward_speed = mw::sim::Fixed(walk_forward);
-    character.walk_backward_speed = mw::sim::Fixed(walk_backward);
+    character.walk_forward_speed = ds::sim::Fixed(walk_forward);
+    character.walk_backward_speed = ds::sim::Fixed(walk_backward);
 
     if (character.jump_duration < 1 || character.jump_apex < 1 || character.starting_health < 1) {
         error = path + ": jump_duration, jump_apex and starting_health must be positive (rule 3)";
@@ -410,7 +410,7 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
     // Rule 4, in both directions. An unknown key is a typo that would otherwise
     // leave a move silently absent, and a missing key is a move the sim can
     // reference but the data does not define.
-    bool seen[mw::sim::MOVE_COUNT] = {};
+    bool seen[ds::sim::MOVE_COUNT] = {};
     for (const auto& [key, value] : *moves) {
         const std::string key_string(key.str());
         const MoveId id_for_key = move_id_from_key(key_string);
@@ -432,7 +432,7 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
         seen[static_cast<int32_t>(id_for_key)] = true;
     }
 
-    for (int32_t i = 0; i < mw::sim::MOVE_COUNT; ++i) {
+    for (int32_t i = 0; i < ds::sim::MOVE_COUNT; ++i) {
         if (!seen[i]) {
             error = path + ": missing move '" + MOVE_KEYS[i] + "' (rule 4)";
             return LoadResult::ValidationFailed;
@@ -444,8 +444,8 @@ LoadResult load_character(const std::string& path, CharacterData& out, std::stri
 }
 
 LoadResult load_match(const std::string& player_one_path, const std::string& player_two_path,
-                      mw::sim::MatchData& out, std::string& error) {
-    mw::sim::MatchData match{};
+                      ds::sim::MatchData& out, std::string& error) {
+    ds::sim::MatchData match{};
 
     const LoadResult first = load_character(player_one_path, match.characters[0], error);
     if (first != LoadResult::Ok) {
@@ -460,4 +460,4 @@ LoadResult load_match(const std::string& player_one_path, const std::string& pla
     return LoadResult::Ok;
 }
 
-}  // namespace mw::data
+}  // namespace ds::data

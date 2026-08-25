@@ -11,7 +11,7 @@
 
 #include "sim/rng.h"
 
-using namespace mw::sim;
+using namespace ds::sim;
 
 TEST_CASE("The same seed produces the same sequence") {
     RngState a{};

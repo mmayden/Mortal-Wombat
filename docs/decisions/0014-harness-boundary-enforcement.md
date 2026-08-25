@@ -39,7 +39,7 @@ Three mechanical guards, all running in CI on every commit.
    and `static_assert`s require each struct's size to equal the sum of its
    members.
 
-3. **`mw_desync_probe` plus the `desync` CI job.** The probe prints a state
+3. **`ds_desync_probe` plus the `desync` CI job.** The probe prints a state
    hash for every frame of every committed recording. CI runs it on Linux,
    Windows, and macOS and diffs the three outputs. A divergence names the frame
    it began on rather than reporting only that the platforms disagree.

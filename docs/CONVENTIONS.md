@@ -1,4 +1,4 @@
-# Conventions — Mortal Wombat
+# Conventions — Divided States
 
 > Short and prescriptive on purpose. Ambiguity here shows up as inconsistency
 > in the diff, and review is this project's binding constraint.
@@ -12,10 +12,10 @@ structs, operator overloading (fixed-point types only), templates for
 containers only.
 
 **Forbidden in shipped code** — the game binary and every library it links
-(`mw_sim`, `mw_data`). Tests and the `tools/` binaries are exempt from the first
+(`ds_sim`, `ds_data`). Tests and the `tools/` binaries are exempt from the first
 two rows and only those: doctest reports failures by throwing, and neither ships
 or can desync anything. The exemption is expressed in the build as the
-`mw_no_exceptions` / `mw_exceptions` interface targets, not as a convention
+`ds_no_exceptions` / `ds_exceptions` interface targets, not as a convention
 anyone has to remember.
 
 | Forbidden | Instead |
@@ -55,17 +55,17 @@ every local test, and fails only in a real match between two machines.
 | Variables, fields | `snake_case` | `round_timer`, `hitstun_remaining` |
 | Constants, `constexpr` | `SCREAMING_SNAKE` | `MAX_PROJECTILES`, `FRAME_RATE` |
 | Enum class members | `PascalCase` | `FighterState::JumpStartup` |
-| Namespaces | `snake_case`, short | `mw`, `mw::sim` |
+| Namespaces | `snake_case`, short | `ds`, `ds::sim` |
 | Files | `snake_case.h` / `.cpp` | `fixed.h`, `state.h`, `sim.cpp` |
 | Test files | `test_<subject>.cpp` | `test_fixed.cpp` |
-| Macros | `SCREAMING_SNAKE`, `MW_` prefix | `MW_LOG_INFO` |
+| Macros | `SCREAMING_SNAKE`, `DS_` prefix | `DS_LOG_INFO` |
 
 **Frame counts carry their unit in the name** when the type does not:
 `startup_frames`, `hitstun_remaining`, `round_timer` (all `int32_t` frames).
 There is no `dt`, no `seconds`, and no `_ms` anywhere below the boundary. If
 you find yourself wanting one, you are on the wrong side of the line.
 
-Everything is in namespace `mw`. The sim is in `mw::sim`.
+Everything is in namespace `ds`. The sim is in `ds::sim`.
 
 ---
 
@@ -104,7 +104,7 @@ failure is reportable and recoverable.
 
 ## 4. Logging
 
-`MW_LOG_INFO` / `MW_LOG_WARN` / `MW_LOG_ERROR`, defined in `src/mw_log.h`.
+`DS_LOG_INFO` / `DS_LOG_WARN` / `DS_LOG_ERROR`, defined in `src/ds_log.h`.
 
 **No logging inside `src/sim/`.** It is I/O, and under rollback the same frame
 logs up to eight times. To observe the sim, use the training-mode overlay or
@@ -158,7 +158,7 @@ fix(render): correct facing flip on cross-up
 refactor(input): extract bitfield decode from event pump
 docs(adr): record fixed-point math decision
 chore(ci): cache CPM downloads between runs
-data(frenchy): tune HP recovery from 16 to 14 frames
+data(george): tune HP recovery from 16 to 14 frames
 ```
 
 Scopes: `sim`, `render`, `audio`, `ui`, `platform`, `input`, `net`, `tools`,
@@ -183,7 +183,7 @@ fix/<scope>-<desc>        fix/render-facing-flip
 test/<scope>              test/sim-coverage
 docs/<topic>              docs/framedata-schema
 chore/<topic>             chore/ci-caching
-data/<character>          data/frenchy-tuning
+data/<character>          data/george-tuning
 ```
 
 Never commit directly to `main`. Never merge red CI. Delete branches after

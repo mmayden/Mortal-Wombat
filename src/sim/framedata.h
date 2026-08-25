@@ -18,7 +18,7 @@
 
 #include "sim/fixed.h"
 
-namespace mw::sim {
+namespace ds::sim {
 
 // OUT OF DATE WITH THE DESIGN, deliberately. This enumerates the four-attack
 // scheme: four standing normals, four crouching variants, a jump attack, and
@@ -164,4 +164,4 @@ static_assert(sizeof(Box) == 4 * sizeof(int32_t), "Box has implicit padding");
 static_assert(sizeof(HitboxSpan) == 2 * sizeof(int32_t) + sizeof(Box),
               "HitboxSpan has implicit padding");
 
-}  // namespace mw::sim
+}  // namespace ds::sim

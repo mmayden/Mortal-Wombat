@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-namespace mw::sim {
+namespace ds::sim {
 namespace {
 
 // ROUND_START_FREEZE_FRAMES and ROUND_END_FREEZE_FRAMES live in constants.h,
@@ -678,4 +678,4 @@ void advance_frame(GameState& state, const MatchData& data, InputPair current, I
     ++state.frame;
 }
 
-}  // namespace mw::sim
+}  // namespace ds::sim

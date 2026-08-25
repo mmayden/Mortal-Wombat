@@ -16,9 +16,9 @@
 #include "sim/constants.h"
 #include "sim/state.h"
 
-using mw::render::Camera;
-using mw::render::camera_update;
-using namespace mw::sim;
+using ds::render::Camera;
+using ds::render::camera_update;
+using namespace ds::sim;
 
 namespace {
 

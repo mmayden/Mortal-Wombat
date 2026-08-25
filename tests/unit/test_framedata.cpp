@@ -22,13 +22,13 @@
 
 #include "data/framedata_loader.h"
 
-using namespace mw::data;
-using namespace mw::sim;
+using namespace ds::data;
+using namespace ds::sim;
 
 namespace {
 
 std::string character_path(const char* id) {
-    return std::string(MW_DATA_DIR) + "/characters/" + id + ".toml";
+    return std::string(DS_DATA_DIR) + "/characters/" + id + ".toml";
 }
 
 CharacterData load_or_fail(const char* id) {
@@ -45,7 +45,7 @@ LoadResult load_text(const std::string& body, std::string& error) {
     // Build tree, not the source tree: a test must not dirty the working copy.
     // The filename still ends in the id the file declares, because rule 2 checks
     // that the id matches the filename stem.
-    const std::string path = std::string(MW_TEST_SCRATCH_DIR) + "/__probe.toml";
+    const std::string path = std::string(DS_TEST_SCRATCH_DIR) + "/__probe.toml";
     {
         std::ofstream file(path, std::ios::binary);
         REQUIRE(file.is_open());
@@ -106,7 +106,7 @@ bool mentions(const std::string& error, const char* fragment) {
 }  // namespace
 
 TEST_CASE("Both shipped characters load") {
-    for (const char* id : {"frenchy", "wisdom"}) {
+    for (const char* id : {"george", "sue"}) {
         CAPTURE(id);
         const CharacterData character = load_or_fail(id);
         CHECK(std::string(character.id) == id);
@@ -138,7 +138,7 @@ TEST_CASE("Shipped frame data matches DESIGN.md 4.5") {
         {MoveId::Special, 12, 4, 24, 6, 18, 12},
     };
 
-    for (const char* id : {"frenchy", "wisdom"}) {
+    for (const char* id : {"george", "sue"}) {
         const CharacterData character = load_or_fail(id);
         for (const Expected& expected : table) {
             CAPTURE(id);
@@ -167,7 +167,7 @@ TEST_CASE("Shipped frame data matches DESIGN.md 4.5") {
 }
 
 TEST_CASE("Shipped physics match DESIGN.md 4.4") {
-    for (const char* id : {"frenchy", "wisdom"}) {
+    for (const char* id : {"george", "sue"}) {
         CAPTURE(id);
         const CharacterData character = load_or_fail(id);
 
@@ -179,13 +179,13 @@ TEST_CASE("Shipped physics match DESIGN.md 4.4") {
     }
 }
 
-TEST_CASE("Frenchy and Wisdom are mechanically identical in v1") {
+TEST_CASE("George and Sue are mechanically identical in v1") {
     // The two characters are mechanically identical for now, so any difference
     // here is drift rather than design -- most likely someone editing one file
     // and not the other. This expectation is expected to be REMOVED once the
     // cast is differentiated; it guards the interim, not the destination.
-    const CharacterData a = load_or_fail("frenchy");
-    const CharacterData b = load_or_fail("wisdom");
+    const CharacterData a = load_or_fail("george");
+    const CharacterData b = load_or_fail("sue");
 
     CHECK(a.walk_forward_speed == b.walk_forward_speed);
     CHECK(a.jump_duration == b.jump_duration);
@@ -209,7 +209,7 @@ TEST_CASE("Every move has a hitbox inside its active window") {
     // Rule 6, checked against the shipped files rather than a probe. A hitbox
     // live outside the active window reads at play time as a move that hits
     // during its own recovery -- almost undiagnosable from the game alone.
-    for (const char* id : {"frenchy", "wisdom"}) {
+    for (const char* id : {"george", "sue"}) {
         const CharacterData character = load_or_fail(id);
         for (int32_t i = 0; i < MOVE_COUNT; ++i) {
             CAPTURE(id);
@@ -444,7 +444,7 @@ TEST_CASE("load_match refuses a half-loaded match") {
     std::string error;
 
     const LoadResult result =
-        load_match(character_path("frenchy"), character_path("__no_such_character"), match, error);
+        load_match(character_path("george"), character_path("__no_such_character"), match, error);
 
     CHECK(result == LoadResult::FileMissing);
 }
@@ -453,9 +453,9 @@ TEST_CASE("load_match loads the shipped pair") {
     MatchData match{};
     std::string error;
     const LoadResult result =
-        load_match(character_path("frenchy"), character_path("wisdom"), match, error);
+        load_match(character_path("george"), character_path("sue"), match, error);
 
     REQUIRE_MESSAGE(result == LoadResult::Ok, error);
-    CHECK(std::string(match.characters[0].id) == "frenchy");
-    CHECK(std::string(match.characters[1].id) == "wisdom");
+    CHECK(std::string(match.characters[0].id) == "george");
+    CHECK(std::string(match.characters[1].id) == "sue");
 }

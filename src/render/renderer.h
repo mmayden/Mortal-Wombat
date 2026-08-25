@@ -17,7 +17,7 @@
 
 struct SDL_Renderer;
 
-namespace mw::render {
+namespace ds::render {
 
 // Interpolates between two sim frames and draws the result.
 //
@@ -35,8 +35,8 @@ namespace mw::render {
 // viewer the project's debugging environment -- it is how "why did that miss?"
 // becomes answerable without attaching a debugger.
 void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
-                const mw::sim::MatchData& data, const Camera& camera,
-                const mw::sim::GameState& previous, const mw::sim::GameState& current, float alpha,
+                const ds::sim::MatchData& data, const Camera& camera,
+                const ds::sim::GameState& previous, const ds::sim::GameState& current, float alpha,
                 bool show_debug);
 
-}  // namespace mw::render
+}  // namespace ds::render

@@ -18,7 +18,7 @@
 
 #include "match_data.h"
 
-using namespace mw::sim;
+using namespace ds::sim;
 
 namespace {
 
@@ -89,7 +89,7 @@ TEST_CASE("The sim survives 600 ticks of idle input") {
     init_state(state, 20260822u);
 
     for (int32_t tick = 0; tick < SMOKE_TICKS; ++tick) {
-        advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
+        advance_frame(state, ds::test::shipped_match_data(), NO_INPUT, NO_INPUT);
         check_invariants(state, tick);
     }
 
@@ -103,7 +103,7 @@ TEST_CASE("The sim survives 600 ticks of scripted input") {
     InputPair previous = NO_INPUT;
     for (int32_t tick = 0; tick < SMOKE_TICKS; ++tick) {
         const InputPair current = scripted_input(tick);
-        advance_frame(state, mw::test::shipped_match_data(), current, previous);
+        advance_frame(state, ds::test::shipped_match_data(), current, previous);
         check_invariants(state, tick);
         previous = current;
     }
@@ -126,7 +126,7 @@ TEST_CASE("The sim survives a full match played to its conclusion") {
         if (state.round_phase == RoundPhase::Fighting && state.frame % 200 == 0) {
             state.fighters[1].health = 0;
         }
-        advance_frame(state, mw::test::shipped_match_data(), scripted_input(tick),
+        advance_frame(state, ds::test::shipped_match_data(), scripted_input(tick),
                       scripted_input(tick - 1));
         ++tick;
     }
@@ -155,7 +155,7 @@ TEST_CASE("600 ticks run fast enough to be worth measuring") {
     // boundary. Nothing inside src/sim/ may do this (ADR 0002).
     const auto start = std::chrono::steady_clock::now();
     for (int32_t tick = 0; tick < SMOKE_TICKS; ++tick) {
-        advance_frame(state, mw::test::shipped_match_data(), scripted_input(tick),
+        advance_frame(state, ds::test::shipped_match_data(), scripted_input(tick),
                       scripted_input(tick - 1));
     }
     const auto elapsed = std::chrono::steady_clock::now() - start;

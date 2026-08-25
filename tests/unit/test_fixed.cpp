@@ -9,7 +9,7 @@
 
 #include "sim/fixed.h"
 
-using namespace mw::sim;
+using namespace ds::sim;
 
 TEST_CASE("Fixed represents whole numbers exactly") {
     CHECK(Fixed::from_int(0).raw == 0);

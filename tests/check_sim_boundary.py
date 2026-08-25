@@ -72,7 +72,7 @@ RULES: list[tuple[str, re.Pattern[str], str]] = [
     ),
     (
         "I/O",
-        re.compile(r"\b(printf|fprintf|puts|fopen|ifstream|ofstream|cout|cerr)\b|MW_LOG_"),
+        re.compile(r"\b(printf|fprintf|puts|fopen|ifstream|ofstream|cout|cerr)\b|DS_LOG_"),
         "Rollback re-simulates the same frame up to 8x, so a side effect fires "
         "8x. Observe the sim from outside instead: training mode or "
         "tools/replay_inspector/.",

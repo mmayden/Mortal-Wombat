@@ -108,7 +108,7 @@ jobs:
       # 600 sim frames is 10 seconds of game time, and the loop paces itself in
       # real time, so expect this step to take about that long.
       - name: Headless game boot
-        run: ./build/debug/bin/mortal_wombat --frames 600
+        run: ./build/debug/bin/divided_states --frames 600
         shell: bash
         env:
           SDL_VIDEODRIVER: dummy
@@ -118,14 +118,14 @@ jobs:
       # actually read and reproduce -- not merely that it writes something.
       #
       # tests/replays/idle.replay is 300 frames of no input from the same seed
-      # the game boots with, recorded by mw_replay_record. A --record run of the
+      # the game boots with, recorded by ds_replay_record. A --record run of the
       # same length must therefore agree on every hash. If the game and the test
       # tooling ever disagree about frame numbering or when a checkpoint is
       # taken, the recordings a player sends in stop reproducing, and this is
       # the only thing that would notice.
       - name: Session recorder round-trips through the replay format
         run: |
-          ./build/debug/bin/mortal_wombat --frames 300 --record recorded.replay
+          ./build/debug/bin/divided_states --frames 300 --record recorded.replay
           grep -E '^(checkpoint|final) ' recorded.replay > recorded-hashes.txt
           grep -E '^(checkpoint|final) ' tests/replays/idle.replay > expected-hashes.txt
           diff -u expected-hashes.txt recorded-hashes.txt
@@ -136,7 +136,7 @@ jobs:
 
       # Uploaded so a desync failure below can be inspected without a rerun.
       - name: Record state hash trace
-        run: ./build/debug/bin/mw_desync_probe > desync-${{ runner.os }}.txt
+        run: ./build/debug/bin/ds_desync_probe > desync-${{ runner.os }}.txt
         shell: bash
 
       - name: Upload state hash trace
@@ -205,8 +205,8 @@ jobs:
 
       - name: Compare state hashes across optimization levels
         run: |
-          ./build/debug/bin/mw_desync_probe   > trace-debug.txt
-          ./build/release/bin/mw_desync_probe > trace-release.txt
+          ./build/debug/bin/ds_desync_probe   > trace-debug.txt
+          ./build/release/bin/ds_desync_probe > trace-release.txt
 
           for f in trace-debug.txt trace-release.txt; do
             if [ ! -s "$f" ]; then

@@ -14,7 +14,7 @@
 
 #include <cstdint>
 
-namespace mw::sim {
+namespace ds::sim {
 
 // Named streams, so that consuming randomness in one system does not shift the
 // sequence another system sees. Adding a hit-spark effect must not change which
@@ -88,4 +88,4 @@ constexpr int32_t rng_range(RngState& rng, RngStream stream, int32_t low, int32_
     return low + static_cast<int32_t>(rng_below(rng, stream, span));
 }
 
-}  // namespace mw::sim
+}  // namespace ds::sim

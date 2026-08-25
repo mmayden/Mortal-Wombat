@@ -1,4 +1,4 @@
-#  Frenchy — player one's fighter.
+#  Sue — player two's fighter.
 #
 #  Schema: docs/framedata_schema.md (version 1). Read the Units section before
 #  editing: every value here is an integer. Durations are frames at 60Hz and
@@ -21,15 +21,21 @@
 #  numbers exist to reach the first hit that connects, which is the last step of
 #  the bootstrap. Tune them in the editor, not here.
 #
-#  Frenchy and Wisdom are mechanically identical in v1: DESIGN.md 4.5 gives one
-#  frame-data table "per character", and 4.6 cuts per-character variation. They
-#  are separate files anyway, because that is where the difference will go.
+#  Sue is mechanically identical to George in v1: DESIGN.md 4.5 gives one
+#  frame-data table "per character", and 4.6 cuts per-character variation. The
+#  two are separate files because that is where the difference will go once
+#  DESIGN.md 5.4 gives each character a special move that fits them.
+#
+#  DESIGN.md 5.4 leaves silhouette, special move, and personality TODO for both
+#  fighters and says not to invent them. The prototype README implies Sue is
+#  the antagonist; that is a hint, not a decision, and nothing here depends on
+#  it.
 
 schema_version = 1
 
 [character]
-id           = "frenchy"
-display_name = "Frenchy"
+id           = "sue"
+display_name = "Sue"
 
 [character.physics]
 walk_forward_speed  = 78643      # 1.2 units/frame  (DESIGN.md 4.4)

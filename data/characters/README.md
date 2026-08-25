@@ -8,7 +8,7 @@ it diffs, reviews, and tests like code, and **balance changes become data
 commits rather than code commits**.
 
 Empty until the character loader lands. The two v1 files will be
-`frenchy.toml` and `wisdom.toml` (DESIGN.md §5.4).
+`george.toml` and `sue.toml` (DESIGN.md §5.4).
 
 Names are settled; silhouette, special move, and personality are still TODO in
 §5.4 and must not be invented. None of them block the loader — every

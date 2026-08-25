@@ -15,7 +15,7 @@
 
 #include "match_data.h"
 
-using namespace mw::sim;
+using namespace ds::sim;
 
 namespace {
 
@@ -31,7 +31,7 @@ InputPair pair_with(InputFrame p1, InputFrame p2) {
 }
 
 const MatchData& data() {
-    return mw::test::shipped_match_data();
+    return ds::test::shipped_match_data();
 }
 
 void skip_to_fighting(GameState& state) {

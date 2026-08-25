@@ -1,6 +1,6 @@
 // Replay scenarios — the input scripts the recordings are generated from.
 //
-// Shared by the replay test and by mw_replay_record so that re-recording
+// Shared by the replay test and by ds_replay_record so that re-recording
 // cannot drift from what is tested. A scenario is deliberately code rather
 // than data: the recorded FILE is the artifact under test, and the script is
 // how that artifact gets regenerated when a change legitimately invalidates it.
@@ -14,21 +14,21 @@
 
 #include "sim/input.h"
 
-namespace mw::test {
+namespace ds::test {
 
 struct Scenario {
     const char* name;
     const char* description;
     uint64_t seed;
     int32_t frame_count;
-    mw::sim::InputPair (*script)(int32_t frame);
+    ds::sim::InputPair (*script)(int32_t frame);
 };
 
 namespace scripts {
 
-using mw::sim::Button;
-using mw::sim::InputFrame;
-using mw::sim::InputPair;
+using ds::sim::Button;
+using ds::sim::InputFrame;
+using ds::sim::InputPair;
 
 constexpr InputFrame NEUTRAL{0u};
 
@@ -200,4 +200,4 @@ inline constexpr int32_t SCENARIO_COUNT =
 // reports the interval it began in rather than only that the end differed.
 inline constexpr int32_t CHECKPOINT_INTERVAL = 30;
 
-}  // namespace mw::test
+}  // namespace ds::test

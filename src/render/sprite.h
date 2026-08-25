@@ -19,7 +19,7 @@
 
 struct SDL_Texture;
 
-namespace mw::render {
+namespace ds::render {
 
 struct Color {
     uint8_t r;
@@ -79,7 +79,7 @@ public:
     // `player_index` is passed separately because it is the fighter's stable
     // identity. Anything player-specific -- colour now, character art later --
     // must key off this and never off `facing`, which flips on every cross-up.
-    virtual void fighter_sprites(const mw::sim::Fighter& fighter, int32_t player_index,
+    virtual void fighter_sprites(const ds::sim::Fighter& fighter, int32_t player_index,
                                  SpriteList& out) const = 0;
 
 protected:
@@ -91,8 +91,8 @@ protected:
 // feel identical to finished sprites while costing nothing to iterate on.
 class PlaceholderManifest final : public SpriteManifest {
 public:
-    void fighter_sprites(const mw::sim::Fighter& fighter, int32_t player_index,
+    void fighter_sprites(const ds::sim::Fighter& fighter, int32_t player_index,
                          SpriteList& out) const override;
 };
 
-}  // namespace mw::render
+}  // namespace ds::render

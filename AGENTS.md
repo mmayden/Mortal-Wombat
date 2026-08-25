@@ -1,8 +1,8 @@
-# Agent Instructions — Mortal Wombat
+# Agent Instructions — Divided States
 
 ## Project
 
-Mortal Wombat is a 2D one-on-one fighting game — six attack buttons, hold back
+Divided States is a 2D one-on-one fighting game — six attack buttons, hold back
 to block, fixed jump arcs, best-of-three rounds. It is written in orthodox C++
 on SDL3, with a deterministic fixed-point simulation at a fixed 60Hz that is
 architected for rollback netcode from day one. The v1 target is two complete
@@ -31,12 +31,12 @@ does that for you; every command below is run through it.
 | Smoke | `powershell -File tools/dev.ps1 ctest --preset debug -L smoke` |
 | Replay | `powershell -File tools/dev.ps1 ctest --preset debug -L replay` |
 | Sim boundary | `python tests/check_sim_boundary.py src/sim` |
-| Re-record replays | `build/debug/bin/mw_replay_record.exe` |
-| Per-frame state hashes | `build/debug/bin/mw_desync_probe.exe` |
-| **Run the game** | `build/debug/bin/mortal_wombat.exe` |
-| Headless boot (N sim frames) | `mortal_wombat.exe --frames 600` |
-| Capture a frame | `mortal_wombat.exe --frames 200 --screenshot out.bmp` |
-| **Record a played session** | `mortal_wombat.exe --record session.replay` |
+| Re-record replays | `build/debug/bin/ds_replay_record.exe` |
+| Per-frame state hashes | `build/debug/bin/ds_desync_probe.exe` |
+| **Run the game** | `build/debug/bin/divided_states.exe` |
+| Headless boot (N sim frames) | `divided_states.exe --frames 600` |
+| Capture a frame | `divided_states.exe --frames 200 --screenshot out.bmp` |
+| **Record a played session** | `divided_states.exe --record session.replay` |
 
 Controls, keyboard: P1 `WASD` + `F G C V` + `B`. P2 arrows + numpad
 `4 5 1 2` + `0`. `ESC` quits, `F1` toggles the debug overlay.
@@ -138,7 +138,7 @@ Below the boundary, these are build-breaking errors, not style preferences:
 6. Every behavior change requires a test. No test, no merge.
    **This includes the render layer**, which was quietly exempt until a camera
    defect was reported twice with nothing to run either time. `camera.cpp` is
-   its own library (`mw_render_camera`) precisely so it can be tested;
+   its own library (`ds_render_camera`) precisely so it can be tested;
    `renderer.cpp` and `sprite.cpp` still cannot be, because they draw through
    SDL. If you can factor the arithmetic out of them, do.
 7. If a task requires editing a file outside your stated scope, **STOP and

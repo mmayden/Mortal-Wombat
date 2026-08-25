@@ -12,7 +12,7 @@
 
 #include <cstdint>
 
-namespace mw::sim {
+namespace ds::sim {
 
 // Number of fractional bits. 16 gives a range of +/-32768 units with a
 // resolution of 1/65536 — the stage is 960 units wide (DESIGN.md 4.4), so
@@ -162,4 +162,4 @@ constexpr Fixed fixed_clamp(Fixed value, Fixed low, Fixed high) {
     return fixed_min(fixed_max(value, low), high);
 }
 
-}  // namespace mw::sim
+}  // namespace ds::sim

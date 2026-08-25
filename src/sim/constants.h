@@ -21,7 +21,7 @@
 
 #include "sim/fixed.h"
 
-namespace mw::sim {
+namespace ds::sim {
 
 // ---------------------------------------------------------------------------
 // From DESIGN.md 4.4
@@ -133,4 +133,4 @@ inline constexpr Fixed JUMP_HORIZONTAL_SCALE = Fixed::from_ratio(9, 5);  // 1.8x
 // which would shrink what rollback copies every frame.
 inline constexpr int32_t MAX_PROJECTILES = 8;
 
-}  // namespace mw::sim
+}  // namespace ds::sim

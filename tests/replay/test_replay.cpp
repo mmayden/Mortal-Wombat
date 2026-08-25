@@ -6,7 +6,7 @@
 // per frame. Only a replay catches that.
 //
 // A failure here is not automatically a bug. If the behavior change was
-// deliberate, re-record with mw_replay_record and commit the new recordings IN
+// deliberate, re-record with ds_replay_record and commit the new recordings IN
 // THE SAME COMMIT as the change (AGENTS.md rule 8).
 #include <cstdio>
 #include <string>
@@ -17,12 +17,12 @@
 #include "replay/replay_runner.h"
 #include "replay/scenarios.h"
 
-using namespace mw::test;
+using namespace ds::test;
 
 namespace {
 
 std::string replay_path(const char* name) {
-    return std::string(MW_REPLAY_DIR) + "/" + name + ".replay";
+    return std::string(DS_REPLAY_DIR) + "/" + name + ".replay";
 }
 
 }  // namespace
@@ -39,7 +39,7 @@ TEST_CASE("Every scenario has a committed recording that still reproduces") {
 
         // A missing recording must fail rather than skip. A replay tier that
         // silently tests nothing is worse than no replay tier, because it is
-        // trusted. Run mw_replay_record to generate them.
+        // trusted. Run ds_replay_record to generate them.
         REQUIRE_MESSAGE(status == ReplayIoStatus::Ok, replay_io_status_name(status), ": ", error);
 
         CHECK(replay.seed == scenario.seed);
@@ -127,9 +127,9 @@ TEST_CASE("The combat recordings actually connect") {
         const int32_t p2_health = result.final_state.fighters[1].health;
 
         if (expectation.expect_damage) {
-            CHECK(p2_health < mw::sim::STARTING_HEALTH);
+            CHECK(p2_health < ds::sim::STARTING_HEALTH);
         } else {
-            CHECK(p2_health == mw::sim::STARTING_HEALTH);
+            CHECK(p2_health == ds::sim::STARTING_HEALTH);
         }
     }
 }
@@ -143,20 +143,20 @@ TEST_CASE("The jump recording actually leaves the ground") {
     std::string error;
     REQUIRE(load_replay(replay_path("jump_attack"), replay, error) == ReplayIoStatus::Ok);
 
-    mw::sim::GameState state{};
-    mw::sim::init_state(state, replay.seed);
-    mw::sim::InputPair previous{{mw::sim::InputFrame{0u}, mw::sim::InputFrame{0u}}};
+    ds::sim::GameState state{};
+    ds::sim::init_state(state, replay.seed);
+    ds::sim::InputPair previous{{ds::sim::InputFrame{0u}, ds::sim::InputFrame{0u}}};
 
     int32_t airborne_frames = 0;
     int32_t jump_attack_frames = 0;
     for (int32_t frame = 0; frame < replay.frame_count; ++frame) {
-        const mw::sim::InputPair current = input_at_frame(replay, frame);
-        mw::sim::advance_frame(state, mw::test::shipped_match_data(), current, previous);
+        const ds::sim::InputPair current = input_at_frame(replay, frame);
+        ds::sim::advance_frame(state, ds::test::shipped_match_data(), current, previous);
         previous = current;
 
-        if (state.fighters[0].state == mw::sim::FighterState::Airborne) {
+        if (state.fighters[0].state == ds::sim::FighterState::Airborne) {
             ++airborne_frames;
-            if (state.fighters[0].move_id == static_cast<int32_t>(mw::sim::MoveId::JumpAttack)) {
+            if (state.fighters[0].move_id == static_cast<int32_t>(ds::sim::MoveId::JumpAttack)) {
                 ++jump_attack_frames;
             }
         }
@@ -169,7 +169,7 @@ TEST_CASE("The jump recording actually leaves the ground") {
     // threw the move is what let a completely unusable jump attack -- one that
     // could not hit anybody from any range at any timing -- reproduce
     // perfectly and pass for as long as it existed.
-    CHECK(state.fighters[1].health < mw::sim::STARTING_HEALTH);
+    CHECK(state.fighters[1].health < ds::sim::STARTING_HEALTH);
 }
 
 TEST_CASE("Blocking in a recording still costs the defender their turn") {
@@ -180,14 +180,14 @@ TEST_CASE("Blocking in a recording still costs the defender their turn") {
     std::string error;
     REQUIRE(load_replay(replay_path("attack_into_block"), replay, error) == ReplayIoStatus::Ok);
 
-    mw::sim::GameState state{};
-    mw::sim::init_state(state, replay.seed);
-    mw::sim::InputPair previous{{mw::sim::InputFrame{0u}, mw::sim::InputFrame{0u}}};
+    ds::sim::GameState state{};
+    ds::sim::init_state(state, replay.seed);
+    ds::sim::InputPair previous{{ds::sim::InputFrame{0u}, ds::sim::InputFrame{0u}}};
 
     int32_t blockstun_frames = 0;
     for (int32_t frame = 0; frame < replay.frame_count; ++frame) {
-        const mw::sim::InputPair current = input_at_frame(replay, frame);
-        mw::sim::advance_frame(state, mw::test::shipped_match_data(), current, previous);
+        const ds::sim::InputPair current = input_at_frame(replay, frame);
+        ds::sim::advance_frame(state, ds::test::shipped_match_data(), current, previous);
         previous = current;
         if (state.fighters[1].blockstun_remaining > 0) {
             ++blockstun_frames;
@@ -228,8 +228,8 @@ TEST_CASE("Run-length compression preserves the input stream exactly") {
         replay.frame_count = scenario.frame_count;
 
         for (int32_t frame = 0; frame < scenario.frame_count; ++frame) {
-            const mw::sim::InputPair expected = scenario.script(frame);
-            const mw::sim::InputPair actual = input_at_frame(replay, frame);
+            const ds::sim::InputPair expected = scenario.script(frame);
+            const ds::sim::InputPair actual = input_at_frame(replay, frame);
             REQUIRE(actual.players[0].buttons == expected.players[0].buttons);
             REQUIRE(actual.players[1].buttons == expected.players[1].buttons);
         }
@@ -240,7 +240,7 @@ TEST_CASE("The loader rejects a recording that asserts nothing") {
     // A file with no expected hashes would pass regardless of what the sim
     // did. Rejecting it at load time is what stops a truncated or hand-edited
     // recording from quietly becoming a no-op test.
-    const std::string path = std::string(MW_TEST_SCRATCH_DIR) + "/__malformed_probe.replay";
+    const std::string path = std::string(DS_TEST_SCRATCH_DIR) + "/__malformed_probe.replay";
     Replay written;
     written.name = "probe";
     written.description = "written by the test, then deliberately stripped";
@@ -268,7 +268,7 @@ TEST_CASE("The loader reports a missing file rather than passing") {
 }
 
 TEST_CASE("A recording round-trips through save and load") {
-    const std::string path = std::string(MW_TEST_SCRATCH_DIR) + "/__roundtrip_probe.replay";
+    const std::string path = std::string(DS_TEST_SCRATCH_DIR) + "/__roundtrip_probe.replay";
 
     const Scenario& scenario = SCENARIOS[1];
     const RunResult result = run_scenario(scenario.seed, scenario.frame_count, scenario.script);

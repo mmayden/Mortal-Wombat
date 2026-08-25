@@ -8,9 +8,9 @@
 #include "sim/hash.h"
 #include "sim/state.h"
 
-#include "mw_log.h"
+#include "ds_log.h"
 
-namespace mw::platform {
+namespace ds::platform {
 namespace {
 
 // The replay format version this writes. Must track REPLAY_FORMAT_VERSION in
@@ -49,8 +49,8 @@ void recorder_begin(SessionRecorder& recorder, uint64_t seed) {
     recorder.checkpoint_count = 0;
 }
 
-void recorder_frame(SessionRecorder& recorder, mw::sim::InputPair input,
-                    const mw::sim::GameState& state) {
+void recorder_frame(SessionRecorder& recorder, ds::sim::InputPair input,
+                    const ds::sim::GameState& state) {
     if (!recorder.active) {
         return;
     }
@@ -83,7 +83,7 @@ void recorder_frame(SessionRecorder& recorder, mw::sim::InputPair input,
         if (recorder.checkpoint_count < MAX_RECORDED_CHECKPOINTS) {
             RecordedCheckpoint& entry = recorder.checkpoints[recorder.checkpoint_count++];
             entry.frame = state.frame;
-            entry.hash = mw::sim::hash_state(state);
+            entry.hash = ds::sim::hash_state(state);
         } else {
             recorder.truncated = true;
         }
@@ -93,7 +93,7 @@ void recorder_frame(SessionRecorder& recorder, mw::sim::InputPair input,
 }
 
 bool recorder_write(const SessionRecorder& recorder, const char* path,
-                    const mw::sim::GameState& final_state) {
+                    const ds::sim::GameState& final_state) {
     if (!recorder.active) {
         return false;
     }
@@ -105,7 +105,7 @@ bool recorder_write(const SessionRecorder& recorder, const char* path,
     // produced a false desync across all 1971 lines of a state trace.
     SDL_IOStream* stream = SDL_IOFromFile(path, "wb");
     if (stream == nullptr) {
-        MW_LOG_ERROR("could not open '%s' for writing: %s", path, SDL_GetError());
+        DS_LOG_ERROR("could not open '%s' for writing: %s", path, SDL_GetError());
         return false;
     }
 
@@ -113,7 +113,7 @@ bool recorder_write(const SessionRecorder& recorder, const char* path,
     ok = ok && write_line(stream, "# Replay recording -- captured from a played session.\n");
     ok = ok && write_line(stream, "#\n");
     ok = ok &&
-         write_line(stream, "# Written by mortal_wombat --record. Do not hand-edit the hashes.\n");
+         write_line(stream, "# Written by divided_states --record. Do not hand-edit the hashes.\n");
     ok = ok &&
          write_line(stream, "# Drop this into tests/replays/ and add its name to the scenario\n");
     ok = ok && write_line(stream, "# list to turn a bug someone found by playing into a test.\n");
@@ -157,20 +157,20 @@ bool recorder_write(const SessionRecorder& recorder, const char* path,
          write_line(stream, "# so that a render-side effect drawing a number cannot fail this.\n");
     ok =
         ok && write_line(stream, "final 0x%016llX\n",
-                         static_cast<unsigned long long>(mw::sim::hash_state_visible(final_state)));
+                         static_cast<unsigned long long>(ds::sim::hash_state_visible(final_state)));
 
     const bool closed = SDL_CloseIO(stream);
     if (!closed || !ok) {
-        MW_LOG_ERROR("failed to finish writing '%s': %s", path, SDL_GetError());
+        DS_LOG_ERROR("failed to finish writing '%s': %s", path, SDL_GetError());
         return false;
     }
 
-    MW_LOG_INFO("recorded %d frames (%d input changes) to %s", recorder.frame_count,
+    DS_LOG_INFO("recorded %d frames (%d input changes) to %s", recorder.frame_count,
                 recorder.change_count, path);
     if (recorder.truncated) {
-        MW_LOG_WARN("the session was truncated -- it exceeded the recorder's limits");
+        DS_LOG_WARN("the session was truncated -- it exceeded the recorder's limits");
     }
     return true;
 }
 
-}  // namespace mw::platform
+}  // namespace ds::platform

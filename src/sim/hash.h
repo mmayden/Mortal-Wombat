@@ -17,7 +17,7 @@
 
 #include "sim/state.h"
 
-namespace mw::sim {
+namespace ds::sim {
 
 inline constexpr uint64_t FNV64_OFFSET_BASIS = 14695981039346656037ULL;
 inline constexpr uint64_t FNV64_PRIME = 1099511628211ULL;
@@ -57,4 +57,4 @@ inline uint64_t hash_state_visible(const GameState& state) {
     return hash;
 }
 
-}  // namespace mw::sim
+}  // namespace ds::sim

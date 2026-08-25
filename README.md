@@ -1,8 +1,8 @@
-# Mortal Wombat
+# Divided States
 
 A 2D one-on-one fighting game: six attack buttons, hold back to block, fixed
-jump arcs, best-of-three rounds. The cast are wombats and the tone is deadpan;
-the fighting system plays completely straight.
+jump arcs, best-of-three rounds. Set across a divided United States, with each
+stage a location in it.
 
 The whole design answers one question — **"was that worth committing to?"**
 Neutral is a distinct phase, and leaving it costs something. You chose a button,
@@ -58,7 +58,7 @@ persistent directory to avoid re-downloading across build trees.
 | `ctest --preset debug -L boundary` | No forbidden construct in `src/sim/` | < 1s |
 | `ctest --preset debug` | All of the above | < 5 min |
 
-The game runs: `build/debug/bin/mortal_wombat`. Two fighters walk, crouch,
+The game runs: `build/debug/bin/divided_states`. Two fighters walk, crouch,
 block, jump and attack; hits connect, deal damage, and apply hitstun and
 blockstun; rounds resolve on KO or timeout. `F1` shows the hitbox overlay.
 
@@ -74,10 +74,10 @@ that disagrees with itself within a month.
 headless via `SDL_VIDEODRIVER=dummy`; `--screenshot PATH` captures the final
 frame.
 
-Two extra binaries come out of the build. `mw_replay_record` regenerates the
+Two extra binaries come out of the build. `ds_replay_record` regenerates the
 committed recordings — run it when a deliberate behavior change invalidates
 the replay tier, and commit its output in the same commit as the change.
-`mw_desync_probe` prints per-frame state hashes and is what the CI desync job
+`ds_desync_probe` prints per-frame state hashes and is what the CI desync job
 diffs across platforms.
 
 The **desync** tier runs in CI only: the same replays across Linux, Windows,
@@ -127,9 +127,7 @@ The one rule everything follows from:
 
 ## IP
 
-Mortal Kombat is Warner Bros. property. This project uses no MK characters,
-names, assets, sound, or trade dress. "Mortal Wombat" is a parody title over an
-original cast. The title is the only reference to it — the mechanical
-inheritance it once implied was dropped (ADR 0018), and the game's controls are
-now the opposite of what that lineage specified. Mechanics are not
-copyrightable; specific characters and assets are.
+Original title, original cast. **Mechanics are not copyrightable; specific
+characters, names, assets and trade dress are** — so frame data, a six-button
+layout and hold-back blocking may be studied from any game freely, while art,
+audio, names and likenesses may not. `DESIGN.md` §9 is the full statement.

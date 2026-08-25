@@ -5,7 +5,7 @@ where a term is needed it is explained here or in
 [MECHANICS.md](MECHANICS.md).
 
 ```
-build\debug\bin\mortal_wombat.exe
+build\debug\bin\divided_states.exe
 ```
 
 `F1` shows the collision boxes. `ESC` quits. Controls are in `AGENTS.md`.
@@ -13,7 +13,7 @@ build\debug\bin\mortal_wombat.exe
 **If something looks wrong, record it.**
 
 ```
-build\debugin\mortal_wombat.exe --record session.replay
+build\debugin\divided_states.exe --record session.replay
 ```
 
 Play until you see the problem, then quit. Send me `session.replay` and I can
@@ -50,7 +50,7 @@ question cannot be answered by playing, the game is not showing enough.
 swapped.** Playing cannot tell you — you would just learn the wrong buttons.
 
 ```
-build\debugin\mortal_wombat.exe --input-test
+build\debugin\divided_states.exe --input-test
 ```
 
 Every time an input changes it prints a line per player. Press one control at a
@@ -172,8 +172,9 @@ they attack you.
 
 They are currently narrow rectangles — 32 wide, 140 tall.
 
-The design document asks for wombats that are *"round, heavy, and
-short-limbed"*, which is close to the opposite shape.
+The design document does not say what they should look like — the cast is
+`TODO` and deliberately unwritten (`DESIGN.md` §5.4). A tall thin rectangle is
+a guess, not a decision.
 
 **Watch for:** now that they move, jump and attack, what shape do they *want* to
 be? Shorter and wider? How much?

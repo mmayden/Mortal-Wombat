@@ -6,11 +6,11 @@
 // where anyone is looking.
 #pragma once
 
-namespace mw::sim {
+namespace ds::sim {
 struct GameState;
 }
 
-namespace mw::render {
+namespace ds::render {
 
 struct Camera {
     float x;
@@ -33,7 +33,7 @@ struct Camera {
 // So the camera holds still while both fighters are comfortably inside the
 // view, and scrolls only when one of them nears an edge -- the deadzone every
 // side-on fighting game actually uses.
-void camera_update(Camera& camera, const mw::sim::GameState& previous,
-                   const mw::sim::GameState& current, float alpha);
+void camera_update(Camera& camera, const ds::sim::GameState& previous,
+                   const ds::sim::GameState& current, float alpha);
 
-}  // namespace mw::render
+}  // namespace ds::render

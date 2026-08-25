@@ -1,4 +1,4 @@
-# Mortal Wombat — Design Document
+# Divided States — Design Document
 
 >
 > **Status by section**, so nobody has to guess which parts are safe to build to.
@@ -27,11 +27,15 @@
 
 ## 1. The game in three sentences
 
-Mortal Wombat is a 2D one-on-one fighting game: six attack buttons, hold back
-to block, grounded neutral, best-of-three rounds. It is a comedy fighter — the
-cast are wombats and the tone is deadpan rather than gritty — built on a
+Divided States is a 2D one-on-one fighting game: six attack buttons, hold back
+to block, grounded neutral, best-of-three rounds. It is set across a divided
+United States, with each stage a different location in it, and is built on a
 deterministic simulation for rollback netplay. The v1 target is two complete
 characters that feel good to play.
+
+**Tone is TODO and deliberately so.** Whether this is satire, comedy or played
+straight does not change a single mechanic, and nothing in this document should
+be read as having decided it.
 
 ---
 
@@ -103,10 +107,15 @@ whiffing a heavy is genuinely punishing.
 - Something two people can pick up in ninety seconds
 - Comedy through character and animation, never through unfair mechanics
 
-**Comedy rule:** the joke is the wombats. The fighting system plays straight.
-Nothing in the mechanics should be a gag — no random damage, no joke moves
-that break the game state, no fourth-wall input. A funny game that plays badly
-is a bad game.
+**The fighting system plays straight**, whatever the tone turns out to be.
+Nothing in the mechanics is a gag: no random damage, no joke moves that break
+the game state, no fourth-wall input.
+
+This survives the change of setting because it was never really about the old
+one. It is a *determinism* constraint wearing a tonal hat — random damage is
+exactly the thing that makes a match irreproducible, and a mechanic that exists
+for a laugh is a mechanic nobody can play around. A funny game that plays badly
+is a bad game, and so is a bleak one.
 
 ---
 
@@ -341,7 +350,7 @@ The planned successor. Recorded here so no agent proposes an alternative.
 Model and rig in Blender, animate, render from a locked orthographic camera to
 sprite sheets. Chosen because:
 
-- **Rig reuse** — every wombat shares a skeleton, so character two costs a
+- **Rig reuse** — the cast shares a skeleton, so character two costs a
   fraction of character one
 - **Iteration is re-render, not redraw** — critical while tuning frame data
 - **Free consistency** — lighting, proportions, and camera identical forever
@@ -354,7 +363,9 @@ cleanup is brutal).
 
 ### 5.3 Visual tone
 
-- Chunky, exaggerated, low-detail. Wombats are round, heavy, and short-limbed —
+- Chunky, exaggerated, low-detail. Silhouette is **TODO** (§5.4) — the previous
+  entry described wombats, which are no longer the cast. What is kept is the
+  *principle*: a shape that reads instantly at a glance and at speed —
   forgiving to model and animate, and the silhouette reads at small sizes.
 - Deadpan presentation. The characters take themselves completely seriously.
 - Period-appropriate UI: chunky health bars, a large centered timer, heavy
@@ -362,23 +373,23 @@ cleanup is brutal).
 
 ### 5.4 The cast — PARTIALLY DECIDED
 
-**Names are settled. Everything else is still undecided — do not invent it.**
+**Names exist so the files have something to be called. Everything else is
+undecided — do not invent it.**
 
-The two v1 characters are **Frenchy** and **Wisdom**. Character ids in code and
-data are `frenchy` and `wisdom`, replacing the former `WOMBAT_A`/`WOMBAT_B`
-placeholders.
+The two v1 characters are **George** and **Sue**. Character ids in code and data
+are `george` and `sue`.
 
-Source: these are the names from the 2024 prototype, whose README read
-*"Frenchy faces off against Wisdom and its gang of evil Wombatants."* Only the
-names carry over. Nothing about that prototype's mechanics, tone, or
-implementation is inherited — it was a different codebase in a different
-language and this document supersedes it entirely.
+**They are placeholders, chosen to unblock the data files, and carry no
+characterisation.** The previous names came from a 2024 prototype whose premise
+has been dropped entirely; nothing of it is inherited. Do not read a personality
+into "George" and "Sue" — there is not one yet, and inventing one here is what
+§5.4 exists to prevent.
 
 §5.4 asks for four things per character before art begins. One is filled in:
 
-| | Frenchy | Wisdom |
+| | George | Sue |
 |---|---|---|
-| Name | **Frenchy** | **Wisdom** |
+| Name | **George** | **Sue** |
 | Silhouette concept | **TODO** | **TODO** |
 | One special move | **TODO** | **TODO** |
 | Personality, one line | **TODO** | **TODO** |
@@ -388,23 +399,33 @@ art begins, not before code — the frame-data loader and the character TOML
 files can be built against the names alone, since every mechanical property
 comes from `docs/framedata_schema.md` rather than from characterisation.
 
-The prototype README hints that Wisdom leads "a gang of evil Wombatants",
-which would make Wisdom the antagonist. That is a hint, not a decision, and it
-is recorded here so nobody re-derives it as fact.
-
 One open question the names raise: both characters get the **same** move set in
 v1, which is correct for v1 scope — two characters exist to prove the engine
-feels good, not to prove a matchup. Whether Frenchy and Wisdom eventually differ
+feels good, not to prove a matchup. Whether George and Sue eventually differ
 mechanically is a post-v1 question (§7). The size of that shared set follows
 from §4.1's six buttons and is being re-authored; §4.5's move list is
 superseded, though its frame values are still live.
 
-### 5.5 TODO — stage design
+### 5.5 Stages — PARTIALLY DECIDED
 
-**Undecided. Do not invent.**
+**Settled:** stages **scroll**, in the manner of any conventional 2D fighter,
+and the set of them is **locations across the United States** — the game's title
+made literal. That matches what the code already does: the stage is 960 units
+wide against a 480-unit screen (§4.4) and the camera tracks the fighters across
+it.
 
-One stage for v1. Required: dimensions confirmed against §4.4, background
-layers, and whether it scrolls. Until filled in, use a flat colored backdrop.
+**Still TODO, and not to be invented:** which locations, what each one looks
+like, how many layers deep the background goes, and whether anything in a stage
+is interactive.
+
+**One stage for v1** regardless (§6). More locations are content work, and §6 is
+explicit that a second character — or a second stage — only earns its cost once
+the first pair play well. Until a location is chosen, a flat coloured backdrop
+stands in.
+
+A note for whoever picks the first one: it is a **feel** decision as much as an
+art one. The floor plane and the depth cues are what make a fighter's position
+readable at a glance, which is the readability work ADR 0017 puts in scope.
 
 ---
 
@@ -469,20 +490,22 @@ Permanent. Changing these requires an ADR superseding this section.
 
 ---
 
-## 9. IP constraint
+## 9. IP — what may be borrowed, and what may not
 
-Mortal Kombat is Warner Bros. property. This project uses **no** MK characters,
-names, assets, sound, or trade dress. "Mortal Wombat" is a parody title over an
-original cast.
+**This section used to carry a real constraint and no longer does.** The project
+was once called "Mortal Wombat", a parody of a Warner Bros. property, which
+meant every naming decision had to be checked against someone else's trademark.
+That is gone: "Divided States" is an original title over an original cast, and
+ADR 0018 had already dropped the mechanical inheritance.
 
-**The title is the only thing that refers to Mortal Kombat.** The mechanical
-inheritance it once implied was dropped by ADR 0018, so the game is no longer
-"MK-like" in any sense a reader should carry into a design decision — §4.1's
-six buttons and hold-back blocking are the opposite of what that lineage
-specified. Anyone reasoning from the name is reasoning from a pun.
+What remains is the ordinary rule, kept because it is the reason the old
+constraint was survivable: **mechanics are not copyrightable; specific
+characters, names, assets and trade dress are.** Frame data, a six-button
+layout, hold-back blocking and a scrolling stage may all be studied from any
+game freely. Art, audio, names and likenesses may not.
 
-Mechanics are not copyrightable; specific characters and assets are. The
-fighting engine is identical either way.
+The one live obligation is the dependency licences, not the design — see
+`README.md`.
 
 ---
 
