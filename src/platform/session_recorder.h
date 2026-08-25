@@ -25,11 +25,11 @@
 
 #include "sim/input.h"
 
-namespace mw::sim {
+namespace ds::sim {
 struct GameState;
 }
 
-namespace mw::platform {
+namespace ds::platform {
 
 // Ten minutes of input changes at worst. A change is only stored when a button
 // actually changes, so ordinary play produces a few hundred -- someone mashing
@@ -74,12 +74,12 @@ void recorder_begin(SessionRecorder& recorder, uint64_t seed);
 // `input` is the input that was just fed to the sim, and `state` is the result.
 // The ordering matters: the replay runner hashes after advancing, so a
 // checkpoint taken before would never match.
-void recorder_frame(SessionRecorder& recorder, mw::sim::InputPair input,
-                    const mw::sim::GameState& state);
+void recorder_frame(SessionRecorder& recorder, ds::sim::InputPair input,
+                    const ds::sim::GameState& state);
 
 // Writes the recording. Returns false if the file could not be written, having
 // already explained why on stderr.
 bool recorder_write(const SessionRecorder& recorder, const char* path,
-                    const mw::sim::GameState& final_state);
+                    const ds::sim::GameState& final_state);
 
-}  // namespace mw::platform
+}  // namespace ds::platform

@@ -12,7 +12,7 @@
 struct SDL_Window;
 struct SDL_Renderer;
 
-namespace mw::platform {
+namespace ds::platform {
 
 // How many gamepads the game tracks. DESIGN.md 6 puts local versus on two
 // gamepads in the v1 definition of done, and the game is two-player, so a third
@@ -34,15 +34,15 @@ struct Platform {
 
     // The live device state, rebuilt each poll. Not sanitized until it is
     // handed out — see current_input().
-    mw::sim::InputPair input;
+    ds::sim::InputPair input;
 
     // The same frame, split by where it came from. Kept separately so that
     // --input-test can say WHICH device produced an input rather than only
     // that one arrived: a controller whose d-pad is also emulating arrow keys
     // looks identical to a game bug from the sim's side, and the two need
     // opposite fixes.
-    mw::sim::InputPair keyboard_input;
-    mw::sim::InputPair pad_input;
+    ds::sim::InputPair keyboard_input;
+    ds::sim::InputPair pad_input;
 };
 
 bool init(Platform& platform, const char* title);
@@ -71,7 +71,7 @@ bool save_screenshot(Platform& platform, const char* path);
 // Sanitizing here rather than trusting the caller means a device or driver
 // setting a bit we do not use cannot alter a state hash and read as a desync
 // on a frame where nothing actually diverged.
-mw::sim::InputPair current_input(const Platform& platform);
+ds::sim::InputPair current_input(const Platform& platform);
 
 // Wall-clock nanoseconds, for the fixed-timestep accumulator in main.
 //
@@ -79,4 +79,4 @@ mw::sim::InputPair current_input(const Platform& platform);
 // boundary. Nothing in src/sim/ may call it (ADR 0002).
 uint64_t now_ns();
 
-}  // namespace mw::platform
+}  // namespace ds::platform

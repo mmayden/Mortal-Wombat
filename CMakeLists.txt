@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(mortal_wombat
+project(divided_states
     VERSION 0.1.0
     DESCRIPTION "A 2D fighting game with a deterministic fixed-point simulation"
     LANGUAGES CXX)
@@ -15,7 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Keep binaries in one predictable place so AGENTS.md can name an exact path.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-option(MW_ENABLE_TRACY "Build with Tracy profiling instrumentation" OFF)
+option(DS_ENABLE_TRACY "Build with Tracy profiling instrumentation" OFF)
 
 # ADR 0010 asks for ASan and UBSan in the debug preset. On Clang and GCC that
 # is a flag. On MSVC it is not: /fsanitize=address conflicts with the runtime
@@ -25,12 +25,12 @@ option(MW_ENABLE_TRACY "Build with Tracy profiling instrumentation" OFF)
 # the sanitizer coverage — the sim is platform-independent, so a memory bug it
 # catches there is the same bug here.
 if(MSVC)
-    set(MW_SANITIZERS_DEFAULT OFF)
+    set(DS_SANITIZERS_DEFAULT OFF)
 else()
-    set(MW_SANITIZERS_DEFAULT ON)
+    set(DS_SANITIZERS_DEFAULT ON)
 endif()
-option(MW_ENABLE_SANITIZERS "Build Debug with AddressSanitizer and UBSan"
-       ${MW_SANITIZERS_DEFAULT})
+option(DS_ENABLE_SANITIZERS "Build Debug with AddressSanitizer and UBSan"
+       ${DS_SANITIZERS_DEFAULT})
 
 # ---------------------------------------------------------------------------
 # Dependencies (ADR 0010)
@@ -115,12 +115,12 @@ CPMAddPackage(
 # tools keep them, because doctest reports failures through exceptions and
 # tools cannot desync anything (ARCHITECTURE.md 2).
 # ---------------------------------------------------------------------------
-add_library(mw_warnings INTERFACE)
-add_library(mw_no_exceptions INTERFACE)
-add_library(mw_exceptions INTERFACE)
+add_library(ds_warnings INTERFACE)
+add_library(ds_no_exceptions INTERFACE)
+add_library(ds_exceptions INTERFACE)
 
 if(MSVC)
-    target_compile_options(mw_warnings INTERFACE
+    target_compile_options(ds_warnings INTERFACE
         /W4 /WX
         /permissive-        # conform to the standard; MSVC's default does not
         /Zc:preprocessor)
@@ -133,35 +133,35 @@ if(MSVC)
     string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     string(STRIP "${CMAKE_CXX_FLAGS}" CMAKE_CXX_FLAGS)
 
-    target_compile_options(mw_no_exceptions INTERFACE /EHs-c- /GR-)
-    target_compile_options(mw_exceptions INTERFACE /EHsc)
+    target_compile_options(ds_no_exceptions INTERFACE /EHs-c- /GR-)
+    target_compile_options(ds_exceptions INTERFACE /EHsc)
 else()
-    target_compile_options(mw_warnings INTERFACE
+    target_compile_options(ds_warnings INTERFACE
         -Wall -Wextra -Wpedantic -Werror
         -Wconversion               # catches silent int32 -> int16 in frame data
         -Wsign-conversion
         -Wshadow
         -Wold-style-cast
         -Wdouble-promotion)        # a stray float below the boundary is a desync
-    target_compile_options(mw_no_exceptions INTERFACE -fno-exceptions -fno-rtti)
-    target_compile_options(mw_exceptions INTERFACE -fexceptions -frtti)
+    target_compile_options(ds_no_exceptions INTERFACE -fno-exceptions -fno-rtti)
+    target_compile_options(ds_exceptions INTERFACE -fexceptions -frtti)
 endif()
 
 # Sanitizers apply to everything, tests included — a memory bug in a test
 # harness is as capable of producing a false green as one in the sim.
-add_library(mw_sanitizers INTERFACE)
-if(MW_ENABLE_SANITIZERS AND NOT MSVC)
-    set(MW_SANITIZER_FLAGS -fsanitize=address,undefined -fno-omit-frame-pointer)
-    target_compile_options(mw_sanitizers INTERFACE
-        "$<$<CONFIG:Debug>:${MW_SANITIZER_FLAGS}>")
-    target_link_options(mw_sanitizers INTERFACE
-        "$<$<CONFIG:Debug>:${MW_SANITIZER_FLAGS}>")
-elseif(MW_ENABLE_SANITIZERS AND MSVC)
+add_library(ds_sanitizers INTERFACE)
+if(DS_ENABLE_SANITIZERS AND NOT MSVC)
+    set(DS_SANITIZER_FLAGS -fsanitize=address,undefined -fno-omit-frame-pointer)
+    target_compile_options(ds_sanitizers INTERFACE
+        "$<$<CONFIG:Debug>:${DS_SANITIZER_FLAGS}>")
+    target_link_options(ds_sanitizers INTERFACE
+        "$<$<CONFIG:Debug>:${DS_SANITIZER_FLAGS}>")
+elseif(DS_ENABLE_SANITIZERS AND MSVC)
     # /RTC1 comes from CMake's Debug defaults and cannot coexist with ASan.
     string(REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-    target_compile_options(mw_sanitizers INTERFACE "$<$<CONFIG:Debug>:/fsanitize=address>")
+    target_compile_options(ds_sanitizers INTERFACE "$<$<CONFIG:Debug>:/fsanitize=address>")
 endif()
-link_libraries(mw_sanitizers)
+link_libraries(ds_sanitizers)
 
 # ---------------------------------------------------------------------------
 # The simulation (ADR 0002, 0005)
@@ -170,17 +170,17 @@ link_libraries(mw_sanitizers)
 # It links nothing. That is not an oversight — it is why the test suite can
 # exercise the whole game without booting SDL.
 # ---------------------------------------------------------------------------
-add_library(mw_sim STATIC
+add_library(ds_sim STATIC
     src/sim/sim.cpp)
 
-target_include_directories(mw_sim PUBLIC src)
+target_include_directories(ds_sim PUBLIC src)
 
 # Both PRIVATE: these govern how the sim is compiled, not how it is consumed.
 # Propagating them would force every consumer to give up exceptions too, which
 # would break doctest (it reports failures by throwing) for no benefit — a
 # no-exceptions static library links into an exceptions-enabled binary fine,
 # since the sim never throws.
-target_link_libraries(mw_sim PRIVATE mw_warnings mw_no_exceptions)
+target_link_libraries(ds_sim PRIVATE ds_warnings ds_no_exceptions)
 
 # Where the compiler supports it, forbid floating-point registers in the sim
 # outright — this turns ADR 0002's central rule from a review item into a
@@ -189,9 +189,9 @@ target_link_libraries(mw_sim PRIVATE mw_warnings mw_no_exceptions)
 # rule on every platform and is what CI actually depends on.
 if(NOT MSVC)
     include(CheckCXXCompilerFlag)
-    check_cxx_compiler_flag(-mgeneral-regs-only MW_HAS_GENERAL_REGS_ONLY)
-    if(MW_HAS_GENERAL_REGS_ONLY)
-        target_compile_options(mw_sim PRIVATE -mgeneral-regs-only)
+    check_cxx_compiler_flag(-mgeneral-regs-only DS_HAS_GENERAL_REGS_ONLY)
+    if(DS_HAS_GENERAL_REGS_ONLY)
+        target_compile_options(ds_sim PRIVATE -mgeneral-regs-only)
     endif()
 endif()
 
@@ -204,20 +204,20 @@ endif()
 # "the sim never fails": every failure mode is discovered here, at load time,
 # where there is somewhere to report it.
 # ---------------------------------------------------------------------------
-add_library(mw_data STATIC
+add_library(ds_data STATIC
     src/data/framedata_loader.cpp)
 
-target_include_directories(mw_data PUBLIC src)
-target_link_libraries(mw_data
-    PUBLIC mw_sim
-    PRIVATE mw_warnings mw_no_exceptions tomlplusplus::tomlplusplus)
+target_include_directories(ds_data PUBLIC src)
+target_link_libraries(ds_data
+    PUBLIC ds_sim
+    PRIVATE ds_warnings ds_no_exceptions tomlplusplus::tomlplusplus)
 
 # Where the shipped character files live, so the game and the tests agree on
 # one answer. Passed as a definition rather than resolved relative to the
 # working directory, which differs between running from the build tree, from
 # an IDE, and from CI.
-target_compile_definitions(mw_data PUBLIC
-    MW_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
+target_compile_definitions(ds_data PUBLIC
+    DS_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
 # MSVC warns (C4530) that standard headers contain exception handlers while
 # this target is built without unwind semantics. That is the whole point of
@@ -228,14 +228,14 @@ target_compile_definitions(mw_data PUBLIC
 # Scoped to this target rather than added globally, so the warning still fires
 # if a future target enables it by accident.
 if(MSVC)
-    target_compile_options(mw_data PRIVATE /wd4530)
+    target_compile_options(ds_data PRIVATE /wd4530)
 endif()
 
 # ---------------------------------------------------------------------------
 # The game binary
 #
 # Everything here is ABOVE the sim boundary: platform, render, and the loop.
-# It links mw_sim and reads its state; nothing in src/sim/ knows these files
+# It links ds_sim and reads its state; nothing in src/sim/ knows these files
 # exist (ARCHITECTURE.md 1).
 #
 # Built with exceptions and RTTI disabled, same as the sim -- this is shipped
@@ -249,28 +249,28 @@ endif()
 # It is here because a camera defect was reported twice by a human and could not
 # be checked by anything: AGENTS.md rule 6 says every behaviour change needs a
 # test, and the render layer had quietly been outside that rule.
-add_library(mw_render_camera STATIC
+add_library(ds_render_camera STATIC
     src/render/camera.cpp)
 
-target_link_libraries(mw_render_camera
-    PUBLIC mw_sim
-    PRIVATE mw_warnings mw_no_exceptions)
+target_link_libraries(ds_render_camera
+    PUBLIC ds_sim
+    PRIVATE ds_warnings ds_no_exceptions)
 
-target_include_directories(mw_render_camera PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(ds_render_camera PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-add_executable(mortal_wombat
+add_executable(divided_states
     src/main.cpp
     src/platform/platform.cpp
     src/platform/session_recorder.cpp
     src/render/renderer.cpp
     src/render/sprite.cpp)
 
-target_link_libraries(mortal_wombat
-    PRIVATE mw_sim mw_data mw_render_camera mw_warnings mw_no_exceptions SDL3::SDL3)
+target_link_libraries(divided_states
+    PRIVATE ds_sim ds_data ds_render_camera ds_warnings ds_no_exceptions SDL3::SDL3)
 
 # WIN32_EXECUTABLE is deliberately OFF: the game logs to stdout and a console
 # is wanted during development. Flip it when there is something to ship.
-set_target_properties(mortal_wombat PROPERTIES WIN32_EXECUTABLE OFF)
+set_target_properties(divided_states PROPERTIES WIN32_EXECUTABLE OFF)
 
 # Located at top level, before the summary below reports on it. Doing this in
 # tests/ meant the summary ran first and always reported it missing -- the
@@ -286,11 +286,11 @@ find_package(Python3 COMPONENTS Interpreter)
 # thing you would be trying to check.
 # ---------------------------------------------------------------------------
 message(STATUS "")
-message(STATUS "Mortal Wombat ${PROJECT_VERSION}")
+message(STATUS "Divided States ${PROJECT_VERSION}")
 message(STATUS "  build type    : ${CMAKE_BUILD_TYPE}")
 message(STATUS "  compiler      : ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
 
-if(MW_ENABLE_SANITIZERS)
+if(DS_ENABLE_SANITIZERS)
     if(MSVC)
         message(STATUS "  sanitizers    : ASan (Debug only). MSVC has no UBSan.")
     else()
@@ -300,7 +300,7 @@ else()
     message(STATUS "  sanitizers    : OFF")
 endif()
 
-if(MW_HAS_GENERAL_REGS_ONLY)
+if(DS_HAS_GENERAL_REGS_ONLY)
     message(STATUS "  sim FP guard  : -mgeneral-regs-only (a float in src/sim/ is a compile error)")
 else()
     message(STATUS "  sim FP guard  : unsupported here; tests/check_sim_boundary.py covers it")
@@ -312,7 +312,7 @@ else()
     message(STATUS "  boundary check: DISABLED -- Python not found")
 endif()
 
-message(STATUS "  Tracy         : ${MW_ENABLE_TRACY} (not yet integrated -- ADR 0012)")
+message(STATUS "  Tracy         : ${DS_ENABLE_TRACY} (not yet integrated -- ADR 0012)")
 message(STATUS "")
 
 enable_testing()

@@ -57,7 +57,7 @@ An attack has three phases, always in this order:
 (4 startup, 8 recovery). High kick is slow and expensive (9 startup, 20
 recovery) but does three times the damage.
 
-> In this project: `data/characters/frenchy.toml`, and the table in
+> In this project: `data/characters/george.toml`, and the table in
 > `DESIGN.md` §4.5. Press `F1` in game to see the active window drawn in red.
 
 ---

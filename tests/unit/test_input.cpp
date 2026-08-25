@@ -10,7 +10,7 @@
 
 #include "sim/input.h"
 
-using namespace mw::sim;
+using namespace ds::sim;
 
 namespace {
 constexpr InputFrame NEUTRAL{0u};

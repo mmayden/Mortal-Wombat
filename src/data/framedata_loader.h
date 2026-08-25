@@ -14,7 +14,7 @@
 
 #include "sim/framedata.h"
 
-namespace mw::data {
+namespace ds::data {
 
 // No exceptions (ADR 0001), so failure is a return value. Callers must handle
 // every case — CONVENTIONS.md 3 forbids a `default:` that swallows.
@@ -34,21 +34,21 @@ const char* load_result_name(LoadResult result);
 // `out` is left untouched. Every rule enforced here is listed in
 // docs/framedata_schema.md under Validation; the two must agree, because the
 // schema doc is the contract tools/framedata_editor/ is written against.
-LoadResult load_character(const std::string& path, mw::sim::CharacterData& out, std::string& error);
+LoadResult load_character(const std::string& path, ds::sim::CharacterData& out, std::string& error);
 
 // Loads both characters of a match.
 //
 // Fails on the first bad file rather than loading what it can: a match with one
 // valid fighter is not a degraded match, it is a broken one.
 LoadResult load_match(const std::string& player_one_path, const std::string& player_two_path,
-                      mw::sim::MatchData& out, std::string& error);
+                      ds::sim::MatchData& out, std::string& error);
 
 // Maps a TOML table key to its MoveId. Returns MoveId::Count for an unknown
 // key, which the loader treats as a validation failure — a typo in a move name
 // must not silently produce a character missing a move.
-mw::sim::MoveId move_id_from_key(const std::string& key);
+ds::sim::MoveId move_id_from_key(const std::string& key);
 
 // The reverse, for error messages and for the frame-data editor.
-const char* move_key(mw::sim::MoveId move);
+const char* move_key(ds::sim::MoveId move);
 
-}  // namespace mw::data
+}  // namespace ds::data

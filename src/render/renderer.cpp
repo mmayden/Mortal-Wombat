@@ -6,12 +6,12 @@
 #include "sim/constants.h"
 #include "sim/sim.h"
 
-namespace mw::render {
+namespace ds::render {
 namespace {
 
-using mw::sim::Fighter;
-using mw::sim::FighterState;
-using mw::sim::GameState;
+using ds::sim::Fighter;
+using ds::sim::FighterState;
+using ds::sim::GameState;
 
 // DESIGN.md 5.3: period-appropriate UI — chunky bars, heavy shapes.
 constexpr Color BACKDROP{0x1A, 0x18, 0x22, 0xFF};
@@ -57,25 +57,25 @@ float lerp(float a, float b, float t) {
     return a + (b - a) * t;
 }
 
-float to_float(mw::sim::Fixed value) {
+float to_float(ds::sim::Fixed value) {
     // The one-way crossing. Below this line everything is exact integer
     // arithmetic; above it, pixels. Conversion happens here and never in the
     // other direction (ARCHITECTURE.md 1).
-    return static_cast<float>(value.raw) / static_cast<float>(mw::sim::FIXED_ONE);
+    return static_cast<float>(value.raw) / static_cast<float>(ds::sim::FIXED_ONE);
 }
 
 void draw_stage(SDL_Renderer* renderer, float camera) {
-    const float screen_w = static_cast<float>(mw::sim::SCREEN_WIDTH);
-    const float screen_h = static_cast<float>(mw::sim::SCREEN_HEIGHT);
-    const float ground_y = static_cast<float>(mw::sim::GROUND_Y);
+    const float screen_w = static_cast<float>(ds::sim::SCREEN_WIDTH);
+    const float screen_h = static_cast<float>(ds::sim::SCREEN_HEIGHT);
+    const float ground_y = static_cast<float>(ds::sim::GROUND_Y);
 
     fill(renderer, 0.0f, 0.0f, screen_w, screen_h, BACKDROP);
     fill(renderer, 0.0f, ground_y, screen_w, screen_h - ground_y, GROUND);
 
     // The stage walls, so that walking into one is visibly a wall rather than
     // the fighter mysteriously refusing to move.
-    const float left_wall = static_cast<float>(mw::sim::STAGE_LEFT_BOUND) - camera;
-    const float right_wall = static_cast<float>(mw::sim::STAGE_RIGHT_BOUND) - camera;
+    const float left_wall = static_cast<float>(ds::sim::STAGE_LEFT_BOUND) - camera;
+    const float right_wall = static_cast<float>(ds::sim::STAGE_RIGHT_BOUND) - camera;
     fill(renderer, left_wall - 3.0f, 0.0f, 3.0f, ground_y, STAGE_EDGE);
     fill(renderer, right_wall, 0.0f, 3.0f, ground_y, STAGE_EDGE);
 }
@@ -136,14 +136,14 @@ void draw_fighter(SDL_Renderer* renderer, const SpriteManifest& manifest, const 
 // An interpolated hitbox is a lie: it would show the box somewhere it never
 // was on any simulation frame, which is precisely the question this overlay
 // exists to answer.
-void draw_debug_boxes(SDL_Renderer* renderer, const mw::sim::MatchData& data,
+void draw_debug_boxes(SDL_Renderer* renderer, const ds::sim::MatchData& data,
                       const GameState& state, float camera) {
     for (int32_t i = 0; i < 2; ++i) {
         const Fighter& fighter = state.fighters[i];
-        const mw::sim::CharacterData& character = data.characters[i];
+        const ds::sim::CharacterData& character = data.characters[i];
 
-        auto draw_box = [&](const mw::sim::Box& local, Color color, bool filled) {
-            const mw::sim::Box box = mw::sim::world_box(fighter, local);
+        auto draw_box = [&](const ds::sim::Box& local, Color color, bool filled) {
+            const ds::sim::Box box = ds::sim::world_box(fighter, local);
             const float x = static_cast<float>(box.x) - camera;
             const float y = static_cast<float>(box.y);
             const float w = static_cast<float>(box.w);
@@ -164,14 +164,14 @@ void draw_debug_boxes(SDL_Renderer* renderer, const mw::sim::MatchData& data,
         // The hurtbox actually presented this frame, including any per-move
         // override -- not the character default, which would mislead on exactly
         // the frames that matter.
-        mw::sim::Box hurtbox = character.standing_hurtbox;
+        ds::sim::Box hurtbox = character.standing_hurtbox;
         if (fighter.state == FighterState::Crouch) {
             hurtbox = character.crouching_hurtbox;
         }
         if (fighter.move_id >= 0) {
-            const mw::sim::MoveData& move =
-                mw::sim::move_of(character, static_cast<mw::sim::MoveId>(fighter.move_id));
-            if (!mw::sim::box_is_empty(move.hurtbox_override)) {
+            const ds::sim::MoveData& move =
+                ds::sim::move_of(character, static_cast<ds::sim::MoveId>(fighter.move_id));
+            if (!ds::sim::box_is_empty(move.hurtbox_override)) {
                 hurtbox = move.hurtbox_override;
             }
         }
@@ -185,11 +185,11 @@ void draw_debug_boxes(SDL_Renderer* renderer, const mw::sim::MatchData& data,
             continue;
         }
 
-        const mw::sim::MoveData& move =
-            mw::sim::move_of(character, static_cast<mw::sim::MoveId>(fighter.move_id));
+        const ds::sim::MoveData& move =
+            ds::sim::move_of(character, static_cast<ds::sim::MoveId>(fighter.move_id));
 
         for (int32_t h = 0; h < move.hitbox_count; ++h) {
-            const mw::sim::HitboxSpan& span = move.hitboxes[h];
+            const ds::sim::HitboxSpan& span = move.hitboxes[h];
             const bool live =
                 fighter.move_frame >= span.first_frame && fighter.move_frame <= span.last_frame;
 
@@ -206,11 +206,11 @@ void draw_debug_boxes(SDL_Renderer* renderer, const mw::sim::MatchData& data,
 // (ADR 0012 puts Dear ImGui in the debug UI, and shipped text is not built),
 // and a fake number would be worse than an honest bar.
 void draw_hud(SDL_Renderer* renderer, const GameState& state) {
-    const float screen_w = static_cast<float>(mw::sim::SCREEN_WIDTH);
+    const float screen_w = static_cast<float>(ds::sim::SCREEN_WIDTH);
 
     for (int32_t i = 0; i < 2; ++i) {
         const float fraction = static_cast<float>(state.fighters[i].health) /
-                               static_cast<float>(mw::sim::STARTING_HEALTH);
+                               static_cast<float>(ds::sim::STARTING_HEALTH);
         const float clamped = fraction < 0.0f ? 0.0f : (fraction > 1.0f ? 1.0f : fraction);
 
         const float bar_x = i == 0 ? HUD_MARGIN : screen_w - HUD_MARGIN - HEALTH_BAR_WIDTH;
@@ -227,7 +227,7 @@ void draw_hud(SDL_Renderer* renderer, const GameState& state) {
         outline(renderer, bar_x, bar_y, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT, HEALTH_FRAME);
 
         // Rounds won, as pips under the bar. Best of three (DESIGN.md 4.4).
-        for (int32_t pip = 0; pip < mw::sim::ROUNDS_TO_WIN; ++pip) {
+        for (int32_t pip = 0; pip < ds::sim::ROUNDS_TO_WIN; ++pip) {
             const float pip_x = i == 0 ? bar_x + static_cast<float>(pip) * (ROUND_PIP_SIZE + 3.0f)
                                        : bar_x + HEALTH_BAR_WIDTH - ROUND_PIP_SIZE -
                                              static_cast<float>(pip) * (ROUND_PIP_SIZE + 3.0f);
@@ -242,7 +242,7 @@ void draw_hud(SDL_Renderer* renderer, const GameState& state) {
     }
 
     const float timer_fraction =
-        static_cast<float>(state.round_timer) / static_cast<float>(mw::sim::ROUND_TIMER_FRAMES);
+        static_cast<float>(state.round_timer) / static_cast<float>(ds::sim::ROUND_TIMER_FRAMES);
     const float timer_width = 64.0f * timer_fraction;
     fill(renderer, (screen_w - 64.0f) * 0.5f, HUD_MARGIN, 64.0f, 6.0f, HEALTH_EMPTY);
     fill(renderer, (screen_w - timer_width) * 0.5f, HUD_MARGIN, timer_width, 6.0f, TIMER_BAR);
@@ -251,7 +251,7 @@ void draw_hud(SDL_Renderer* renderer, const GameState& state) {
 }  // namespace
 
 void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
-                const mw::sim::MatchData& data, const Camera& view, const GameState& previous,
+                const ds::sim::MatchData& data, const Camera& view, const GameState& previous,
                 const GameState& current, float alpha, bool show_debug) {
     const float camera = view.x;
 
@@ -269,4 +269,4 @@ void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
     draw_hud(renderer, current);
 }
 
-}  // namespace mw::render
+}  // namespace ds::render

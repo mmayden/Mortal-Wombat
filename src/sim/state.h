@@ -21,7 +21,7 @@
 #include "sim/fixed.h"
 #include "sim/rng.h"
 
-namespace mw::sim {
+namespace ds::sim {
 
 // DESIGN.md 4.2. This set is closed — adding a state requires an ADR.
 enum class FighterState : int32_t {
@@ -201,4 +201,4 @@ void init_state(GameState& state, uint64_t seed);
 // Resets for the next round, preserving rounds_won and the RNG stream position.
 void begin_round(GameState& state);
 
-}  // namespace mw::sim
+}  // namespace ds::sim

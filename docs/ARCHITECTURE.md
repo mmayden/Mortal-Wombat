@@ -1,4 +1,4 @@
-# Architecture — Mortal Wombat
+# Architecture — Divided States
 
 > **Status:** v1, binding
 > **Derives from:** `decisions/0001-0013-stack.md` (ADRs 0002, 0004, 0005, 0009)
@@ -59,7 +59,7 @@ class of problem structurally by keeping them out of `GameState`.
 | `src/sim/framedata.h` | `MoveData`, `CharacterData`, `MatchData` — POD, read-only | sim |
 | `src/sim/sim.h` `.cpp` | `advance_frame()` — the whole game, one function | sim |
 | `src/data/framedata_loader.*` | Parses character TOML. I/O and `std::string` live here | data |
-| `src/mw_log.h` | `MW_LOG_*`. **Never included below the sim boundary** | app |
+| `src/ds_log.h` | `DS_LOG_*`. **Never included below the sim boundary** | app |
 | `src/platform/` | SDL3 window, event pump, gamepad, timing | platform |
 | `src/render/` | Draws `GameState`. Interpolation lives here. | render |
 | `src/audio/` | miniaudio playback, driven by observed state change | render |
@@ -244,7 +244,7 @@ sim's build flags — tools build with exceptions and RTTI enabled.
 | Replay | `tests/replay/` + `tests/replays/*.replay` | Behaviour did not change |
 | Desync | CI matrix, same replays | Bit-identical across Linux/Win/macOS |
 | Boundary | `tests/check_sim_boundary.py` | No forbidden construct entered `src/sim/` |
-| Game boot | CI, `mortal_wombat --frames 600` | The real binary starts and runs headless |
+| Game boot | CI, `divided_states --frames 600` | The real binary starts and runs headless |
 
 Tests link the sim directly and never boot SDL. That is only possible because
 the sim has no platform dependency, which is the practical payoff of §1. The

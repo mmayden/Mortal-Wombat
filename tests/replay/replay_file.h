@@ -19,14 +19,14 @@
 
 #include "sim/input.h"
 
-namespace mw::test {
+namespace ds::test {
 
 // One input change. Inputs are stored as changes rather than per frame,
 // because a recording is mostly a fighter holding a direction — run-length
 // form keeps a ten-second recording to a few dozen readable lines.
 struct InputChange {
     int32_t frame;
-    mw::sim::InputFrame players[2];
+    ds::sim::InputFrame players[2];
 };
 
 // A full-state hash at a specific frame. Recorded periodically so a desync
@@ -60,6 +60,6 @@ ReplayIoStatus load_replay(const std::string& path, Replay& out, std::string& er
 ReplayIoStatus save_replay(const std::string& path, const Replay& replay);
 
 // The input in effect on a given frame, resolved from the change list.
-mw::sim::InputPair input_at_frame(const Replay& replay, int32_t frame);
+ds::sim::InputPair input_at_frame(const Replay& replay, int32_t frame);
 
-}  // namespace mw::test
+}  // namespace ds::test

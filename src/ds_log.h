@@ -9,27 +9,27 @@
 
 #include <cstdio>
 
-namespace mw {
+namespace ds {
 
-#define MW_LOG_INFO(...)                   \
+#define DS_LOG_INFO(...)                   \
     do {                                   \
         std::fprintf(stdout, "[info] ");   \
         std::fprintf(stdout, __VA_ARGS__); \
         std::fprintf(stdout, "\n");        \
     } while (0)
 
-#define MW_LOG_WARN(...)                   \
+#define DS_LOG_WARN(...)                   \
     do {                                   \
         std::fprintf(stderr, "[warn] ");   \
         std::fprintf(stderr, __VA_ARGS__); \
         std::fprintf(stderr, "\n");        \
     } while (0)
 
-#define MW_LOG_ERROR(...)                  \
+#define DS_LOG_ERROR(...)                  \
     do {                                   \
         std::fprintf(stderr, "[error] ");  \
         std::fprintf(stderr, __VA_ARGS__); \
         std::fprintf(stderr, "\n");        \
     } while (0)
 
-}  // namespace mw
+}  // namespace ds

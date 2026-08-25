@@ -17,7 +17,7 @@
 #include "sim/input.h"
 #include "sim/state.h"
 
-namespace mw::sim {
+namespace ds::sim {
 
 // Advances the match by exactly one 60Hz frame.
 //
@@ -52,4 +52,4 @@ bool boxes_overlap(const Box& a, const Box& b);
 // this is the only place facing is applied to geometry.
 Box world_box(const Fighter& fighter, const Box& local);
 
-}  // namespace mw::sim
+}  // namespace ds::sim

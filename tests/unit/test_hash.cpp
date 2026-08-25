@@ -13,7 +13,7 @@
 
 #include "match_data.h"
 
-using namespace mw::sim;
+using namespace ds::sim;
 
 namespace {
 constexpr InputFrame NEUTRAL{0u};
@@ -36,7 +36,7 @@ TEST_CASE("Hashing is stable across a memcpy round-trip") {
     GameState state;
     init_state(state, 888u);
     for (int32_t i = 0; i < 120; ++i) {
-        advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
+        advance_frame(state, ds::test::shipped_match_data(), NO_INPUT, NO_INPUT);
     }
 
     const uint64_t before = hash_state(state);
@@ -119,7 +119,7 @@ TEST_CASE("The hash changes on nearly every frame of a live match") {
     uint64_t previous = hash_state(state);
     int32_t changes = 0;
     for (int32_t i = 0; i < 300; ++i) {
-        advance_frame(state, mw::test::shipped_match_data(), NO_INPUT, NO_INPUT);
+        advance_frame(state, ds::test::shipped_match_data(), NO_INPUT, NO_INPUT);
         const uint64_t current = hash_state(state);
         if (current != previous) {
             ++changes;

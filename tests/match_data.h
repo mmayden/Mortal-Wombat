@@ -19,25 +19,25 @@
 
 #include "data/framedata_loader.h"
 
-namespace mw::test {
+namespace ds::test {
 
 // Loaded once and reused. Loading is pure with respect to the sim: the result
 // is immutable for the process, so sharing it cannot let one test perturb
 // another.
-inline const mw::sim::MatchData& shipped_match_data() {
-    static const mw::sim::MatchData data = [] {
-        const std::string dir = std::string(MW_DATA_DIR) + "/characters/";
-        mw::sim::MatchData loaded{};
+inline const ds::sim::MatchData& shipped_match_data() {
+    static const ds::sim::MatchData data = [] {
+        const std::string dir = std::string(DS_DATA_DIR) + "/characters/";
+        ds::sim::MatchData loaded{};
         std::string error;
-        const mw::data::LoadResult result =
-            mw::data::load_match(dir + "frenchy.toml", dir + "wisdom.toml", loaded, error);
+        const ds::data::LoadResult result =
+            ds::data::load_match(dir + "george.toml", dir + "sue.toml", loaded, error);
 
-        if (result != mw::data::LoadResult::Ok) {
+        if (result != ds::data::LoadResult::Ok) {
             // Aborting rather than returning empty data. A test tier that
             // silently ran against zeroed frame data would pass a great many
             // assertions while proving nothing at all.
             std::fprintf(stderr, "FATAL: could not load shipped character data (%s): %s\n",
-                         mw::data::load_result_name(result), error.c_str());
+                         ds::data::load_result_name(result), error.c_str());
             std::abort();
         }
         return loaded;
@@ -45,4 +45,4 @@ inline const mw::sim::MatchData& shipped_match_data() {
     return data;
 }
 
-}  // namespace mw::test
+}  // namespace ds::test

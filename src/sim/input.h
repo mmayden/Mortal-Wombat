@@ -11,7 +11,7 @@
 
 #include <cstdint>
 
-namespace mw::sim {
+namespace ds::sim {
 
 // OUT OF DATE WITH THE DESIGN, deliberately. This is the old scheme: four
 // attacks plus a dedicated Block button, and four directions.
@@ -118,4 +118,4 @@ struct InputPair {
     InputFrame players[2];
 };
 
-}  // namespace mw::sim
+}  // namespace ds::sim

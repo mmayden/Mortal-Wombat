@@ -17,7 +17,7 @@
 
 #include "match_data.h"
 
-using namespace mw::sim;
+using namespace ds::sim;
 
 namespace {
 
@@ -25,7 +25,7 @@ constexpr InputFrame NEUTRAL{0u};
 constexpr InputPair NO_INPUT{{NEUTRAL, NEUTRAL}};
 
 const MatchData& data() {
-    return mw::test::shipped_match_data();
+    return ds::test::shipped_match_data();
 }
 
 // Jumps player one toward player two from `gap` units away, throws the attack

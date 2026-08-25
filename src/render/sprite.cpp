@@ -2,7 +2,7 @@
 
 #include "sim/framedata.h"
 
-namespace mw::render {
+namespace ds::render {
 namespace {
 
 // DESIGN.md 5.1: fighter body is a solid rectangle in a per-player color, with
@@ -21,10 +21,10 @@ constexpr Color FACING_NOTCH{0xFF, 0xFF, 0xFF, 0xFF};
 // matches the standing hurtbox sketched in docs/framedata_schema.md, but that
 // sketch was itself a guess, so this is a guess agreeing with a guess.
 //
-// It shows. 32x140 renders as a narrow pillar, and DESIGN.md 5.3 asks for
-// wombats that are "round, heavy, and short-limbed" with a silhouette that
-// reads at small sizes -- close to the opposite proportion. Fixing it properly
-// needs DESIGN.md 5.4, which has not named the cast and says not to invent it.
+// It shows. 32x140 renders as a narrow pillar, and DESIGN.md 5.3 asks for a
+// silhouette that reads instantly at small sizes -- which this does not.
+// Fixing it properly needs DESIGN.md 5.4, which has not described the cast and
+// says not to invent it.
 //
 // Left visibly wrong on purpose rather than quietly tuned to something
 // plausible: a placeholder that looks unfinished prompts the decision, and one
@@ -39,8 +39,8 @@ constexpr float NOTCH_HEIGHT = 10.0f;
 // A crouching fighter is shorter. Everything else about the placeholder is
 // state-independent until frame data exists to describe it — deliberately, so
 // that nothing here has to be unlearned when real boxes arrive.
-float body_height_for(const mw::sim::Fighter& fighter) {
-    return fighter.state == mw::sim::FighterState::Crouch ? CROUCH_HEIGHT : BODY_HEIGHT;
+float body_height_for(const ds::sim::Fighter& fighter) {
+    return fighter.state == ds::sim::FighterState::Crouch ? CROUCH_HEIGHT : BODY_HEIGHT;
 }
 
 // Feedback colours. Chosen to stay readable against both player colours rather
@@ -79,11 +79,11 @@ Color blend(Color from, Color to, float t) {
 
 // Kicks come out low, punches high. Only used to place the placeholder limb.
 bool is_kick(int32_t move_id) {
-    switch (static_cast<mw::sim::MoveId>(move_id)) {
-        case mw::sim::MoveId::StandLowKick:
-        case mw::sim::MoveId::StandHighKick:
-        case mw::sim::MoveId::CrouchLowKick:
-        case mw::sim::MoveId::CrouchHighKick:
+    switch (static_cast<ds::sim::MoveId>(move_id)) {
+        case ds::sim::MoveId::StandLowKick:
+        case ds::sim::MoveId::StandHighKick:
+        case ds::sim::MoveId::CrouchLowKick:
+        case ds::sim::MoveId::CrouchHighKick:
             return true;
         default:
             return false;
@@ -103,9 +103,9 @@ SpriteQuad untextured(float x, float y, float w, float h, Color tint) {
 
 }  // namespace
 
-void PlaceholderManifest::fighter_sprites(const mw::sim::Fighter& fighter, int32_t player_index,
+void PlaceholderManifest::fighter_sprites(const ds::sim::Fighter& fighter, int32_t player_index,
                                           SpriteList& out) const {
-    using mw::sim::FighterState;
+    using ds::sim::FighterState;
 
     out.count = 0;
 
@@ -198,4 +198,4 @@ void PlaceholderManifest::fighter_sprites(const mw::sim::Fighter& fighter, int32
                      untextured(notch_x, -height * 0.75f, NOTCH_WIDTH, NOTCH_HEIGHT, FACING_NOTCH));
 }
 
-}  // namespace mw::render
+}  // namespace ds::render

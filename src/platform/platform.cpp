@@ -4,13 +4,13 @@
 
 #include "sim/constants.h"
 
-#include "mw_log.h"
+#include "ds_log.h"
 
-namespace mw::platform {
+namespace ds::platform {
 namespace {
 
-using mw::sim::Button;
-using mw::sim::InputFrame;
+using ds::sim::Button;
+using ds::sim::InputFrame;
 
 // Keyboard bindings for local versus. DESIGN.md 6 puts two gamepads in the v1
 // definition of done; keyboard comes first because it is what makes this
@@ -140,14 +140,14 @@ void attach_gamepad(Platform& platform, SDL_JoystickID id) {
         }
         SDL_Gamepad* pad = SDL_OpenGamepad(id);
         if (pad == nullptr) {
-            MW_LOG_WARN("could not open gamepad %u: %s", static_cast<unsigned>(id), SDL_GetError());
+            DS_LOG_WARN("could not open gamepad %u: %s", static_cast<unsigned>(id), SDL_GetError());
             return;
         }
         platform.gamepads[i] = pad;
-        MW_LOG_INFO("player %d: %s", i + 1, SDL_GetGamepadName(pad));
+        DS_LOG_INFO("player %d: %s", i + 1, SDL_GetGamepadName(pad));
         return;
     }
-    MW_LOG_INFO("ignoring a third gamepad -- this is a two-player game");
+    DS_LOG_INFO("ignoring a third gamepad -- this is a two-player game");
 }
 
 void detach_gamepad(Platform& platform, SDL_JoystickID id) {
@@ -162,7 +162,7 @@ void detach_gamepad(Platform& platform, SDL_JoystickID id) {
         // Falling back to the keyboard rather than freezing that player: a pad
         // yanked mid-match should not make the game unplayable, and the sim
         // cannot tell the difference anyway -- it sees the same bitfield.
-        MW_LOG_INFO("player %d gamepad disconnected, falling back to keyboard", i + 1);
+        DS_LOG_INFO("player %d gamepad disconnected, falling back to keyboard", i + 1);
         return;
     }
 }
@@ -186,7 +186,7 @@ bool init(Platform& platform, const char* title) {
     // puts playback in miniaudio in the render layer, and there is nothing to
     // play.
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD)) {
-        MW_LOG_ERROR("SDL_Init failed: %s", SDL_GetError());
+        DS_LOG_ERROR("SDL_Init failed: %s", SDL_GetError());
         return false;
     }
 
@@ -195,12 +195,12 @@ bool init(Platform& platform, const char* title) {
     // specifies 480x270 integer-scaled, and a non-integer scale would blur
     // every edge of a game made of hard-edged boxes.
     constexpr int SCALE = 3;
-    const int window_w = mw::sim::SCREEN_WIDTH * SCALE;
-    const int window_h = mw::sim::SCREEN_HEIGHT * SCALE;
+    const int window_w = ds::sim::SCREEN_WIDTH * SCALE;
+    const int window_h = ds::sim::SCREEN_HEIGHT * SCALE;
 
     if (!SDL_CreateWindowAndRenderer(title, window_w, window_h, SDL_WINDOW_RESIZABLE,
                                      &platform.window, &platform.renderer)) {
-        MW_LOG_ERROR("SDL_CreateWindowAndRenderer failed: %s", SDL_GetError());
+        DS_LOG_ERROR("SDL_CreateWindowAndRenderer failed: %s", SDL_GetError());
         SDL_Quit();
         return false;
     }
@@ -211,8 +211,8 @@ bool init(Platform& platform, const char* title) {
     //
     // INTEGER_SCALE rather than LETTERBOX so that a resized window never
     // produces half-pixel edges.
-    SDL_SetRenderLogicalPresentation(platform.renderer, mw::sim::SCREEN_WIDTH,
-                                     mw::sim::SCREEN_HEIGHT,
+    SDL_SetRenderLogicalPresentation(platform.renderer, ds::sim::SCREEN_WIDTH,
+                                     ds::sim::SCREEN_HEIGHT,
                                      SDL_LOGICAL_PRESENTATION_INTEGER_SCALE);
 
     // No vsync wait: the fixed-timestep loop in main owns pacing, and vsync
@@ -231,10 +231,10 @@ bool init(Platform& platform, const char* title) {
         SDL_free(ids);
     }
     if (gamepad_count == 0) {
-        MW_LOG_INFO("no gamepads detected; both players on the keyboard");
+        DS_LOG_INFO("no gamepads detected; both players on the keyboard");
     }
 
-    MW_LOG_INFO("SDL3 %d.%d.%d, renderer: %s", SDL_MAJOR_VERSION, SDL_MINOR_VERSION,
+    DS_LOG_INFO("SDL3 %d.%d.%d, renderer: %s", SDL_MAJOR_VERSION, SDL_MINOR_VERSION,
                 SDL_MICRO_VERSION, SDL_GetRendererName(platform.renderer));
     return true;
 }
@@ -320,20 +320,20 @@ void present(Platform& platform) {
 bool save_screenshot(Platform& platform, const char* path) {
     SDL_Surface* surface = SDL_RenderReadPixels(platform.renderer, nullptr);
     if (surface == nullptr) {
-        MW_LOG_ERROR("SDL_RenderReadPixels failed: %s", SDL_GetError());
+        DS_LOG_ERROR("SDL_RenderReadPixels failed: %s", SDL_GetError());
         return false;
     }
 
     const bool ok = SDL_SaveBMP(surface, path);
     if (!ok) {
-        MW_LOG_ERROR("SDL_SaveBMP failed: %s", SDL_GetError());
+        DS_LOG_ERROR("SDL_SaveBMP failed: %s", SDL_GetError());
     }
     SDL_DestroySurface(surface);
     return ok;
 }
 
-mw::sim::InputPair current_input(const Platform& platform) {
-    mw::sim::InputPair sanitized{};
+ds::sim::InputPair current_input(const Platform& platform) {
+    ds::sim::InputPair sanitized{};
     sanitized.players[0] = input_sanitized(platform.input.players[0]);
     sanitized.players[1] = input_sanitized(platform.input.players[1]);
     return sanitized;
@@ -343,4 +343,4 @@ uint64_t now_ns() {
     return SDL_GetTicksNS();
 }
 
-}  // namespace mw::platform
+}  // namespace ds::platform

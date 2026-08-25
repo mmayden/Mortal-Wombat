@@ -7,9 +7,11 @@ work on.
 Kept current as work lands. If it disagrees with the code, the code is right and
 this file is a bug.
 
-> **Naming note:** the repository directory is `game-dev-system`, after the
-> development-process blueprint it was seeded from. The project is **Mortal
-> Wombat**. The remote is `github.com/mmayden/Mortal-Wombat`.
+> **Naming note:** the repository directory on disk is `game-dev-system`, after
+> the development-process blueprint it was seeded from. The game is **Divided
+> States**; the remote is `github.com/mmayden/Divided-States`. It was called
+> *Mortal Wombat* until 2026-08-25 — that name and its whole premise are gone,
+> not renamed around.
 
 ---
 
@@ -228,8 +230,8 @@ these are calls only the author can make.
 | Question | Blocks | Where |
 |---|---|---|
 | **Cast details** — silhouette, one special move, personality per character | The special-move parser: a special that "fits the character" needs a character | `DESIGN.md` §5.4 |
-| **The stage** | Backgrounds, whether it scrolls, camera behaviour | `DESIGN.md` §5.5 |
-| **Fighter silhouette** — currently a 32×140 pillar, which contradicts §5.3's "round, heavy, short-limbed" | Art, and the hitbox geometry that follows from it | `src/render/sprite.cpp` |
+| **Fighter silhouette** — currently a 32×140 pillar, which is a guess rather than a decision | Art, and the hitbox geometry that follows from it | `src/render/sprite.cpp` |
+| **Which US locations** are stages, and what each looks like | Backgrounds and the readability pass. That stages *scroll* is settled | `DESIGN.md` §5.5 |
 
 ---
 
@@ -267,6 +269,6 @@ Newest first. Enough to orient; `git log` has the detail.
 | Gamepad | Hot-plug, dedupe, `--input-test`; one pad no longer claims both slots. Validated on real hardware at one pad and two |
 | Jumping | Fixed arcs, jump attacks, landing recovery |
 | Combat | Hitboxes, damage, hitstun, blockstun, pushboxes |
-| Frame data | TOML loader, validation, Frenchy and Wisdom as data |
+| Frame data | TOML loader, validation, George and Sue as data |
 | Bootstrap | SDL3 window, fixed-timestep loop, rendering |
 | Harness | Four test tiers, three-platform CI, desync comparison |

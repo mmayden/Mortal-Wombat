@@ -1,4 +1,4 @@
-// Mortal Wombat — entry point and the fixed-timestep loop.
+// Divided States — entry point and the fixed-timestep loop.
 //
 // This file wires platform, sim, and render together and owns the loop. It is
 // the only place all three meet.
@@ -23,12 +23,12 @@
 #include "sim/state.h"
 
 #include "data/framedata_loader.h"
-#include "mw_log.h"
+#include "ds_log.h"
 
 namespace {
 
 constexpr uint64_t NS_PER_SECOND = 1000000000ull;
-constexpr uint64_t FRAME_NS = NS_PER_SECOND / static_cast<uint64_t>(mw::sim::FRAME_RATE);
+constexpr uint64_t FRAME_NS = NS_PER_SECOND / static_cast<uint64_t>(ds::sim::FRAME_RATE);
 
 // If the process stalls — a breakpoint, a window drag, the machine sleeping —
 // the accumulator would otherwise hold seconds of owed simulation and try to
@@ -63,22 +63,22 @@ constexpr uint64_t DEFAULT_SEED = 20260822u;
 // DESIGN.md 6 puts an input display in training mode for v1. This is the
 // console-shaped ancestor of it.
 // Names the buttons held in one frame. Empty string when nothing is held.
-std::string decode_input(mw::sim::InputFrame frame) {
+std::string decode_input(ds::sim::InputFrame frame) {
     struct Named {
-        mw::sim::Button button;
+        ds::sim::Button button;
         const char* name;
     };
     constexpr Named NAMES[] = {
-        {mw::sim::Button::Up, "Up"},       {mw::sim::Button::Down, "Down"},
-        {mw::sim::Button::Left, "Left"},   {mw::sim::Button::Right, "Right"},
-        {mw::sim::Button::LowPunch, "LP"}, {mw::sim::Button::HighPunch, "HP"},
-        {mw::sim::Button::LowKick, "LK"},  {mw::sim::Button::HighKick, "HK"},
-        {mw::sim::Button::Block, "BLOCK"},
+        {ds::sim::Button::Up, "Up"},       {ds::sim::Button::Down, "Down"},
+        {ds::sim::Button::Left, "Left"},   {ds::sim::Button::Right, "Right"},
+        {ds::sim::Button::LowPunch, "LP"}, {ds::sim::Button::HighPunch, "HP"},
+        {ds::sim::Button::LowKick, "LK"},  {ds::sim::Button::HighKick, "HK"},
+        {ds::sim::Button::Block, "BLOCK"},
     };
 
     std::string held;
     for (const Named& named : NAMES) {
-        if (mw::sim::input_held(frame, named.button)) {
+        if (ds::sim::input_held(frame, named.button)) {
             if (!held.empty()) {
                 held += " + ";
             }
@@ -99,8 +99,8 @@ std::string decode_input(mw::sim::InputFrame frame) {
 //
 // DESIGN.md 6 puts an input display in training mode for v1. This is its
 // console-shaped ancestor.
-void print_input(int32_t frame, const mw::platform::Platform& platform,
-                 const mw::sim::GameState& state) {
+void print_input(int32_t frame, const ds::platform::Platform& platform,
+                 const ds::sim::GameState& state) {
     const char* STATE_NAMES[] = {"RoundStart", "Idle",      "WalkFwd",  "WalkBack",
                                  "Crouch",     "JumpStart", "Airborne", "Landing",
                                  "Attack",     "Blocking",  "Hitstun",  "Blockstun",
@@ -109,18 +109,18 @@ void print_input(int32_t frame, const mw::platform::Platform& platform,
     for (int32_t player = 0; player < 2; ++player) {
         const std::string pad = decode_input(platform.pad_input.players[player]);
         const std::string keys = decode_input(platform.keyboard_input.players[player]);
-        const mw::sim::Fighter& fighter = state.fighters[player];
+        const ds::sim::Fighter& fighter = state.fighters[player];
 
         // Position and state are printed alongside the input because "both
         // characters moved" has two very different causes that look the same
         // from the outside: input reaching the wrong player, or pushboxes
         // separating two fighters who are touching. A player whose x changes
         // while its own input line is empty is being pushed, not driven.
-        MW_LOG_INFO("f%-6d P%d  pad[%-22s] keys[%-22s] x=%-5d %s", frame, player + 1, pad.c_str(),
+        DS_LOG_INFO("f%-6d P%d  pad[%-22s] keys[%-22s] x=%-5d %s", frame, player + 1, pad.c_str(),
                     keys.c_str(), fighter.x.to_int(),
                     STATE_NAMES[static_cast<int32_t>(fighter.state)]);
     }
-    MW_LOG_INFO("        gap between fighters: %d units",
+    DS_LOG_INFO("        gap between fighters: %d units",
                 state.fighters[1].x.to_int() - state.fighters[0].x.to_int());
 }
 
@@ -157,7 +157,7 @@ Options parse_options(int argc, char** argv) {
         } else if (std::strcmp(argv[i], "--record") == 0 && i + 1 < argc) {
             options.record = argv[++i];
         } else {
-            MW_LOG_WARN("ignoring unrecognized argument: %s", argv[i]);
+            DS_LOG_WARN("ignoring unrecognized argument: %s", argv[i]);
         }
     }
     return options;
@@ -168,8 +168,8 @@ Options parse_options(int argc, char** argv) {
 int main(int argc, char** argv) {
     const Options options = parse_options(argc, argv);
 
-    mw::platform::Platform platform{};
-    if (!mw::platform::init(platform, "Mortal Wombat")) {
+    ds::platform::Platform platform{};
+    if (!ds::platform::init(platform, "Divided States")) {
         return 1;
     }
 
@@ -177,58 +177,58 @@ int main(int argc, char** argv) {
     // appears, not after. Everything the sim needs is validated here, at load
     // time, which is what lets advance_frame have no error path at all
     // (CONVENTIONS.md 3).
-    mw::sim::MatchData match_data{};
+    ds::sim::MatchData match_data{};
     {
-        const std::string data_dir = std::string(MW_DATA_DIR) + "/characters/";
+        const std::string data_dir = std::string(DS_DATA_DIR) + "/characters/";
         std::string error;
-        const mw::data::LoadResult result = mw::data::load_match(
-            data_dir + "frenchy.toml", data_dir + "wisdom.toml", match_data, error);
-        if (result != mw::data::LoadResult::Ok) {
-            MW_LOG_ERROR("could not load frame data (%s): %s", mw::data::load_result_name(result),
+        const ds::data::LoadResult result = ds::data::load_match(
+            data_dir + "george.toml", data_dir + "sue.toml", match_data, error);
+        if (result != ds::data::LoadResult::Ok) {
+            DS_LOG_ERROR("could not load frame data (%s): %s", ds::data::load_result_name(result),
                          error.c_str());
-            mw::platform::shutdown(platform);
+            ds::platform::shutdown(platform);
             return 1;
         }
-        MW_LOG_INFO("loaded %s vs %s", match_data.characters[0].display_name,
+        DS_LOG_INFO("loaded %s vs %s", match_data.characters[0].display_name,
                     match_data.characters[1].display_name);
     }
 
-    const mw::render::PlaceholderManifest manifest;
+    const ds::render::PlaceholderManifest manifest;
 
     // Render-layer state: the view is not part of GameState and is never
     // rolled back (ARCHITECTURE.md 3).
-    mw::render::Camera camera{};
+    ds::render::Camera camera{};
 
-    mw::sim::GameState state{};
-    mw::sim::init_state(state, DEFAULT_SEED);
+    ds::sim::GameState state{};
+    ds::sim::init_state(state, DEFAULT_SEED);
 
     // The state one simulation step behind, kept solely so the renderer can
     // interpolate. It is a copy, never a reference: the sim owns `state` and
     // rewrites it in place.
-    mw::sim::GameState previous_state = state;
+    ds::sim::GameState previous_state = state;
 
-    mw::sim::InputPair current_input{};
-    mw::sim::InputPair previous_input{};
+    ds::sim::InputPair current_input{};
+    ds::sim::InputPair previous_input{};
 
     // Heap rather than a local: the recorder holds fixed-size arrays for ten
     // minutes of play, which is far too large for the stack. This is the render
     // side of the boundary, so an allocation here is fine -- it would not be
     // twenty lines further down.
-    mw::platform::SessionRecorder* recorder = nullptr;
+    ds::platform::SessionRecorder* recorder = nullptr;
     if (options.record != nullptr) {
-        recorder = new mw::platform::SessionRecorder();
-        mw::platform::recorder_begin(*recorder, DEFAULT_SEED);
-        MW_LOG_INFO("recording this session to %s", options.record);
+        recorder = new ds::platform::SessionRecorder();
+        ds::platform::recorder_begin(*recorder, DEFAULT_SEED);
+        DS_LOG_INFO("recording this session to %s", options.record);
     }
 
-    MW_LOG_INFO("running at a fixed %d Hz; ESC quits, F1 toggles debug", mw::sim::FRAME_RATE);
+    DS_LOG_INFO("running at a fixed %d Hz; ESC quits, F1 toggles debug", ds::sim::FRAME_RATE);
 
-    uint64_t last_time = mw::platform::now_ns();
+    uint64_t last_time = ds::platform::now_ns();
     uint64_t accumulator = 0;
     int32_t frames_rendered = 0;
 
     while (!platform.should_quit) {
-        const uint64_t now = mw::platform::now_ns();
+        const uint64_t now = ds::platform::now_ns();
         uint64_t elapsed = now - last_time;
         last_time = now;
 
@@ -237,7 +237,7 @@ int main(int argc, char** argv) {
         }
         accumulator += elapsed;
 
-        mw::platform::poll(platform);
+        ds::platform::poll(platform);
 
         // Advance in whole frames. Input is sampled per step rather than per
         // render frame, so that a slow render frame that owes two simulation
@@ -246,7 +246,7 @@ int main(int argc, char** argv) {
         while (accumulator >= FRAME_NS) {
             previous_state = state;
             previous_input = current_input;
-            current_input = mw::platform::current_input(platform);
+            current_input = ds::platform::current_input(platform);
 
             if (options.input_test &&
                 (current_input.players[0].buttons != previous_input.players[0].buttons ||
@@ -254,10 +254,10 @@ int main(int argc, char** argv) {
                 print_input(state.frame, platform, state);
             }
 
-            mw::sim::advance_frame(state, match_data, current_input, previous_input);
+            ds::sim::advance_frame(state, match_data, current_input, previous_input);
 
             if (recorder != nullptr) {
-                mw::platform::recorder_frame(*recorder, current_input, state);
+                ds::platform::recorder_frame(*recorder, current_input, state);
             }
 
             accumulator -= FRAME_NS;
@@ -268,10 +268,10 @@ int main(int argc, char** argv) {
         // never crosses the boundary (ARCHITECTURE.md 4).
         const float alpha = static_cast<float>(accumulator) / static_cast<float>(FRAME_NS);
 
-        mw::render::camera_update(camera, previous_state, state, alpha);
-        mw::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
+        ds::render::camera_update(camera, previous_state, state, alpha);
+        ds::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
                                state, alpha, platform.show_debug);
-        mw::platform::present(platform);
+        ds::platform::present(platform);
         ++frames_rendered;
 
         if (options.frames >= 0 && state.frame >= options.frames) {
@@ -286,26 +286,26 @@ int main(int argc, char** argv) {
         // particularly bad failure for a debugging tool: the image looked
         // plausible and was one frame stale, which is exactly enough to make a
         // hitbox look inactive on the frame it connected.
-        mw::render::camera_update(camera, previous_state, state, 0.0f);
-        mw::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
+        ds::render::camera_update(camera, previous_state, state, 0.0f);
+        ds::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
                                state, 0.0f, platform.show_debug);
 
-        if (!mw::platform::save_screenshot(platform, options.screenshot)) {
-            mw::platform::shutdown(platform);
+        if (!ds::platform::save_screenshot(platform, options.screenshot)) {
+            ds::platform::shutdown(platform);
             return 1;
         }
-        MW_LOG_INFO("wrote %s", options.screenshot);
+        DS_LOG_INFO("wrote %s", options.screenshot);
     }
 
-    MW_LOG_INFO("ran %d render frames, %d simulation frames", frames_rendered, state.frame);
+    DS_LOG_INFO("ran %d render frames, %d simulation frames", frames_rendered, state.frame);
 
     // Written after the screenshot path, so --record and --screenshot compose.
     if (recorder != nullptr) {
-        mw::platform::recorder_write(*recorder, options.record, state);
+        ds::platform::recorder_write(*recorder, options.record, state);
         delete recorder;
         recorder = nullptr;
     }
 
-    mw::platform::shutdown(platform);
+    ds::platform::shutdown(platform);
     return 0;
 }

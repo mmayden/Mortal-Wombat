@@ -3,7 +3,7 @@
 #include "sim/constants.h"
 #include "sim/state.h"
 
-namespace mw::render {
+namespace ds::render {
 namespace {
 
 // How close a fighter may come to the edge of the view before the camera
@@ -15,33 +15,33 @@ namespace {
 // shoves back and forth, too large and a fighter can walk off screen.
 constexpr float CAMERA_EDGE_MARGIN = 90.0f;
 
-float to_float(mw::sim::Fixed value) {
-    return static_cast<float>(value.raw) / static_cast<float>(mw::sim::FIXED_ONE);
+float to_float(ds::sim::Fixed value) {
+    return static_cast<float>(value.raw) / static_cast<float>(ds::sim::FIXED_ONE);
 }
 
 float lerp(float a, float b, float t) {
     return a + (b - a) * t;
 }
 
-float interpolated_x(const mw::sim::GameState& previous, const mw::sim::GameState& current,
+float interpolated_x(const ds::sim::GameState& previous, const ds::sim::GameState& current,
                      int32_t index, float alpha) {
     return lerp(to_float(previous.fighters[index].x), to_float(current.fighters[index].x), alpha);
 }
 
 }  // namespace
 
-void camera_update(Camera& camera, const mw::sim::GameState& previous,
-                   const mw::sim::GameState& current, float alpha) {
+void camera_update(Camera& camera, const ds::sim::GameState& previous,
+                   const ds::sim::GameState& current, float alpha) {
     const float first = interpolated_x(previous, current, 0, alpha);
     const float second = interpolated_x(previous, current, 1, alpha);
 
     const float leftmost = first < second ? first : second;
     const float rightmost = first < second ? second : first;
 
-    const float screen_width = static_cast<float>(mw::sim::SCREEN_WIDTH);
+    const float screen_width = static_cast<float>(ds::sim::SCREEN_WIDTH);
     const float furthest_left = 0.0f;
     const float furthest_right =
-        static_cast<float>(mw::sim::STAGE_WIDTH) - static_cast<float>(mw::sim::SCREEN_WIDTH);
+        static_cast<float>(ds::sim::STAGE_WIDTH) - static_cast<float>(ds::sim::SCREEN_WIDTH);
 
     if (!camera.initialized) {
         // Open centred, so the first frame of a round is symmetric.
@@ -91,4 +91,4 @@ void camera_update(Camera& camera, const mw::sim::GameState& previous,
     }
 }
 
-}  // namespace mw::render
+}  // namespace ds::render

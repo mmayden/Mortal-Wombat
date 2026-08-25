@@ -28,34 +28,34 @@
 
 #include "match_data.h"
 
-using namespace mw::test;
+using namespace ds::test;
 
 namespace {
 
 std::string replay_path(const char* name) {
-    return std::string(MW_REPLAY_DIR) + "/" + name + ".replay";
+    return std::string(DS_REPLAY_DIR) + "/" + name + ".replay";
 }
 
 // Prints every frame rather than the interval checkpoints the replay tier
 // uses. Volume is the point: this output is diffed, not read, and a per-frame
 // trace turns "these platforms disagree" into "they disagree at frame 214".
 int probe_one(const Replay& replay) {
-    mw::sim::GameState state;
-    mw::sim::init_state(state, replay.seed);
+    ds::sim::GameState state;
+    ds::sim::init_state(state, replay.seed);
 
-    mw::sim::InputPair previous{{mw::sim::InputFrame{0u}, mw::sim::InputFrame{0u}}};
+    ds::sim::InputPair previous{{ds::sim::InputFrame{0u}, ds::sim::InputFrame{0u}}};
 
     std::printf("# scenario %s seed %llu frames %d\n", replay.name.c_str(),
                 static_cast<unsigned long long>(replay.seed), replay.frame_count);
-    std::printf("%d %016llX\n", 0, static_cast<unsigned long long>(mw::sim::hash_state(state)));
+    std::printf("%d %016llX\n", 0, static_cast<unsigned long long>(ds::sim::hash_state(state)));
 
     for (int32_t frame = 0; frame < replay.frame_count; ++frame) {
-        const mw::sim::InputPair current = input_at_frame(replay, frame);
-        mw::sim::advance_frame(state, mw::test::shipped_match_data(), current, previous);
+        const ds::sim::InputPair current = input_at_frame(replay, frame);
+        ds::sim::advance_frame(state, ds::test::shipped_match_data(), current, previous);
         previous = current;
 
         std::printf("%d %016llX\n", frame + 1,
-                    static_cast<unsigned long long>(mw::sim::hash_state(state)));
+                    static_cast<unsigned long long>(ds::sim::hash_state(state)));
     }
 
     return 0;
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
     // behavior, and printing the sizes turns that from a mystery into the
     // first line of the diff.
     std::printf("# sizeof(GameState)=%zu sizeof(Fighter)=%zu sizeof(Projectile)=%zu\n",
-                sizeof(mw::sim::GameState), sizeof(mw::sim::Fighter), sizeof(mw::sim::Projectile));
+                sizeof(ds::sim::GameState), sizeof(ds::sim::Fighter), sizeof(ds::sim::Projectile));
 
     int failures = 0;
 

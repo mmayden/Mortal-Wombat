@@ -88,7 +88,7 @@ waits it out via `FREEZE_FRAMES`.
 **Re-record replays in the same commit as the change that invalidated them.**
 
 ```
-build/debug/bin/mw_replay_record.exe
+build/debug/bin/ds_replay_record.exe
 ```
 
 It prints what changed and where it first diverged. A separate "fix tests"
@@ -129,7 +129,7 @@ it actively confirms the mistake.
 path for every target and every dependency built through it. A header briefly
 named `src/assert.h` shadowed the C standard `<assert.h>` — toml++ included it, got ours, and the
 build failed inside somebody else's code. Same hazard for `math.h`, `time.h`,
-`string.h`, `stdio.h`. Everything at that level takes the `mw_` prefix — `src/mw_log.h` is the one
+`string.h`, `stdio.h`. Everything at that level takes the `ds_` prefix — `src/ds_log.h` is the one
 that remains.
 
 It surfaced only on a **clean** build: an incremental build had no reason to

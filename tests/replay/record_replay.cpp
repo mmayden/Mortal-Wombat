@@ -18,12 +18,12 @@
 #include "replay/replay_runner.h"
 #include "replay/scenarios.h"
 
-using namespace mw::test;
+using namespace ds::test;
 
 namespace {
 
 std::string replay_path(const char* name) {
-    return std::string(MW_REPLAY_DIR) + "/" + name + ".replay";
+    return std::string(DS_REPLAY_DIR) + "/" + name + ".replay";
 }
 
 void print_usage(const char* argv0) {
@@ -34,7 +34,7 @@ void print_usage(const char* argv0) {
         "With no arguments, regenerates all %d scenarios.\n"
         "\n"
         "Scenarios:\n",
-        argv0, MW_REPLAY_DIR, SCENARIO_COUNT);
+        argv0, DS_REPLAY_DIR, SCENARIO_COUNT);
     for (int32_t i = 0; i < SCENARIO_COUNT; ++i) {
         std::printf("  %-20s %s\n", SCENARIOS[i].name, SCENARIOS[i].description);
     }
@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    std::printf("Recording replays into %s\n", MW_REPLAY_DIR);
+    std::printf("Recording replays into %s\n", DS_REPLAY_DIR);
 
     int failures = 0;
     int recorded = 0;
