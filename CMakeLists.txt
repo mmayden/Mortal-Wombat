@@ -272,6 +272,25 @@ target_link_libraries(divided_states
 # is wanted during development. Flip it when there is something to ship.
 set_target_properties(divided_states PROPERTIES WIN32_EXECUTABLE OFF)
 
+# ---------------------------------------------------------------------------
+# tools/framedata_viewer -- draws what the character TOML says.
+#
+# The stack decision said to build this BEFORE authoring content, and that was
+# overrun: every hitbox in data/characters/ was hand-written, and the jump
+# attack shipped with its hitbox at standing-punch height where it could not
+# touch anyone from any range at any timing. Four plausible integers, invisible
+# in review, obvious the moment they are drawn.
+#
+# Pure tooling: no sim contact, cannot desync anything (tools/README.md).
+# ---------------------------------------------------------------------------
+add_executable(ds_framedata_viewer
+    tools/framedata_viewer/main.cpp)
+
+target_link_libraries(ds_framedata_viewer
+    PRIVATE ds_sim ds_data ds_warnings ds_exceptions SDL3::SDL3)
+
+target_include_directories(ds_framedata_viewer PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/tools")
+
 # Located at top level, before the summary below reports on it. Doing this in
 # tests/ meant the summary ran first and always reported it missing -- the
 # summary caught that about itself on its first run.

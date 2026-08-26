@@ -37,6 +37,8 @@ does that for you; every command below is run through it.
 | Headless boot (N sim frames) | `divided_states.exe --frames 600` |
 | Capture a frame | `divided_states.exe --frames 200 --screenshot out.bmp` |
 | **Record a played session** | `divided_states.exe --record session.replay` |
+| **View frame data** | `build/debug/bin/ds_framedata_viewer.exe` |
+| Reach report (headless) | `ds_framedata_viewer.exe --report` |
 
 Controls, keyboard: P1 `WASD` + `F G C V` + `B`. P2 arrows + numpad
 `4 5 1 2` + `0`. `ESC` quits, `F1` toggles the debug overlay.

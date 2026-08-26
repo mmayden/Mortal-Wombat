@@ -260,6 +260,7 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Frame-data viewer | `ds_framedata_viewer` draws the hitboxes, and `test_reach` asserts every move can connect |
 | Session recorder | `--record` captures a played session as a replay file, so a feel report stops being guesswork |
 | Camera, second fix | Backing away walked you off the left edge; the render layer had no tests at all |
 | Jump attack fix | It could not hit anyone; three files shared one wrong assumption |
