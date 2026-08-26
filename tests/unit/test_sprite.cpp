@@ -25,7 +25,7 @@
 #include "match_data.h"
 
 using namespace ds::sim;
-using ds::render::PlaceholderManifest;
+using ds::render::placeholder_fighter_sprites;
 using ds::render::SpriteList;
 
 namespace {
@@ -51,9 +51,11 @@ struct Limb {
 };
 
 Limb limb_of(const CharacterData& character, const Fighter& fighter) {
-    PlaceholderManifest manifest;
+    // The free function, not the manifest: this library is built without RTTI
+    // and the test binary with it, so constructing the polymorphic type here
+    // leaves its typeinfo undefined at link time on GCC and Clang.
     SpriteList sprites{};
-    manifest.fighter_sprites(fighter, character, 0, sprites);
+    placeholder_fighter_sprites(fighter, character, 0, sprites);
 
     // The body is quad 0. Any later quad narrower than the body is the guard
     // plate, so the limb is identified by being the one that extends forward

@@ -103,4 +103,20 @@ public:
                          int32_t player_index, SpriteList& out) const override;
 };
 
+// The placeholder manifest's whole body, as a free function.
+//
+// PlaceholderManifest delegates to this and adds nothing. The split exists so
+// tests can call it without touching the polymorphic type: this library is
+// built -fno-rtti (ADR 0001) so it emits no typeinfo, while the test binary is
+// built with RTTI for doctest, and constructing the class across that boundary
+// leaves an undefined reference to its typeinfo at link time. Green on MSVC,
+// red on GCC and Clang, like the four before it.
+//
+// Testing the function rather than the interface is the better shape anyway --
+// building a sprite list is a pure transformation, and the virtual exists only
+// so real art can replace it later.
+void placeholder_fighter_sprites(const ds::sim::Fighter& fighter,
+                                 const ds::sim::CharacterData& character, int32_t player_index,
+                                 SpriteList& out);
+
 }  // namespace ds::render

@@ -91,6 +91,12 @@ SpriteQuad untextured(float x, float y, float w, float h, Color tint) {
 void PlaceholderManifest::fighter_sprites(const ds::sim::Fighter& fighter,
                                           const ds::sim::CharacterData& character,
                                           int32_t player_index, SpriteList& out) const {
+    placeholder_fighter_sprites(fighter, character, player_index, out);
+}
+
+void placeholder_fighter_sprites(const ds::sim::Fighter& fighter,
+                                 const ds::sim::CharacterData& character, int32_t player_index,
+                                 SpriteList& out) {
     using ds::sim::FighterState;
 
     out.count = 0;
