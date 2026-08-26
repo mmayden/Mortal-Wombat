@@ -79,7 +79,7 @@ distinct phase, and leaving it is a priced decision (`DESIGN.md` §3, ADR 0020).
 
 `drawing-board/RULESET.md` has the table pointing at where each is specified.
 
-**Still open:** six of the sixteen ruleset decisions, listed in
+**Still open:** five of the sixteen ruleset decisions, listed in
 `drawing-board/RULESET.md`. Their *direction* is now constrained by §3, which is
 why several of them got easier rather than merely later.
 
@@ -186,9 +186,19 @@ not initiative.
 
 ### 4. Knockdown and wakeup
 
-The last two of the sixteen states in `DESIGN.md` §4.2 that are unreachable,
-and a named line in the v1 definition of done. Self-contained sim work with the
-frame-data and state-machine plumbing already in place.
+**The design is settled (ADR 0026); this is the implementation.** Two of the
+sixteen states in `DESIGN.md` §4.2 are unreachable without it, and it is a named
+line in the v1 definition of done.
+
+The research calls it the engine — it is what makes landing one hit worth more
+than the damage it dealt. Soft knockdowns let the defender choose quick or
+delayed rise; hard ones are fixed. A grounded fighter cannot be hit, and the
+rise itself is invulnerable.
+
+Three things it drags with it: a per-move knockdown field in the frame data
+(schema bump, both character files, rule 5), a wakeup choice in `GameState`, and
+every replay re-recorded, since it changes what happens after a hit. `src/sim`
+is human-led, so it needs direction rather than initiative (rule 1).
 
 ### 5. Training mode: frame data readout and input display
 
