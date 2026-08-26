@@ -166,6 +166,53 @@ TEST_CASE("Shipped frame data keeps light, medium and heavy distinct") {
             CHECK(heavy.hitstun > medium.hitstun);
         }
 
+        SUBCASE("landing a hit buys your turn, and being blocked costs it") {
+            // Frame advantage: the stun the defender owes, minus what the
+            // attacker still owes when the move connects. It is the number a
+            // fighting game is actually balanced around, and until it was
+            // measured nobody here had computed it once.
+            //
+            // What the measurement found: every medium and heavy was NEGATIVE
+            // ON HIT. Land a clean heavy punch and the defender acted first.
+            // Recovery had been widened for risk without re-deriving the stun,
+            // so attacking carried the cost and paid nothing -- which inverts
+            // DESIGN.md 3's question rather than sharpening it.
+            for (int32_t m = 0; m < MOVE_COUNT; ++m) {
+                const MoveId move = static_cast<MoveId>(m);
+                if (move == MoveId::JumpAttack || move == MoveId::Throw ||
+                    move == MoveId::Special) {
+                    continue;  // Their reward is a knockdown, not frame advantage.
+                }
+
+                const MoveData& data = move_of(character, move);
+                const int32_t owed = (data.active - 1) + data.recovery;
+                CAPTURE(m);
+
+                // Hitting must be worth something.
+                CHECK(data.hitstun - owed > 0);
+                // Being blocked must not be. A move that is plus on block is a
+                // move with no reason not to throw it.
+                CHECK(data.blockstun - owed < 0);
+                // And the gap between the two is what makes blocking correct.
+                CHECK(data.hitstun > data.blockstun);
+            }
+        }
+
+        SUBCASE("a heavy is punishable on block and a light is not") {
+            const MoveData& light = move_of(character, MoveId::StandLightPunch);
+            const MoveData& heavy = move_of(character, MoveId::StandHeavyPunch);
+
+            const int32_t light_adv = light.blockstun - ((light.active - 1) + light.recovery);
+            const int32_t heavy_adv = heavy.blockstun - ((heavy.active - 1) + heavy.recovery);
+
+            // A heavy has to be a real commitment or the thesis has no teeth:
+            // throwing one and being blocked should hand over the turn, not
+            // merely pause it.
+            CHECK(heavy_adv < light_adv);
+            CHECK(heavy_adv <= -5);
+            CHECK(light_adv >= -3);
+        }
+
         SUBCASE("a hitbox is live exactly on its move's active frames") {
             // Retuning startup without moving the hitbox window is the silent
             // way to break a move: it still swings, and connects on frames it
