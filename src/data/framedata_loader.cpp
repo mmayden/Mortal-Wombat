@@ -18,14 +18,23 @@ using ds::sim::MoveId;
 // this and updating tools/framedata_editor/ in the same commit (AGENTS.md
 // rule 5) -- a schema change that lands in only one consumer produces files the
 // other cannot read, with no build error to catch it.
-constexpr int64_t SUPPORTED_SCHEMA_VERSION = 1;
+constexpr int64_t SUPPORTED_SCHEMA_VERSION = 2;
 
 // Table key for each MoveId, in enum order. The loader and the editor both
 // address moves by these strings, so they are part of the schema contract.
 constexpr const char* MOVE_KEYS[ds::sim::MOVE_COUNT] = {
-    "low_punch",         "high_punch",      "low_kick",         "high_kick",   "crouch_low_punch",
-    "crouch_high_punch", "crouch_low_kick", "crouch_high_kick", "jump_attack", "special",
+    "light_punch",        "medium_punch",      "heavy_punch",        "light_kick",
+    "medium_kick",        "heavy_kick",        "crouch_light_punch", "crouch_medium_punch",
+    "crouch_heavy_punch", "crouch_light_kick", "crouch_medium_kick", "crouch_heavy_kick",
+    "jump_attack",        "special",
 };
+
+// The table above must stay the same length as the enum. Without this, adding a
+// MoveId and forgetting a key reads past the end of the array at load time --
+// which on a good day is a garbage move name in an error message and on a bad
+// one is a crash in a tool nobody was debugging.
+static_assert(sizeof(MOVE_KEYS) / sizeof(MOVE_KEYS[0]) == ds::sim::MOVE_COUNT,
+              "MOVE_KEYS must have exactly one entry per MoveId, in enum order");
 
 // Looks up a nested key, returning null if any level is missing or is not a
 // table.

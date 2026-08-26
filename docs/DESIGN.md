@@ -221,22 +221,25 @@ and which half you are looking at matters.**
 
 | | |
 |---|---|
-| **The move list is dead** | It describes a four-attack scheme — no medium punch, no medium kick, because there were no medium buttons when it was written. §4.1 is the binding control spec and it requires six. **Do not treat this list as the moveset.** |
+| **The move list is dead** | It describes a four-attack scheme, because there were no medium buttons when it was written. The real move set is **fourteen** — six buttons standing, six crouching, a jump attack and a special — and it lives in `data/characters/*.toml` under `framedata_schema.md` v2. **Do not treat this list as the moveset.** |
 | **The frame values are live** | Startup, active, recovery, damage, hitstun and blockstun are what `data/characters/*.toml` currently ships and what the replay recordings encode. `ARCHITECTURE.md`, `framedata_schema.md` and `MECHANICS.md` all cite them, correctly. **Tune them freely** — they were always marked as starting points, and §4.4's re-record rule applies. |
 
 The distinction matters because four other documents point here for numbers. A
 blanket "superseded" would have told those readers to ignore values the game is
 actually running on.
 
-Closing the dead half costs roughly eight new move definitions — MP and MK,
-standing and crouching, for two characters — each needing hitbox geometry that
-has to be *seen* to be reviewed. The jump attack shipped with its hitbox at standing-punch
-height and could not touch anyone from any range at any timing, because the
-numbers are plausible in a text file. So `tools/framedata_editor/` comes first;
-`ROADMAP.md` sequences it.
+The dead half was closed on 2026-08-26. The eight missing definitions — MP and
+MK, standing and crouching, for two characters — are **interpolated between the
+light and heavy of the same limb**, which is no more of a guess than the values
+on either side of them, and every one was checked in `ds_framedata_viewer`
+before it landed. That tool was built first precisely so they could be: the jump
+attack shipped with its hitbox at standing-punch height, unable to touch anyone
+from any range at any timing, because four integers are plausible in a text file
+and obvious in a picture. A test now asserts that every move can connect with
+somebody, which is the guard that bug never had.
 
-The table below is therefore kept, not archived. Its light and heavy rows remain
-the live starting shape; medium has no row yet because medium has no data yet.
+The table below is therefore kept, not archived. Its rows are the live starting
+shape for light and heavy; medium sits between them and is only in the data.
 
 Per character, v1. Twelve moves total.
 

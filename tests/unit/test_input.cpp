@@ -25,24 +25,27 @@ InputFrame make(std::initializer_list<Button> buttons) {
 }  // namespace
 
 TEST_CASE("Buttons set and clear independently") {
-    const InputFrame frame = make({Button::HighPunch, Button::Block});
+    const InputFrame frame = make({Button::HeavyPunch, Button::MediumKick});
 
-    CHECK(input_held(frame, Button::HighPunch));
-    CHECK(input_held(frame, Button::Block));
-    CHECK_FALSE(input_held(frame, Button::LowPunch));
+    CHECK(input_held(frame, Button::HeavyPunch));
+    CHECK(input_held(frame, Button::MediumKick));
+    CHECK_FALSE(input_held(frame, Button::LightPunch));
     CHECK_FALSE(input_held(frame, Button::Up));
 
-    const InputFrame cleared = input_without(frame, Button::Block);
-    CHECK(input_held(cleared, Button::HighPunch));
-    CHECK_FALSE(input_held(cleared, Button::Block));
+    const InputFrame cleared = input_without(frame, Button::MediumKick);
+    CHECK(input_held(cleared, Button::HeavyPunch));
+    CHECK_FALSE(input_held(cleared, Button::MediumKick));
 }
 
-TEST_CASE("All five buttons occupy distinct bits") {
+TEST_CASE("All ten buttons occupy distinct bits") {
     // DESIGN.md 4.1. A collision here would make two buttons the same button,
     // which is the sort of thing that is obvious in a test and invisible in
-    // a bitfield.
-    const Button all[] = {Button::LowPunch, Button::HighPunch, Button::LowKick, Button::HighKick,
-                          Button::Block};
+    // a bitfield. Directions are included because they share the field: a
+    // sixth attack button colliding with Up would read as a jump.
+    const Button all[] = {Button::Up,         Button::Down,       Button::Left,
+                          Button::Right,      Button::LightPunch, Button::MediumPunch,
+                          Button::HeavyPunch, Button::LightKick,  Button::MediumKick,
+                          Button::HeavyKick};
 
     for (Button a : all) {
         for (Button b : all) {
@@ -54,26 +57,26 @@ TEST_CASE("All five buttons occupy distinct bits") {
 }
 
 TEST_CASE("Edge detection compares against the previous frame") {
-    const InputFrame pressed = make({Button::HighPunch});
+    const InputFrame pressed = make({Button::HeavyPunch});
 
     SUBCASE("a button newly held reads as pressed") {
-        CHECK(input_pressed(pressed, NEUTRAL, Button::HighPunch));
-        CHECK_FALSE(input_released(pressed, NEUTRAL, Button::HighPunch));
+        CHECK(input_pressed(pressed, NEUTRAL, Button::HeavyPunch));
+        CHECK_FALSE(input_released(pressed, NEUTRAL, Button::HeavyPunch));
     }
 
     SUBCASE("a button held for a second frame is no longer pressed") {
-        CHECK_FALSE(input_pressed(pressed, pressed, Button::HighPunch));
-        CHECK(input_held(pressed, Button::HighPunch));
+        CHECK_FALSE(input_pressed(pressed, pressed, Button::HeavyPunch));
+        CHECK(input_held(pressed, Button::HeavyPunch));
     }
 
     SUBCASE("a button let go reads as released") {
-        CHECK(input_released(NEUTRAL, pressed, Button::HighPunch));
-        CHECK_FALSE(input_pressed(NEUTRAL, pressed, Button::HighPunch));
+        CHECK(input_released(NEUTRAL, pressed, Button::HeavyPunch));
+        CHECK_FALSE(input_pressed(NEUTRAL, pressed, Button::HeavyPunch));
     }
 
     SUBCASE("a button untouched is neither") {
-        CHECK_FALSE(input_pressed(NEUTRAL, NEUTRAL, Button::HighPunch));
-        CHECK_FALSE(input_released(NEUTRAL, NEUTRAL, Button::HighPunch));
+        CHECK_FALSE(input_pressed(NEUTRAL, NEUTRAL, Button::HeavyPunch));
+        CHECK_FALSE(input_released(NEUTRAL, NEUTRAL, Button::HeavyPunch));
     }
 }
 
@@ -126,7 +129,7 @@ TEST_CASE("Sanitizing strips reserved bits") {
     CHECK((clean.buttons & static_cast<uint16_t>(~INPUT_BUTTON_MASK)) == 0u);
 
     SUBCASE("meaningful bits survive") {
-        const InputFrame real = make({Button::HighKick, Button::Down});
+        const InputFrame real = make({Button::HeavyKick, Button::Down});
         CHECK(input_sanitized(real).buttons == real.buttons);
     }
 

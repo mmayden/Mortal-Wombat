@@ -13,38 +13,45 @@
 
 namespace ds::sim {
 
-// OUT OF DATE WITH THE DESIGN, deliberately. This is the old scheme: four
-// attacks plus a dedicated Block button, and four directions.
+// Six attack buttons and four directions -- DESIGN.md 4.1, ADR 0021.
 //
-// DESIGN.md 4.1 and ADR 0021 specify six attack buttons with HOLD BACK to
-// block, which is the opposite trade -- it reintroduces the walk-backward/block
-// ambiguity on purpose, because that ambiguity is what makes crossups an axis
-// of offence rather than a cosmetic side switch.
+// LIGHT / MEDIUM / HEAVY, not low/mid/high. The names matter: attack HEIGHT is
+// a separate axis entirely and is still undecided (drawing-board/RULESET.md
+// decision 7). These buttons were called LowPunch and HighPunch until the sixth
+// button landed, which would have read as "a punch that hits low" the moment
+// heights arrived.
 //
-// Changing it invalidates every replay recording (they encode these input
-// semantics) and needs an input history in GameState, which does not exist yet.
-// ROADMAP.md sequences it. src/sim is a human-led zone -- AGENTS.md rule 1.
+// There is no Block button. Blocking is holding BACK (DESIGN.md 4.1), which is
+// what makes a crossup an axis of offence: because "back" is relative to the
+// opponent, an attack that changes sides mid-animation forces the defender to
+// reverse their input. A block button gives every attack the same answer and
+// deletes that axis entirely.
+//
+// It costs something real, which is the point. Blocking and retreating are now
+// the same input, so a defender cannot do both -- and that is what puts throws
+// back under consideration (drawing-board/RULESET.md decision 13).
 enum class Button : uint16_t {
     Up = 1u << 0,
     Down = 1u << 1,
     Left = 1u << 2,
     Right = 1u << 3,
-    LowPunch = 1u << 4,
-    HighPunch = 1u << 5,
-    LowKick = 1u << 6,
-    HighKick = 1u << 7,
-    Block = 1u << 8,
+    LightPunch = 1u << 4,
+    MediumPunch = 1u << 5,
+    HeavyPunch = 1u << 6,
+    LightKick = 1u << 7,
+    MediumKick = 1u << 8,
+    HeavyKick = 1u << 9,
 };
 
 // Sixteen bits is what rollback sends over the wire per player per frame, so
-// this is deliberately small. Nine bits are used; the rest are reserved and
+// this is deliberately small. Ten bits are used; the rest are reserved and
 // must stay zero, since a nonzero reserved bit would change the state hash
 // without changing behavior.
 struct InputFrame {
     uint16_t buttons;
 };
 
-inline constexpr uint16_t INPUT_BUTTON_MASK = 0x01FFu;
+inline constexpr uint16_t INPUT_BUTTON_MASK = 0x03FFu;
 
 constexpr bool input_held(InputFrame input, Button button) {
     return (input.buttons & static_cast<uint16_t>(button)) != 0u;

@@ -15,43 +15,43 @@ frames 480
 # input <frame> <p1_buttons> <p2_buttons> -- holds until the next line
 input 0 0x0008 0x0000
 input 150 0x0000 0x0000
-input 160 0x0020 0x0000
+input 160 0x0040 0x0000
 input 161 0x0000 0x0000
 input 210 0x0009 0x0000
 input 211 0x0000 0x0000
-input 230 0x0020 0x0000
+input 230 0x0040 0x0000
 input 231 0x0000 0x0000
 input 280 0x0009 0x0000
 input 281 0x0000 0x0000
-input 300 0x0020 0x0000
+input 300 0x0040 0x0000
 input 301 0x0000 0x0000
 input 350 0x0009 0x0000
 input 351 0x0000 0x0000
-input 370 0x0020 0x0000
+input 370 0x0040 0x0000
 input 371 0x0000 0x0000
 input 420 0x0009 0x0000
 input 421 0x0000 0x0000
-input 440 0x0020 0x0000
+input 440 0x0040 0x0000
 input 441 0x0000 0x0000
 
 # Full state hash at intervals, so a divergence reports its first frame.
-checkpoint 30 0x1357E425426EB352
-checkpoint 60 0xD9DD1AFB6DB31F86
-checkpoint 90 0x2F156B18B8DF50F3
-checkpoint 120 0xFACEB9EF2139A0DC
-checkpoint 150 0xEEED4CC3575B6D62
-checkpoint 180 0xC1C7C239AC029B9E
-checkpoint 210 0x49CE3579C1238096
-checkpoint 240 0x7F40DA223AC67253
-checkpoint 270 0x95A86AF648516FEE
-checkpoint 300 0x892E9A75BBB7368C
-checkpoint 330 0xCD468A0E144C0AEB
-checkpoint 360 0x1551012FC7D4E6A7
-checkpoint 390 0x46D578150FB5B7CA
-checkpoint 420 0x9C34CEF9966AAB42
-checkpoint 450 0x748DE7F02AA2306D
-checkpoint 480 0x9B2297F1AA5E7A14
+checkpoint 30 0xF34B6C548BA66A72
+checkpoint 60 0x6736D1C560D300A6
+checkpoint 90 0x53E3E7574AD0C603
+checkpoint 120 0x37D4D1A82F718DEC
+checkpoint 150 0xF8FD63481CCB99B2
+checkpoint 180 0xE9428B3EF9E0067D
+checkpoint 210 0xD6803905DAFFEB06
+checkpoint 240 0xB2602B82AF42E967
+checkpoint 270 0x50B283C6A041066E
+checkpoint 300 0xC2B7A5060EF4F55C
+checkpoint 330 0xE40CF324EF9A1F2B
+checkpoint 360 0x794FAAB98150F2D7
+checkpoint 390 0x18D8EBF6BF171C06
+checkpoint 420 0x53D9A09B698E2EB2
+checkpoint 450 0x5AEECB4D0C281C61
+checkpoint 480 0x5BD0CC7883EA8EF4
 
 # Visible-state hash after the final frame. Excludes RNG position
 # so that a render-side effect drawing a number cannot fail this.
-final 0xC3DC640547BFD17F
+final 0x13A601D98D8517DF

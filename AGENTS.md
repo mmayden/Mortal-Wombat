@@ -40,18 +40,21 @@ does that for you; every command below is run through it.
 | **View frame data** | `build/debug/bin/ds_framedata_viewer.exe` |
 | Reach report (headless) | `ds_framedata_viewer.exe --report` |
 
-Controls, keyboard: P1 `WASD` + `F G C V` + `B`. P2 arrows + numpad
-`4 5 1 2` + `0`. `ESC` quits, `F1` toggles the debug overlay.
+**Controls** — six attack buttons, and **no block button**: hold BACK to block
+(`DESIGN.md` §4.1, ADR 0021).
 
-**These are the OLD controls and do not match the design.** `DESIGN.md` §4.1
-and ADR 0021 specify six attack buttons with hold-back blocking; the build still
-has four attacks plus a block button. `ROADMAP.md` sequences the reconciliation
-— note it is a content change as well as an input change, since medium punch and
-medium kick do not exist in the move data at all.
+| | Light | Medium | Heavy |
+|---|---|---|---|
+| P1 punch / kick | `F` / `C` | `G` / `V` | `H` / `B` |
+| P2 punch / kick | numpad `4` / `1` | numpad `5` / `2` | numpad `6` / `3` |
+
+P1 moves on `WASD`, P2 on the arrow keys. `ESC` quits, `F1` toggles the debug
+overlay.
 
 Gamepads are supported and hot-pluggable; the first pad connected becomes
-player one. Punches on the left face pair (X/Y), kicks on the right (A/B),
-block on either shoulder or trigger. Pad input is OR-ed with the keyboard, so
+player one. Punches on the top row (X, Y, RB), kicks on the bottom (A, B, LB);
+the triggers duplicate the heavies. There is nothing to put a block on — back
+is block. Pad input is OR-ed with the keyboard, so
 one player can be on a pad and the other on keys with no mode to select.
 
 On Linux/macOS (and in CI) drop the wrapper: `cmake --preset debug`,

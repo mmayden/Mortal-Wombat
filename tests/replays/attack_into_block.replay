@@ -13,37 +13,37 @@ seed 1357
 frames 420
 
 # input <frame> <p1_buttons> <p2_buttons> -- holds until the next line
-input 0 0x0008 0x0100
-input 220 0x0000 0x0100
-input 240 0x0040 0x0100
-input 241 0x0000 0x0100
-input 270 0x0040 0x0100
-input 271 0x0000 0x0100
-input 300 0x0040 0x0100
-input 301 0x0000 0x0100
-input 330 0x0040 0x0100
-input 331 0x0000 0x0100
-input 360 0x0040 0x0100
-input 361 0x0000 0x0100
-input 390 0x0040 0x0100
-input 391 0x0000 0x0100
+input 0 0x0008 0x0000
+input 220 0x0008 0x0008
+input 240 0x0088 0x0008
+input 241 0x0008 0x0008
+input 270 0x0088 0x0008
+input 271 0x0008 0x0008
+input 300 0x0088 0x0008
+input 301 0x0008 0x0008
+input 330 0x0088 0x0008
+input 331 0x0008 0x0008
+input 360 0x0088 0x0008
+input 361 0x0008 0x0008
+input 390 0x0088 0x0008
+input 391 0x0008 0x0008
 
 # Full state hash at intervals, so a divergence reports its first frame.
-checkpoint 30 0x6EBA3BEEF341BAD4
-checkpoint 60 0xCCB4514E6F2A12A8
-checkpoint 90 0xCE213106D6C65D31
-checkpoint 120 0xD9C336E465D479A6
-checkpoint 150 0x4138A71B1ACD1B5C
-checkpoint 180 0x811FCB14E9D59F12
-checkpoint 210 0x38CA4771CED71C25
-checkpoint 240 0x7AC9419D3561DCD3
-checkpoint 270 0xEDE0F72A87D30461
-checkpoint 300 0x87CE7E12B23CAECD
-checkpoint 330 0x381BA1B87E2A8559
-checkpoint 360 0xBEEE88AF75A4019D
-checkpoint 390 0xC4F6165366099644
-checkpoint 420 0x96EDECE2652DB858
+checkpoint 30 0x664FFFA04D6D97B4
+checkpoint 60 0x266A0006D2673788
+checkpoint 90 0x54785E75FB15A081
+checkpoint 120 0xBFA4B5C943ADE40E
+checkpoint 150 0xCCC9C0A305EB1074
+checkpoint 180 0xB615AF97AE2387AA
+checkpoint 210 0xAB4957E9B5755FAD
+checkpoint 240 0x1E9417551CEE978D
+checkpoint 270 0xEBC3F4FA6CDB5492
+checkpoint 300 0xD2A5EC6472A2677F
+checkpoint 330 0xDED1166BC83245A0
+checkpoint 360 0x039A5330C06519D8
+checkpoint 390 0xD6D7A838302873FE
+checkpoint 420 0x553B6C5C6AA85FC1
 
 # Visible-state hash after the final frame. Excludes RNG position
 # so that a render-side effect drawing a number cannot fail this.
-final 0xEC8BF97D4C65A9D5
+final 0x52C0F45714001DCC

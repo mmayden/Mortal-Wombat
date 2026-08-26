@@ -25,7 +25,7 @@
 #  frame-data table "per character", and 4.6 cuts per-character variation. They
 #  are separate files anyway, because that is where the difference will go.
 
-schema_version = 1
+schema_version = 2
 
 [character]
 id           = "george"
@@ -52,7 +52,7 @@ pushbox           = { x = -14, y = -130, w = 28, h = 130 }
 #  Standing normals — DESIGN.md 4.5
 # ---------------------------------------------------------------------------
 
-[moves.low_punch]
+[moves.light_punch]
 input     = "LP"
 startup   = 4
 active    = 2
@@ -61,14 +61,34 @@ damage    = 3
 hitstun   = 12
 blockstun = 8
 
-[[moves.low_punch.hitboxes]]
+[[moves.light_punch.hitboxes]]
 frames = [5, 6]                  # startup 4, so active frames are 5 and 6
 x = 16
 y = -110
 w = 30
 h = 20
 
-[moves.high_punch]
+[moves.medium_punch]
+# Standing medium punch.
+# PROVISIONAL, like every other move here. Interpolated between the
+# light and heavy of the same limb -- halfway between two guesses is
+# no more of a guess than either, and DESIGN.md 4.4 calls all of these
+# starting points to tune. Check it in ds_framedata_viewer, not here.
+startup   = 5
+active    = 2
+recovery  = 12
+damage    = 5
+hitstun   = 15
+blockstun = 10
+
+[[moves.medium_punch.hitboxes]]
+frames = [6, 7]
+x = 17
+y = -115
+w = 34
+h = 22
+
+[moves.heavy_punch]
 input     = "HP"
 startup   = 7
 active    = 3
@@ -77,14 +97,14 @@ damage    = 8
 hitstun   = 18
 blockstun = 12
 
-[[moves.high_punch.hitboxes]]
+[[moves.heavy_punch.hitboxes]]
 frames = [8, 10]
 x = 18
 y = -120
 w = 38
 h = 24
 
-[moves.low_kick]
+[moves.light_kick]
 input     = "LK"
 startup   = 5
 active    = 3
@@ -93,14 +113,34 @@ damage    = 4
 hitstun   = 13
 blockstun = 9
 
-[[moves.low_kick.hitboxes]]
+[[moves.light_kick.hitboxes]]
 frames = [6, 8]
 x = 16
 y = -46
 w = 34
 h = 22
 
-[moves.high_kick]
+[moves.medium_kick]
+# Standing medium kick.
+# PROVISIONAL, like every other move here. Interpolated between the
+# light and heavy of the same limb -- halfway between two guesses is
+# no more of a guess than either, and DESIGN.md 4.4 calls all of these
+# starting points to tune. Check it in ds_framedata_viewer, not here.
+startup   = 7
+active    = 3
+recovery  = 15
+damage    = 6
+hitstun   = 16
+blockstun = 11
+
+[[moves.medium_kick.hitboxes]]
+frames = [8, 10]
+x = 17
+y = -81
+w = 39
+h = 24
+
+[moves.heavy_kick]
 input     = "HK"
 startup   = 9
 active    = 4
@@ -109,7 +149,7 @@ damage    = 9
 hitstun   = 20
 blockstun = 14
 
-[[moves.high_kick.hitboxes]]
+[[moves.heavy_kick.hitboxes]]
 frames = [10, 13]
 x = 18
 y = -116
@@ -123,7 +163,7 @@ h = 26
 #  boxes move: lower, and shorter in reach for the punches.
 # ---------------------------------------------------------------------------
 
-[moves.crouch_low_punch]
+[moves.crouch_light_punch]
 input            = "D+LP"
 startup          = 4
 active           = 2
@@ -133,14 +173,34 @@ hitstun          = 12
 blockstun        = 8
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
-[[moves.crouch_low_punch.hitboxes]]
+[[moves.crouch_light_punch.hitboxes]]
 frames = [5, 6]
 x = 16
 y = -62
 w = 28
 h = 18
 
-[moves.crouch_high_punch]
+[moves.crouch_medium_punch]
+# Crouching medium punch.
+# PROVISIONAL, like every other move here. Interpolated between the
+# light and heavy of the same limb -- halfway between two guesses is
+# no more of a guess than either, and DESIGN.md 4.4 calls all of these
+# starting points to tune. Check it in ds_framedata_viewer, not here.
+startup   = 5
+active    = 2
+recovery  = 12
+damage    = 5
+hitstun   = 15
+blockstun = 10
+
+[[moves.crouch_medium_punch.hitboxes]]
+frames = [6, 7]
+x = 17
+y = -68
+w = 31
+h = 20
+
+[moves.crouch_heavy_punch]
 input            = "D+HP"
 startup          = 7
 active           = 3
@@ -150,14 +210,14 @@ hitstun          = 18
 blockstun        = 12
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
-[[moves.crouch_high_punch.hitboxes]]
+[[moves.crouch_heavy_punch.hitboxes]]
 frames = [8, 10]
 x = 18
 y = -74
 w = 34
 h = 22
 
-[moves.crouch_low_kick]
+[moves.crouch_light_kick]
 input            = "D+LK"
 startup          = 5
 active           = 3
@@ -167,14 +227,34 @@ hitstun          = 13
 blockstun        = 9
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
-[[moves.crouch_low_kick.hitboxes]]
+[[moves.crouch_light_kick.hitboxes]]
 frames = [6, 8]
 x = 16
 y = -22
 w = 38
 h = 20
 
-[moves.crouch_high_kick]
+[moves.crouch_medium_kick]
+# Crouching medium kick.
+# PROVISIONAL, like every other move here. Interpolated between the
+# light and heavy of the same limb -- halfway between two guesses is
+# no more of a guess than either, and DESIGN.md 4.4 calls all of these
+# starting points to tune. Check it in ds_framedata_viewer, not here.
+startup   = 7
+active    = 3
+recovery  = 15
+damage    = 6
+hitstun   = 16
+blockstun = 11
+
+[[moves.crouch_medium_kick.hitboxes]]
+frames = [8, 10]
+x = 17
+y = -28
+w = 42
+h = 22
+
+[moves.crouch_heavy_kick]
 input            = "D+HK"
 startup          = 9
 active           = 4
@@ -184,7 +264,7 @@ hitstun          = 20
 blockstun        = 14
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
-[[moves.crouch_high_kick.hitboxes]]
+[[moves.crouch_heavy_kick.hitboxes]]
 frames = [10, 13]
 x = 18
 y = -34

@@ -51,10 +51,12 @@ MoveId requested_move(InputFrame current, InputFrame previous, bool crouching) {
     // before kicks and light before heavy, because the lighter option is the
     // one a player mashing both is more likely to be able to react out of.
     constexpr Binding BINDINGS[] = {
-        {Button::LowPunch, MoveId::StandLowPunch, MoveId::CrouchLowPunch},
-        {Button::HighPunch, MoveId::StandHighPunch, MoveId::CrouchHighPunch},
-        {Button::LowKick, MoveId::StandLowKick, MoveId::CrouchLowKick},
-        {Button::HighKick, MoveId::StandHighKick, MoveId::CrouchHighKick},
+        {Button::LightPunch, MoveId::StandLightPunch, MoveId::CrouchLightPunch},
+        {Button::MediumPunch, MoveId::StandMediumPunch, MoveId::CrouchMediumPunch},
+        {Button::HeavyPunch, MoveId::StandHeavyPunch, MoveId::CrouchHeavyPunch},
+        {Button::LightKick, MoveId::StandLightKick, MoveId::CrouchLightKick},
+        {Button::MediumKick, MoveId::StandMediumKick, MoveId::CrouchMediumKick},
+        {Button::HeavyKick, MoveId::StandHeavyKick, MoveId::CrouchHeavyKick},
     };
 
     for (const Binding& binding : BINDINGS) {
@@ -67,10 +69,12 @@ MoveId requested_move(InputFrame current, InputFrame previous, bool crouching) {
 
 // True when any attack button was newly pressed this frame.
 bool attack_pressed(InputFrame current, InputFrame previous) {
-    return input_pressed(current, previous, Button::LowPunch) ||
-           input_pressed(current, previous, Button::HighPunch) ||
-           input_pressed(current, previous, Button::LowKick) ||
-           input_pressed(current, previous, Button::HighKick);
+    return input_pressed(current, previous, Button::LightPunch) ||
+           input_pressed(current, previous, Button::MediumPunch) ||
+           input_pressed(current, previous, Button::HeavyPunch) ||
+           input_pressed(current, previous, Button::LightKick) ||
+           input_pressed(current, previous, Button::MediumKick) ||
+           input_pressed(current, previous, Button::HeavyKick);
 }
 
 // Gravity, derived from the character's jump_duration and jump_apex rather
@@ -279,23 +283,28 @@ void tick_fighter_state(Fighter& fighter, const CharacterData& character, InputF
         return;
     }
 
-    // Block is a button, not hold-back (DESIGN.md 4.1), so blocking and walking
-    // backward are never ambiguous and never need disentangling.
-    if (input_held(current, Button::Block)) {
-        fighter.state = FighterState::Blocking;
-        fighter.velocity_x = Fixed();
-        return;
-    }
+    // Input is in world space; forward depends on which way the fighter faces.
+    const int32_t horizontal = input_horizontal(current);
+    const int32_t facing_sign = static_cast<int32_t>(fighter.facing);
+
+    // Holding BACK guards (DESIGN.md 4.1). It is a flag rather than a state
+    // because guarding is not something a fighter does INSTEAD of walking
+    // backward -- it is a property of walking backward, and of crouching
+    // backward. Making it a state would mean choosing between retreating and
+    // defending on the same frame, which is not the trade the design asks for.
+    //
+    // Set here rather than at hit resolution because the defender's input is
+    // not available there, and threading it through would let hit resolution
+    // depend on which fighter was ticked first (ARCHITECTURE.md 5, step 3
+    // before step 6).
+    const bool holding_back = horizontal != 0 && horizontal != facing_sign;
+    fighter.guarding = holding_back ? 1 : 0;
 
     if (crouching) {
         fighter.state = FighterState::Crouch;
         fighter.velocity_x = Fixed();
         return;
     }
-
-    // Input is in world space; forward depends on which way the fighter faces.
-    const int32_t horizontal = input_horizontal(current);
-    const int32_t facing_sign = static_cast<int32_t>(fighter.facing);
 
     if (horizontal == 0) {
         fighter.state = FighterState::Idle;
@@ -415,7 +424,12 @@ void resolve_hits(GameState& state, const MatchData& data) {
             // the simpler default. The hit still costs the defender their
             // turn, which is what keeps attacking into a block a real
             // decision rather than a free one.
-            const bool blocked = defending.state == FighterState::Blocking;
+            // Guarding, not a Blocking state: blocking is holding back, and
+            // a fighter holding back is walking backward or crouching. There
+            // is no air blocking (ADR 0022) -- an airborne fighter's guard
+            // flag is cleared on takeoff and never set while off the ground,
+            // which is what makes jumping a committed gamble.
+            const bool blocked = defending.guarding != 0;
             outcomes[attacker] = Outcome{true, blocked, blocked ? 0 : move.damage,
                                          blocked ? move.blockstun : move.hitstun};
             break;
@@ -629,6 +643,12 @@ void advance_frame(GameState& state, const MatchData& data, InputPair current, I
     for (int32_t i = 0; i < 2; ++i) {
         Fighter& fighter = state.fighters[i];
         fighter.hit_confirm_frame = -1;
+
+        // Cleared every frame and set again only by the state machine, so a
+        // fighter who stops holding back stops guarding on the same frame --
+        // and an attacking, stunned or airborne fighter never guards at all,
+        // because those paths return before the guard is set.
+        fighter.guarding = 0;
 
         if (players_active) {
             tick_fighter_state(fighter, data.characters[i], current.players[i],

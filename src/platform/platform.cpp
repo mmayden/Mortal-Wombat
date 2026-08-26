@@ -26,19 +26,19 @@ struct Binding {
 };
 
 constexpr Binding P1_BINDINGS[] = {
-    {SDL_SCANCODE_W, Button::Up},       {SDL_SCANCODE_S, Button::Down},
-    {SDL_SCANCODE_A, Button::Left},     {SDL_SCANCODE_D, Button::Right},
-    {SDL_SCANCODE_F, Button::LowPunch}, {SDL_SCANCODE_G, Button::HighPunch},
-    {SDL_SCANCODE_C, Button::LowKick},  {SDL_SCANCODE_V, Button::HighKick},
-    {SDL_SCANCODE_B, Button::Block},
+    {SDL_SCANCODE_W, Button::Up},         {SDL_SCANCODE_S, Button::Down},
+    {SDL_SCANCODE_A, Button::Left},       {SDL_SCANCODE_D, Button::Right},
+    {SDL_SCANCODE_F, Button::LightPunch}, {SDL_SCANCODE_G, Button::MediumPunch},
+    {SDL_SCANCODE_H, Button::HeavyPunch}, {SDL_SCANCODE_C, Button::LightKick},
+    {SDL_SCANCODE_V, Button::MediumKick}, {SDL_SCANCODE_B, Button::HeavyKick},
 };
 
 constexpr Binding P2_BINDINGS[] = {
-    {SDL_SCANCODE_UP, Button::Up},         {SDL_SCANCODE_DOWN, Button::Down},
-    {SDL_SCANCODE_LEFT, Button::Left},     {SDL_SCANCODE_RIGHT, Button::Right},
-    {SDL_SCANCODE_KP_4, Button::LowPunch}, {SDL_SCANCODE_KP_5, Button::HighPunch},
-    {SDL_SCANCODE_KP_1, Button::LowKick},  {SDL_SCANCODE_KP_2, Button::HighKick},
-    {SDL_SCANCODE_KP_0, Button::Block},
+    {SDL_SCANCODE_UP, Button::Up},           {SDL_SCANCODE_DOWN, Button::Down},
+    {SDL_SCANCODE_LEFT, Button::Left},       {SDL_SCANCODE_RIGHT, Button::Right},
+    {SDL_SCANCODE_KP_4, Button::LightPunch}, {SDL_SCANCODE_KP_5, Button::MediumPunch},
+    {SDL_SCANCODE_KP_6, Button::HeavyPunch}, {SDL_SCANCODE_KP_1, Button::LightKick},
+    {SDL_SCANCODE_KP_2, Button::MediumKick}, {SDL_SCANCODE_KP_3, Button::HeavyKick},
 };
 
 // Gamepad bindings. DESIGN.md 6 puts local versus on two gamepads in the v1
@@ -59,12 +59,15 @@ constexpr GamepadBinding GAMEPAD_BINDINGS[] = {
     {SDL_GAMEPAD_BUTTON_DPAD_DOWN, Button::Down},
     {SDL_GAMEPAD_BUTTON_DPAD_LEFT, Button::Left},
     {SDL_GAMEPAD_BUTTON_DPAD_RIGHT, Button::Right},
-    {SDL_GAMEPAD_BUTTON_WEST, Button::LowPunch},    // X on Xbox layout
-    {SDL_GAMEPAD_BUTTON_NORTH, Button::HighPunch},  // Y
-    {SDL_GAMEPAD_BUTTON_SOUTH, Button::LowKick},    // A
-    {SDL_GAMEPAD_BUTTON_EAST, Button::HighKick},    // B
-    {SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER, Button::Block},
-    {SDL_GAMEPAD_BUTTON_LEFT_SHOULDER, Button::Block},
+    // The conventional six-button pad layout: punches on the top row, kicks on
+    // the bottom, heavies on the shoulders. DESIGN.md 4.1 -- four face buttons
+    // plus two shoulders, no special hardware and no claw grip.
+    {SDL_GAMEPAD_BUTTON_WEST, Button::LightPunch},            // X on Xbox layout
+    {SDL_GAMEPAD_BUTTON_NORTH, Button::MediumPunch},          // Y
+    {SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER, Button::HeavyPunch},  // RB
+    {SDL_GAMEPAD_BUTTON_SOUTH, Button::LightKick},            // A
+    {SDL_GAMEPAD_BUTTON_EAST, Button::MediumKick},            // B
+    {SDL_GAMEPAD_BUTTON_LEFT_SHOULDER, Button::HeavyKick},    // LB
 };
 
 // Past this, a stick counts as pressed. SDL reports axes over the full int16
@@ -103,10 +106,14 @@ InputFrame read_gamepad(SDL_Gamepad* pad) {
         frame = input_with(frame, Button::Down);
     }
 
-    // Triggers as an alternative block, for pads whose shoulders are stiff.
-    if (SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_LEFT_TRIGGER) >= STICK_THRESHOLD ||
-        SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) >= STICK_THRESHOLD) {
-        frame = input_with(frame, Button::Block);
+    // Triggers duplicate the heavies, for pads whose shoulders are stiff and
+    // for players who prefer them there. There is no block button to put on a
+    // trigger any more -- blocking is holding back (ADR 0021).
+    if (SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_RIGHT_TRIGGER) >= STICK_THRESHOLD) {
+        frame = input_with(frame, Button::HeavyPunch);
+    }
+    if (SDL_GetGamepadAxis(pad, SDL_GAMEPAD_AXIS_LEFT_TRIGGER) >= STICK_THRESHOLD) {
+        frame = input_with(frame, Button::HeavyKick);
     }
 
     return frame;

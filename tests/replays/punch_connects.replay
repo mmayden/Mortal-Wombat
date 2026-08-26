@@ -15,33 +15,33 @@ frames 420
 # input <frame> <p1_buttons> <p2_buttons> -- holds until the next line
 input 0 0x0008 0x0000
 input 220 0x0000 0x0000
-input 240 0x0020 0x0000
+input 240 0x0040 0x0000
 input 241 0x0000 0x0000
-input 280 0x0020 0x0000
+input 280 0x0040 0x0000
 input 281 0x0000 0x0000
-input 320 0x0020 0x0000
+input 320 0x0040 0x0000
 input 321 0x0000 0x0000
-input 360 0x0020 0x0000
+input 360 0x0040 0x0000
 input 361 0x0000 0x0000
-input 400 0x0020 0x0000
+input 400 0x0040 0x0000
 input 401 0x0000 0x0000
 
 # Full state hash at intervals, so a divergence reports its first frame.
-checkpoint 30 0xBC3FA4B726A2E387
-checkpoint 60 0x7D6F5DD57A2E3063
-checkpoint 90 0xBB95002410504942
-checkpoint 120 0x2D297D622C15222D
-checkpoint 150 0x5B341AE0499EA1D7
-checkpoint 180 0x14A796C191F74FC1
-checkpoint 210 0xF901E7FC52F76D66
-checkpoint 240 0xAF9F513ED8A13578
-checkpoint 270 0xCFD2002756050832
-checkpoint 300 0x0306EEC4B18146F8
-checkpoint 330 0xB99A1FA647ACB210
-checkpoint 360 0x0DAFD2F9C15E34F6
-checkpoint 390 0x35A198B9411A9ADF
-checkpoint 420 0x0D13C71A5E2CF649
+checkpoint 30 0x77D674122BC0EC27
+checkpoint 60 0x25F60C6CC86E3203
+checkpoint 90 0xD9C76BD26A7CBF52
+checkpoint 120 0x42CA0394306085BD
+checkpoint 150 0xD2987D1E624C4AE7
+checkpoint 180 0x65ABC5383DAADFD1
+checkpoint 210 0x83B9398B595AAA36
+checkpoint 240 0x02BD46A1458CAE48
+checkpoint 270 0x561CE17C89654EC2
+checkpoint 300 0xF2CBC5595CB4B5A3
+checkpoint 330 0x06BA551757E26D3B
+checkpoint 360 0x2A840819925D7C46
+checkpoint 390 0x020414301792926F
+checkpoint 420 0xB0F1095DAF09741E
 
 # Visible-state hash after the final frame. Excludes RNG position
 # so that a render-side effect drawing a number cannot fail this.
-final 0x86DB3BB29B6117DB
+final 0xF011F34C5BE93210

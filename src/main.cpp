@@ -69,11 +69,11 @@ std::string decode_input(ds::sim::InputFrame frame) {
         const char* name;
     };
     constexpr Named NAMES[] = {
-        {ds::sim::Button::Up, "Up"},       {ds::sim::Button::Down, "Down"},
-        {ds::sim::Button::Left, "Left"},   {ds::sim::Button::Right, "Right"},
-        {ds::sim::Button::LowPunch, "LP"}, {ds::sim::Button::HighPunch, "HP"},
-        {ds::sim::Button::LowKick, "LK"},  {ds::sim::Button::HighKick, "HK"},
-        {ds::sim::Button::Block, "BLOCK"},
+        {ds::sim::Button::Up, "Up"},         {ds::sim::Button::Down, "Down"},
+        {ds::sim::Button::Left, "Left"},     {ds::sim::Button::Right, "Right"},
+        {ds::sim::Button::LightPunch, "LP"}, {ds::sim::Button::MediumPunch, "MP"},
+        {ds::sim::Button::HeavyPunch, "HP"}, {ds::sim::Button::LightKick, "LK"},
+        {ds::sim::Button::MediumKick, "MK"}, {ds::sim::Button::HeavyKick, "HK"},
     };
 
     std::string held;

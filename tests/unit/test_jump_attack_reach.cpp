@@ -48,7 +48,7 @@ int32_t jump_in(int32_t gap, int32_t press_at) {
     for (int32_t frame = 0; frame < 80; ++frame) {
         InputPair input = NO_INPUT;
         if (frame == press_at) {
-            input.players[0] = input_with(NEUTRAL, Button::HighPunch);
+            input.players[0] = input_with(NEUTRAL, Button::HeavyPunch);
         }
         advance_frame(state, data(), input, NO_INPUT);
     }

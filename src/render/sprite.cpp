@@ -80,10 +80,10 @@ Color blend(Color from, Color to, float t) {
 // Kicks come out low, punches high. Only used to place the placeholder limb.
 bool is_kick(int32_t move_id) {
     switch (static_cast<ds::sim::MoveId>(move_id)) {
-        case ds::sim::MoveId::StandLowKick:
-        case ds::sim::MoveId::StandHighKick:
-        case ds::sim::MoveId::CrouchLowKick:
-        case ds::sim::MoveId::CrouchHighKick:
+        case ds::sim::MoveId::StandLightKick:
+        case ds::sim::MoveId::StandHeavyKick:
+        case ds::sim::MoveId::CrouchLightKick:
+        case ds::sim::MoveId::CrouchHeavyKick:
             return true;
         default:
             return false;
@@ -137,11 +137,21 @@ void PlaceholderManifest::fighter_sprites(const ds::sim::Fighter& fighter, int32
         body = brighten(body, 40);
     }
 
+    // Guarding tints regardless of which state carries it, since a fighter
+    // holding back is in WalkBackward or Crouch.
+    if (fighter.guarding != 0) {
+        body = blend(body, GUARD, 0.45f);
+    }
+
     switch (fighter.state) {
         case FighterState::Attack:
             break;
         case FighterState::Blocking:
-            body = blend(body, GUARD, 0.45f);
+            // Unreachable since blocking became hold-back (ADR 0021): a
+            // guarding fighter is walking backward or crouching, so the tint
+            // is driven by the guarding flag below instead. The case stays
+            // because the state is still in DESIGN.md 4.2's closed set and
+            // removing one from that set needs an ADR.
             break;
         case FighterState::Hitstun:
             body = blend(body, HIT_FLASH, 0.65f);
@@ -178,9 +188,13 @@ void PlaceholderManifest::fighter_sprites(const ds::sim::Fighter& fighter, int32
             out, untextured(limb_x, limb_y, LIMB_LENGTH, LIMB_THICKNESS, brighten(body, 30)));
     }
 
-    // A guard plate on the leading edge while blocking, so the defensive stance
+    // A guard plate on the leading edge while guarding, so the defensive stance
     // reads at a glance and not only by tint.
-    if (fighter.state == FighterState::Blocking || fighter.state == FighterState::Blockstun) {
+    //
+    // Driven by the guarding flag rather than a state, because holding back is
+    // simultaneously walking backward -- the fighter is retreating AND
+    // defending, and the picture has to say both.
+    if (fighter.guarding != 0 || fighter.state == FighterState::Blockstun) {
         const float facing = static_cast<float>(static_cast<int32_t>(fighter.facing));
         const float plate_x =
             facing > 0.0f ? BODY_WIDTH * 0.5f - GUARD_THICKNESS : -BODY_WIDTH * 0.5f;

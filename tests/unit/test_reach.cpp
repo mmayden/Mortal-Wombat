@@ -27,36 +27,47 @@ using ds::data::MoveReach;
 
 namespace {
 
-// Returns std::string, not const char*. A const char* silently converts to bool
-// on the way into doctest's message stream, so the name of the failing move
-// printed as "1" -- which is worse than printing nothing, because it looks like
-// data. Caught only because a deliberately broken hitbox was used to prove
-// these assertions could fail at all.
 std::string move_name(MoveId move) {
+    // Returns std::string, not const char*. A const char* silently converts to
+    // bool on the way into doctest's message stream, so the name of the failing
+    // move printed as "1" -- worse than printing nothing, because it looks like
+    // data.
+    //
+    // No default case either: an unhandled enumerator is a build error, so
+    // adding a MoveId cannot leave this reporting "unknown".
     switch (move) {
-        case MoveId::StandLowPunch:
-            return "stand low punch";
-        case MoveId::StandHighPunch:
-            return "stand high punch";
-        case MoveId::StandLowKick:
-            return "stand low kick";
-        case MoveId::StandHighKick:
-            return "stand high kick";
-        case MoveId::CrouchLowPunch:
-            return "crouch low punch";
-        case MoveId::CrouchHighPunch:
-            return "crouch high punch";
-        case MoveId::CrouchLowKick:
-            return "crouch low kick";
-        case MoveId::CrouchHighKick:
-            return "crouch high kick";
+        case MoveId::StandLightPunch:
+            return "stand light punch";
+        case MoveId::StandMediumPunch:
+            return "stand medium punch";
+        case MoveId::StandHeavyPunch:
+            return "stand heavy punch";
+        case MoveId::StandLightKick:
+            return "stand light kick";
+        case MoveId::StandMediumKick:
+            return "stand medium kick";
+        case MoveId::StandHeavyKick:
+            return "stand heavy kick";
+        case MoveId::CrouchLightPunch:
+            return "crouch light punch";
+        case MoveId::CrouchMediumPunch:
+            return "crouch medium punch";
+        case MoveId::CrouchHeavyPunch:
+            return "crouch heavy punch";
+        case MoveId::CrouchLightKick:
+            return "crouch light kick";
+        case MoveId::CrouchMediumKick:
+            return "crouch medium kick";
+        case MoveId::CrouchHeavyKick:
+            return "crouch heavy kick";
         case MoveId::JumpAttack:
             return "jump attack";
         case MoveId::Special:
             return "special";
-        default:
-            return "unknown";
+        case MoveId::Count:
+            break;
     }
+    return "invalid";
 }
 
 }  // namespace
@@ -128,12 +139,13 @@ TEST_CASE("Heavier attacks reach at least as far as lighter ones") {
         const CharacterData& defender = data.characters[1 - c];
 
         const int32_t light_punch =
-            measure_reach(attacker, defender, MoveId::StandLowPunch).furthest;
+            measure_reach(attacker, defender, MoveId::StandLightPunch).furthest;
         const int32_t heavy_punch =
-            measure_reach(attacker, defender, MoveId::StandHighPunch).furthest;
-        const int32_t light_kick = measure_reach(attacker, defender, MoveId::StandLowKick).furthest;
+            measure_reach(attacker, defender, MoveId::StandHeavyPunch).furthest;
+        const int32_t light_kick =
+            measure_reach(attacker, defender, MoveId::StandLightKick).furthest;
         const int32_t heavy_kick =
-            measure_reach(attacker, defender, MoveId::StandHighKick).furthest;
+            measure_reach(attacker, defender, MoveId::StandHeavyKick).furthest;
 
         CHECK(heavy_punch >= light_punch);
         CHECK(heavy_kick >= light_kick);

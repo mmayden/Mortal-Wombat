@@ -65,7 +65,7 @@ TEST_CASE("One player's attack input moves and acts only for that player") {
         const int32_t other = 1 - actor;
 
         GameState state = fighting_state();
-        advance_frame(state, data(), only(actor, Button::HighPunch), NO_INPUT);
+        advance_frame(state, data(), only(actor, Button::HeavyPunch), NO_INPUT);
 
         CHECK(state.fighters[actor].state == FighterState::Attack);
         CHECK(state.fighters[other].state != FighterState::Attack);

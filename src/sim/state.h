@@ -93,6 +93,19 @@ struct Fighter {
     // when the move ends, because the fighter can be interrupted out of a
     // move at any point.
     int32_t hit_already_landed;
+
+    // Whether the fighter is holding back this frame, and so would block an
+    // attack that connected. Set by the state machine from input; read by hit
+    // resolution, which has no access to input of its own.
+    //
+    // A flag rather than a FighterState, because guarding is a property of
+    // walking or crouching backward rather than an alternative to it -- the
+    // design asks a defender to choose a direction, not to choose between
+    // retreating and defending (DESIGN.md 4.1).
+    //
+    // int32_t rather than bool to keep the layout free of padding, which the
+    // state hash walks over.
+    int32_t guarding;
 };
 
 struct Projectile {
@@ -180,7 +193,7 @@ static_assert(sizeof(GameState) < 4096,
 // prove there is none: each struct's size must be exactly the sum of its
 // members. If one of these fails after you added a field, add or remove
 // explicit padding to restore it — do not raise the number.
-static_assert(sizeof(Fighter) == 14 * sizeof(int32_t), "Fighter has implicit padding");
+static_assert(sizeof(Fighter) == 15 * sizeof(int32_t), "Fighter has implicit padding");
 static_assert(sizeof(Projectile) == 8 * sizeof(int32_t), "Projectile has implicit padding");
 static_assert(sizeof(RngState) == 2 * sizeof(uint64_t), "RngState has implicit padding");
 static_assert(sizeof(GameState) == 2 * sizeof(Fighter) + MAX_PROJECTILES * sizeof(Projectile) +
