@@ -50,8 +50,6 @@ constexpr Color GUARD{0xC8, 0xD8, 0xF0, 0xFF};      // pale blue-white
 constexpr Color HIT_FLASH{0xFF, 0xF2, 0xC0, 0xFF};  // hot cream
 constexpr Color DOWNED{0x38, 0x34, 0x40, 0xFF};     // washed out
 
-constexpr float LIMB_LENGTH = 26.0f;
-constexpr float LIMB_THICKNESS = 12.0f;
 constexpr float GUARD_THICKNESS = 5.0f;
 
 uint8_t clamp_channel(int32_t value) {
@@ -75,19 +73,6 @@ Color blend(Color from, Color to, float t) {
             static_cast<float>(a) + (static_cast<float>(b) - static_cast<float>(a)) * t));
     };
     return Color{mix(from.r, to.r), mix(from.g, to.g), mix(from.b, to.b), from.a};
-}
-
-// Kicks come out low, punches high. Only used to place the placeholder limb.
-bool is_kick(int32_t move_id) {
-    switch (static_cast<ds::sim::MoveId>(move_id)) {
-        case ds::sim::MoveId::StandLightKick:
-        case ds::sim::MoveId::StandHeavyKick:
-        case ds::sim::MoveId::CrouchLightKick:
-        case ds::sim::MoveId::CrouchHeavyKick:
-            return true;
-        default:
-            return false;
-    }
 }
 
 SpriteQuad untextured(float x, float y, float w, float h, Color tint) {
