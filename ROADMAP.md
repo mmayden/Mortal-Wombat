@@ -46,7 +46,7 @@ the status.** Numbering matches that list.
 | Block, hitstun, blockstun, knockdown, wakeup all correct | **partial** — knockdown and wakeup are unbuilt |
 | Best-of-three rounds with timer and win conditions | **done** |
 | Local versus on two gamepads | **done** — two real pads, one per player, played 2026-08-24. Button-to-action mapping still unverified (`--input-test`, PLAYTEST §0) |
-| Training mode: hitbox display, frame data readout, input display | **1 of 3** — `F1` hitboxes; no readout, no on-screen input display |
+| Training mode: hitbox display, frame data readout, input display | **done** — all three on `F1` (ADR 0025) |
 | 50+ replay tests passing | **9 of 50** |
 | Desync CI green across three platforms | **done** |
 | **It is fun** | **unknown** — played, but the feel questions in `PLAYTEST.md` are unanswered |
@@ -260,6 +260,7 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Training readout | `F1` now shows state, move, frame, phase and held buttons — the other half of "I don't know what's happening" |
 | Readable attacks | The limb is the move's hitbox now, so all six buttons look different — reported as "I don't know the difference in the attacks" |
 | Frame-data viewer | `ds_framedata_viewer` draws the hitboxes, and `test_reach` asserts every move can connect |
 | Session recorder | `--record` captures a played session as a replay file, so a feel report stops being guesswork |

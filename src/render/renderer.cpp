@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 
 #include "render/camera.h"
+#include "render/readout.h"
 #include "sim/constants.h"
 #include "sim/sim.h"
 
@@ -253,7 +254,7 @@ void draw_hud(SDL_Renderer* renderer, const GameState& state) {
 
 void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
                 const ds::sim::MatchData& data, const Camera& view, const GameState& previous,
-                const GameState& current, float alpha, bool show_debug) {
+                const GameState& current, float alpha, bool show_debug, ds::sim::InputPair inputs) {
     const float camera = view.x;
 
     draw_stage(renderer, camera);
@@ -265,6 +266,7 @@ void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
 
     if (show_debug) {
         draw_debug_boxes(renderer, data, current, camera);
+        draw_readout(renderer, data, current, inputs);
     }
 
     draw_hud(renderer, current);

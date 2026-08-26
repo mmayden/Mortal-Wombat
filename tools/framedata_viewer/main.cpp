@@ -27,7 +27,7 @@
 #include "data/framedata_loader.h"
 #include "data/reach.h"
 #include "ds_log.h"
-#include "framedata_viewer/font.h"
+#include "render/font.h"
 #include "sim/constants.h"
 #include "sim/framedata.h"
 #include "sim/sim.h"
@@ -38,7 +38,7 @@ namespace {
 using namespace ds::sim;
 using ds::data::measure_reach;
 using ds::data::MoveReach;
-using ds::tools::draw_text;
+using ds::render::draw_text;
 
 constexpr int32_t VIEW_W = 640;
 constexpr int32_t VIEW_H = 360;
