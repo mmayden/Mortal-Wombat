@@ -59,6 +59,20 @@ MoveId requested_move(InputFrame current, InputFrame previous, bool crouching) {
         {Button::HeavyKick, MoveId::StandHeavyKick, MoveId::CrouchHeavyKick},
     };
 
+    // Throw is light punch and light kick together, which is the genre's
+    // convention and costs no button (ADR 0029).
+    //
+    // Checked BEFORE the table, or pressing both would simply produce a light
+    // punch -- the table returns on the first match and light punch is first.
+    if (input_pressed(current, previous, Button::LightPunch) &&
+        input_held(current, Button::LightKick)) {
+        return MoveId::Throw;
+    }
+    if (input_pressed(current, previous, Button::LightKick) &&
+        input_held(current, Button::LightPunch)) {
+        return MoveId::Throw;
+    }
+
     for (const Binding& binding : BINDINGS) {
         if (input_pressed(current, previous, binding.button)) {
             return crouching ? binding.crouching : binding.standing;
@@ -492,11 +506,24 @@ void resolve_hits(GameState& state, const MatchData& data) {
             // This is what gives offence an axis. Without it, holding back
             // answers everything and there is nothing to guess -- which is
             // exactly the hole a knockdown loop would otherwise open into.
+            // A throw cannot be blocked at all -- that is the entire reason it
+            // exists (ADR 0029). It is what stops a defender crouch-blocking
+            // and simply waiting, which attack heights alone did not answer.
+            //
+            // It also cannot catch an airborne fighter. Jumping beats a throw,
+            // which is the third corner of the triangle: attack beats throw,
+            // throw beats block, block beats attack.
+            const bool is_throw = static_cast<MoveId>(attacking.move_id) == MoveId::Throw;
+            if (is_throw && (defending.state == FighterState::Airborne ||
+                             defending.state == FighterState::JumpStartup)) {
+                continue;
+            }
+
             const bool crouching = defending.state == FighterState::Crouch;
             const bool stance_covers = move.height == AttackHeight::Mid ||
                                        (move.height == AttackHeight::Low && crouching) ||
                                        (move.height == AttackHeight::Overhead && !crouching);
-            const bool blocked = defending.guarding != 0 && stance_covers;
+            const bool blocked = !is_throw && defending.guarding != 0 && stance_covers;
 
             // A clean hit on an AIRBORNE fighter knocks down softly whatever
             // the move says, because they have nowhere to land but the floor.

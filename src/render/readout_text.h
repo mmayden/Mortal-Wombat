@@ -63,6 +63,8 @@ inline const char* readout_move_name(ds::sim::MoveId move) {
             return "JUMP ATK";
         case ds::sim::MoveId::Special:
             return "SPECIAL";
+        case ds::sim::MoveId::Throw:
+            return "THROW";
         case ds::sim::MoveId::Count:
             break;
     }

@@ -1,6 +1,6 @@
 # Frame Data Schema
 
-> **Schema version:** 4
+> **Schema version:** 5
 > **Status:** contract — binding on both consumers
 > **Consumers:** `src/sim/` (read) and `tools/framedata_editor/` (read + write)
 
@@ -20,6 +20,7 @@ coordination failure is silent.
 | Version | Date | Change |
 |---|---|---|
 | 1 | 2026-08-22 | Initial schema |
+| 5 | 2026-08-26 | Throws (ADR 0029). A fifteenth required move key, `throw`, **appended** to the move list rather than inserted — tools and tests iterate `0..Count`, so a mid-list insert would renumber everything after it. |
 | 4 | 2026-08-26 | Attack heights (ADR 0028). Optional per-move `height` key: `"mid"` (the default), `"low"` or `"overhead"`. Same reasoning as v3 on the bump — a v3 reader would ignore a key that changes whether a move can be blocked. |
 | 3 | 2026-08-26 | Knockdown (ADR 0026). Optional per-move `knockdown` key: `"none"` (the default), `"soft"` or `"hard"`. A v2 file loads unchanged in meaning — every move simply causes no knockdown — but the version still bumps, because a v2 *reader* would silently ignore a key that changes what a move does. |
 | 2 | 2026-08-26 | Six attack buttons (ADR 0021). Four new required move keys per character — `medium_punch`, `medium_kick` and their crouching variants — and `low_`/`high_` renamed to `light_`/`heavy_` throughout. A v1 file no longer loads. |
@@ -57,7 +58,7 @@ ADR 0002 makes that a desync.
 ## Top-level document
 
 ```toml
-schema_version = 4
+schema_version = 5
 
 [character]
 id           = "george"
@@ -106,8 +107,9 @@ a typo would otherwise leave a character silently missing a move.
 | `crouch_heavy_kick` | Crouching HK |
 | `jump_attack` | Jump attack |
 | `special` | Special |
+| `throw` | Throw — light punch + light kick, unblockable |
 
-**All fourteen are required.** A file missing one fails to load.
+**All fifteen are required.** A file missing one fails to load.
 
 ### `height` — optional, per move
 

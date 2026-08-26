@@ -288,6 +288,13 @@ gap between its best and second-best use, and keeping that gap honest is
 permanent work, not a launch decision. One developer with no live-service patch
 cadence has to be able to audit it by hand. Which three is open.
 
+**Throws are unblockable, and that is what they are for.** Light punch and
+light kick together. Short reach, fast startup, long recovery, and they cannot
+catch an airborne fighter — so attacking beats a throw, a throw beats blocking,
+and blocking beats attacking. A throw causes a *soft* knockdown and cannot be
+teched: the defender's answer is to press a button or jump, not to press throw
+(ADR 0029).
+
 **Attacks come at three heights, and the stance must match.** A *mid* is
 blocked standing or crouching; a *low* must be blocked crouching; an *overhead*
 must be blocked standing. Crouching kicks are lows and jump attacks are

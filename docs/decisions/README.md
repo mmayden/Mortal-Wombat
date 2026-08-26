@@ -41,6 +41,7 @@ record of what was believed, and why, is most of the value.
 | 0026 | **Knockdown and wakeup** — soft and hard, with a timing choice on soft | [0026](0026-knockdown-and-wakeup.md) |
 | 0027 | **Popular consensus is a legitimate input**, not a shortcut (clarifies 0019) | [0027](0027-consensus-is-a-legitimate-input.md) |
 | 0028 | **Attack heights** — mid, low and overhead; the stance must match | [0028](0028-attack-heights.md) |
+| 0029 | **Throws** — unblockable, short, and not tech-able | [0029](0029-throws.md) |
 
 ADRs 0001–0013 live in one file because they were decided together, as the
 project's founding stack decision. That file also carries the scope tier, the

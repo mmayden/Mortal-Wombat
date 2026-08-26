@@ -42,12 +42,12 @@ the status.** Numbering matches that list.
 
 | | Status |
 |---|---|
-| Two characters with the full v1 moveset | **13 of 14** — all six buttons standing and crouching, plus the jump attack. The special exists as data but has no input to trigger it |
+| Two characters with the full v1 moveset | **14 of 15** — all six buttons standing and crouching, plus the jump attack. The special exists as data but has no input to trigger it |
 | Block, hitstun, blockstun, knockdown, wakeup all correct | **done** — knockdown and wakeup landed 2026-08-26 (ADR 0026) |
 | Best-of-three rounds with timer and win conditions | **done** |
 | Local versus on two gamepads | **done** — two real pads, one per player, played 2026-08-24. Button-to-action mapping still unverified (`--input-test`, PLAYTEST §0) |
 | Training mode: hitbox display, frame data readout, input display | **done** — all three on `F1` (ADR 0025) |
-| 50+ replay tests passing | **10 of 50** |
+| 50+ replay tests passing | **11 of 50** |
 | Desync CI green across three platforms | **done** |
 | **It is fun** | **unknown** — played, but the feel questions in `PLAYTEST.md` are unanswered |
 
@@ -212,6 +212,7 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Throws | Unblockable, short-ranged, not tech-able. Closes the rock-paper-scissors: attack beats throw, throw beats block, block beats attack |
 | Attack heights | Mid, low and overhead, with the stance required to match. Gives the knockdown loop something to threaten with |
 | Knockdown and wakeup | Soft and hard, with a timing choice on soft. `FighterState::Blocking` is now the only unreachable state |
 | Training readout | `F1` now shows state, move, frame, phase and held buttons — the other half of "I don't know what's happening" |

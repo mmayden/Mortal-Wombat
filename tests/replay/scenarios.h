@@ -176,6 +176,22 @@ inline InputPair low_vs_standing_block(int32_t frame) {
     return InputPair{{p1, p2}};
 }
 
+// Player one throws; player two holds back and is thrown anyway.
+//
+// Added with the feature rather than after it, because the height change taught
+// the lesson the hard way: every recording blocked a mid, so not one of them
+// changed and the new rule went into the regression net uncovered.
+inline InputPair throw_vs_block(int32_t frame) {
+    InputFrame p1 = input_with(NEUTRAL, Button::Right);
+    if (frame >= APPROACH_UNTIL && frame % 40 == 0) {
+        p1 = input_with(input_with(p1, Button::LightPunch), Button::LightKick);
+    }
+
+    // Guarding, and it will not help. Back for player two is Right.
+    const InputFrame p2 = frame < APPROACH_UNTIL ? NEUTRAL : input_with(NEUTRAL, Button::Right);
+    return InputPair{{p1, p2}};
+}
+
 // Both fighters close and mash high punch. Pins down trades -- that a
 // simultaneous hit lands for both, rather than the lower-indexed player
 // silently winning every exchange.
@@ -231,6 +247,8 @@ inline constexpr Scenario SCENARIOS[] = {
      &scripts::attack_into_block},
     {"low_vs_standing_block", "Player 1 sweeps; player 2 stands and blocks, and is hit anyway.",
      8821u, 420, &scripts::low_vs_standing_block},
+    {"throw_vs_block", "Player 1 throws a guarding player 2. Blocking does not help.", 4412u, 420,
+     &scripts::throw_vs_block},
     {"mutual_pressure", "Both fighters punch from close range. Trades.", 8642u, 420,
      &scripts::mutual_pressure},
     {"jump_attack", "Player 1 jumps in and attacks from the air. Fixed arcs.", 13579u, 480,

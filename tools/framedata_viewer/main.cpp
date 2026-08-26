@@ -84,6 +84,7 @@ const char* move_name(MoveId move) {
         case MoveId::CrouchHeavyKick: return "CROUCH HK";
         case MoveId::JumpAttack: return "JUMP ATTACK";
         case MoveId::Special: return "SPECIAL";
+        case MoveId::Throw: return "THROW";
         case MoveId::Count: break;
     }
     return "INVALID";
