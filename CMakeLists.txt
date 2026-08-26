@@ -276,6 +276,7 @@ add_executable(divided_states
     src/main.cpp
     src/platform/platform.cpp
     src/platform/session_recorder.cpp
+    src/render/readout.cpp
     src/render/renderer.cpp)
 
 target_link_libraries(divided_states

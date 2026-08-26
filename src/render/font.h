@@ -1,22 +1,24 @@
 // A 5x7 bitmap font, drawn as rectangles.
 //
 // The project has no text-rendering path. ADR 0012 plans Dear ImGui for debug
-// UI and it is not integrated, and AGENTS rule 4 forbids adding a dependency
-// without asking -- so this tool would otherwise have had to print everything
-// to a console the user is not looking at while they study a hitbox.
+// UI and it is not integrated; ADR 0025 records why this stayed instead of
+// pulling that in, and what would make the trade go the other way.
 //
 // Forty-odd glyphs of five bits by seven rows is not a font system. It is the
-// smallest thing that makes the tool answer its own question on screen. If it
-// proves useful enough to want in the game's training mode, promoting it is a
-// decision for ADR 0012 to make, not something to assume by moving the file.
+// smallest thing that puts a move's name and its frame count on screen, which
+// is what a player needs to tell six attack buttons apart.
+//
+// It began in tools/framedata_viewer and was promoted here when a playtester
+// reported not being able to tell the attacks apart. That promotion was the
+// decision ADR 0012 was owed, so it got one.
 #pragma once
-
-#include <SDL3/SDL.h>
 
 #include <cstdint>
 #include <string>
 
-namespace ds::tools {
+#include <SDL3/SDL.h>
+
+namespace ds::render {
 
 inline constexpr int32_t GLYPH_W = 5;
 inline constexpr int32_t GLYPH_H = 7;
@@ -116,4 +118,4 @@ inline float draw_text(SDL_Renderer* renderer, float x, float y, const std::stri
     return pen - x;
 }
 
-}  // namespace ds::tools
+}  // namespace ds::render

@@ -143,6 +143,10 @@ struct Options {
     // report like "the other character slid toward me" reproducible instead of
     // a thing that has to be guessed at from a description.
     const char* record = nullptr;
+
+    // Start with the F1 overlay already on. Mostly so --screenshot can capture
+    // it: a diagnostic view nobody can photograph is one nobody reviews.
+    bool debug = false;
 };
 
 Options parse_options(int argc, char** argv) {
@@ -156,6 +160,8 @@ Options parse_options(int argc, char** argv) {
             options.input_test = true;
         } else if (std::strcmp(argv[i], "--record") == 0 && i + 1 < argc) {
             options.record = argv[++i];
+        } else if (std::strcmp(argv[i], "--debug") == 0) {
+            options.debug = true;
         } else {
             DS_LOG_WARN("ignoring unrecognized argument: %s", argv[i]);
         }
@@ -197,6 +203,8 @@ int main(int argc, char** argv) {
 
     // Render-layer state: the view is not part of GameState and is never
     // rolled back (ARCHITECTURE.md 3).
+    platform.show_debug = options.debug;
+
     ds::render::Camera camera{};
 
     ds::sim::GameState state{};
@@ -270,7 +278,7 @@ int main(int argc, char** argv) {
 
         ds::render::camera_update(camera, previous_state, state, alpha);
         ds::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
-                               state, alpha, platform.show_debug);
+                               state, alpha, platform.show_debug, current_input);
         ds::platform::present(platform);
         ++frames_rendered;
 
@@ -288,7 +296,7 @@ int main(int argc, char** argv) {
         // hitbox look inactive on the frame it connected.
         ds::render::camera_update(camera, previous_state, state, 0.0f);
         ds::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
-                               state, 0.0f, platform.show_debug);
+                               state, 0.0f, platform.show_debug, current_input);
 
         if (!ds::platform::save_screenshot(platform, options.screenshot)) {
             ds::platform::shutdown(platform);

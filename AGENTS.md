@@ -37,6 +37,7 @@ does that for you; every command below is run through it.
 | Headless boot (N sim frames) | `divided_states.exe --frames 600` |
 | Capture a frame | `divided_states.exe --frames 200 --screenshot out.bmp` |
 | **Record a played session** | `divided_states.exe --record session.replay` |
+| Start with the overlay on | `divided_states.exe --debug` |
 | **View frame data** | `build/debug/bin/ds_framedata_viewer.exe` |
 | Reach report (headless) | `ds_framedata_viewer.exe --report` |
 
@@ -75,7 +76,13 @@ to guess at — two camera defects were chased by guessing before this existed.
 Drop the file into `tests/replays/`, add its name to the scenario list, and a
 bug someone found by playing becomes a regression test.
 
-`F1` toggles the hitbox overlay — blue hurtboxes, red hitboxes (filled while
+`F1` toggles the whole diagnostic layer: hitboxes, and a per-player readout
+showing state, the current move with its frame count and phase, that move's
+frame data, and which buttons are held. That is all three training-mode lines
+in `DESIGN.md` §6. Text is drawn with a built-in 5x7 bitmap font rather than
+Dear ImGui — ADR 0025 says why, and what would change it.
+
+The hitbox overlay — blue hurtboxes, red hitboxes (filled while
 active), yellow pushboxes. It is the fastest way to answer "why did that
 miss?".
 

@@ -13,6 +13,7 @@
 #include "render/camera.h"
 #include "render/sprite.h"
 #include "sim/framedata.h"
+#include "sim/input.h"
 #include "sim/state.h"
 
 struct SDL_Renderer;
@@ -37,6 +38,6 @@ namespace ds::render {
 void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
                 const ds::sim::MatchData& data, const Camera& camera,
                 const ds::sim::GameState& previous, const ds::sim::GameState& current, float alpha,
-                bool show_debug);
+                bool show_debug, ds::sim::InputPair inputs);
 
 }  // namespace ds::render
