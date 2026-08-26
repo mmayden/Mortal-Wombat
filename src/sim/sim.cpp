@@ -248,6 +248,53 @@ void tick_fighter_state(Fighter& fighter, const CharacterData& character, InputF
         return;
     }
 
+    // Knockdown and the rise own the fighter completely. ADR 0026.
+    //
+    // Checked before airborne, because being knocked out of the air lands you
+    // on the floor -- the knockdown replaces the jump rather than waiting for
+    // it to finish.
+    if (fighter.state == FighterState::Knockdown) {
+        fighter.velocity_x = Fixed();
+        fighter.velocity_y = Fixed();
+        fighter.y = Fixed::from_int(GROUND_Y);
+
+        // Not decremented here. tick_timers counts state_frames_remaining down
+        // at step 8, after this runs -- doing it here as well made every
+        // knockdown last half as long as its constant said, which the test
+        // caught and reading never would have.
+        if (fighter.state_frames_remaining > 0) {
+            return;
+        }
+
+        // The wakeup choice, taken on the frame the fighter would otherwise
+        // rise. Holding DOWN delays; anything else gets up now.
+        //
+        // Only once, and only on a soft knockdown. Without the
+        // already-delayed flag a player could hold down forever and never be
+        // vulnerable, which is not a choice, it is a hiding place.
+        if (fighter.knockdown_hard == 0 && fighter.wakeup_delayed == 0 &&
+            input_vertical(current) > 0) {
+            fighter.wakeup_delayed = 1;
+            fighter.state_frames_remaining = WAKEUP_DELAY_FRAMES;
+            return;
+        }
+
+        fighter.state = FighterState::Wakeup;
+        fighter.state_frames_remaining = WAKEUP_FRAMES;
+        return;
+    }
+
+    if (fighter.state == FighterState::Wakeup) {
+        fighter.velocity_x = Fixed();
+        if (fighter.state_frames_remaining > 0) {
+            return;
+        }
+        fighter.state = FighterState::Idle;
+        fighter.knockdown_hard = 0;
+        fighter.wakeup_delayed = 0;
+        return;
+    }
+
     // Airborne states own the fighter completely -- a ground input cannot
     // interrupt a jump, which is what "committed at takeoff" means.
     if (tick_airborne(fighter, character, current, previous)) {
@@ -378,6 +425,7 @@ void resolve_hits(GameState& state, const MatchData& data) {
         bool blocked;
         int32_t damage;
         int32_t stun;
+        KnockdownKind knockdown;
     };
     Outcome outcomes[2] = {};
 
@@ -398,6 +446,14 @@ void resolve_hits(GameState& state, const MatchData& data) {
         // hitbox, and here it could not connect. "Attacking" is a move being
         // active, not a state the fighter is in.
         if (attacking.move_id < 0 || attacking.hit_already_landed != 0) {
+            continue;
+        }
+
+        // A grounded or rising fighter cannot be hit. ADR 0026 -- this is the
+        // rule that creates okizeme: an attacker who could simply keep hitting
+        // would have nothing to set up, and a rise that could be hit would
+        // leave the defender with no option at all.
+        if (defending.state == FighterState::Knockdown || defending.state == FighterState::Wakeup) {
             continue;
         }
 
@@ -430,8 +486,23 @@ void resolve_hits(GameState& state, const MatchData& data) {
             // flag is cleared on takeoff and never set while off the ground,
             // which is what makes jumping a committed gamble.
             const bool blocked = defending.guarding != 0;
+
+            // A clean hit on an AIRBORNE fighter knocks down softly whatever
+            // the move says, because they have nowhere to land but the floor.
+            // That is a property of the defender's state, not of the attack,
+            // which is why it is decided here rather than in the frame data.
+            //
+            // A blocked hit never knocks down. Blocking is supposed to be the
+            // thing that stops this happening to you.
+            KnockdownKind knockdown = KnockdownKind::None;
+            if (!blocked) {
+                const bool airborne = defending.state == FighterState::Airborne ||
+                                      defending.state == FighterState::JumpStartup;
+                knockdown = airborne ? KnockdownKind::Soft : move.knockdown;
+            }
+
             outcomes[attacker] = Outcome{true, blocked, blocked ? 0 : move.damage,
-                                         blocked ? move.blockstun : move.hitstun};
+                                         blocked ? move.blockstun : move.hitstun, knockdown};
             break;
         }
     }
@@ -462,6 +533,19 @@ void resolve_hits(GameState& state, const MatchData& data) {
             // moment hitstun ended, from the frame they left off.
             hurt.move_id = -1;
             hurt.move_frame = 0;
+
+            // Knockdown replaces hitstun rather than following it. ADR 0026:
+            // the floor IS the stun, and a fighter who served hitstun first and
+            // then fell over would be punished twice for one hit.
+            if (outcomes[attacker].knockdown != KnockdownKind::None) {
+                hurt.state = FighterState::Knockdown;
+                hurt.state_frames_remaining = KNOCKDOWN_FRAMES;
+                hurt.hitstun_remaining = 0;
+                hurt.knockdown_hard = outcomes[attacker].knockdown == KnockdownKind::Hard ? 1 : 0;
+                hurt.wakeup_delayed = 0;
+                hurt.velocity_y = Fixed();
+                hurt.y = Fixed::from_int(GROUND_Y);
+            }
         }
         hurt.velocity_x = Fixed();
     }

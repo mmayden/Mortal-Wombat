@@ -66,20 +66,18 @@ every system multiplies what a new player holds in their head. If playtesting
 shows the defender needs more escape, a restricted roll is the first thing to
 try.
 
-## Why this, and not simply "what SF6 does"
+## Why this shape
 
-The author asked for community consensus and a fit with a grounded, SF6-adjacent
-game rather than an anime one. Both are good instincts and neither is the reason
-this decision is what it is.
+**Community consensus is the starting point, and it points here.** Timing choice
+is what most modern 2D fighters settled on, and ADR 0027 records why that is a
+legitimate basis for this project rather than a shortcut around one.
 
-**ADR 0019 forbids adopting a mechanic because it is popular.** The test is what
-constraint it releases, whether the role is already filled, and whether it serves
-§3. Timing choice passes on its own terms: the attacker's commitment still pays,
-because they retain advantage and the defender is still guessing — while the
-defender makes a decision rather than watching. Fixed timing maximises the payoff
-but makes being knocked down passive, and a game whose thesis is *"was that worth
-committing to?"* should not have a state where one player has nothing to commit
-to at all.
+It also passes the ADR 0019 test on its own terms, which is what makes it safe
+to adopt: the attacker's commitment still pays, because they keep advantage and
+the defender is still guessing, while the defender makes a decision rather than
+watching. Fixed timing maximises the payoff but makes being knocked down
+passive, and a game whose thesis is *"was that worth committing to?"* should not
+have a state where one player has nothing to commit to at all.
 
 **One factual caution.** "Timing choice" is the Street Fighter IV lineage;
 quick rise, with delayed wakeup added in Ultra. Later Street Fighters lean more

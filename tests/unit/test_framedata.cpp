@@ -79,7 +79,7 @@ h = 20
                                                      : moves_override;
 
     return std::string(R"(
-schema_version = 2
+schema_version = 3
 [character]
 id = "__probe"
 display_name = "Probe"
@@ -290,7 +290,7 @@ h = 20
 TEST_CASE("Validation rejects a wrong schema version") {
     std::string error;
     std::string body = valid_probe();
-    body.replace(body.find("schema_version = 2"), 18, "schema_version = 99");
+    body.replace(body.find("schema_version = 3"), 18, "schema_version = 99");
 
     const LoadResult result = load_text(body, error);
     CHECK(result == LoadResult::BadSchemaVersion);

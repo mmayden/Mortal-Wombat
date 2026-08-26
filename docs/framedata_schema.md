@@ -1,6 +1,6 @@
 # Frame Data Schema
 
-> **Schema version:** 2
+> **Schema version:** 3
 > **Status:** contract — binding on both consumers
 > **Consumers:** `src/sim/` (read) and `tools/framedata_editor/` (read + write)
 
@@ -20,6 +20,7 @@ coordination failure is silent.
 | Version | Date | Change |
 |---|---|---|
 | 1 | 2026-08-22 | Initial schema |
+| 3 | 2026-08-26 | Knockdown (ADR 0026). Optional per-move `knockdown` key: `"none"` (the default), `"soft"` or `"hard"`. A v2 file loads unchanged in meaning — every move simply causes no knockdown — but the version still bumps, because a v2 *reader* would silently ignore a key that changes what a move does. |
 | 2 | 2026-08-26 | Six attack buttons (ADR 0021). Four new required move keys per character — `medium_punch`, `medium_kick` and their crouching variants — and `low_`/`high_` renamed to `light_`/`heavy_` throughout. A v1 file no longer loads. |
 
 ---
@@ -55,7 +56,7 @@ ADR 0002 makes that a desync.
 ## Top-level document
 
 ```toml
-schema_version = 2
+schema_version = 3
 
 [character]
 id           = "george"
@@ -106,6 +107,25 @@ a typo would otherwise leave a character silently missing a move.
 | `special` | Special |
 
 **All fourteen are required.** A file missing one fails to load.
+
+### `knockdown` — optional, per move
+
+`"none"` (the default), `"soft"` or `"hard"`. ADR 0026.
+
+Spelled rather than numbered, because `knockdown = "hard"` says what it means at
+the point of use where a `2` would send the reader to a header. Optional because
+most moves do not knock down, and requiring the line on all fourteen would be
+noise people stop reading.
+
+A **soft** knockdown lets the defender choose when to rise; a **hard** one is
+fixed timing and the cleaner setup for the attacker. Any clean hit on an
+*airborne* fighter is a soft knockdown whatever this key says — that is a
+property of the defender's state, not of the attack, so it lives in the
+simulation rather than in the data.
+
+The shipped assignment follows the convention nearly every 2D fighter shares:
+the sweep (`crouch_heavy_kick`) and the `special` are hard, everything else on
+the ground is none.
 
 The names are **light / medium / heavy**, not low / mid / high. Attack *height*
 is a separate axis and is still undecided (`drawing-board/RULESET.md` decision

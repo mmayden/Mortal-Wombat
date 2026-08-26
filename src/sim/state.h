@@ -106,6 +106,15 @@ struct Fighter {
     // int32_t rather than bool to keep the layout free of padding, which the
     // state hash walks over.
     int32_t guarding;
+
+    // Whether the knockdown being served allows a wakeup choice, and whether it
+    // has already been used. ADR 0026: a soft knockdown lets the defender rise
+    // quick or delayed, a hard one does not.
+    //
+    // Two fields rather than one packed value, because this is read in the
+    // middle of the state machine and a reader should not have to decode it.
+    int32_t knockdown_hard;
+    int32_t wakeup_delayed;
 };
 
 struct Projectile {
@@ -193,7 +202,7 @@ static_assert(sizeof(GameState) < 4096,
 // prove there is none: each struct's size must be exactly the sum of its
 // members. If one of these fails after you added a field, add or remove
 // explicit padding to restore it — do not raise the number.
-static_assert(sizeof(Fighter) == 15 * sizeof(int32_t), "Fighter has implicit padding");
+static_assert(sizeof(Fighter) == 17 * sizeof(int32_t), "Fighter has implicit padding");
 static_assert(sizeof(Projectile) == 8 * sizeof(int32_t), "Projectile has implicit padding");
 static_assert(sizeof(RngState) == 2 * sizeof(uint64_t), "RngState has implicit padding");
 static_assert(sizeof(GameState) == 2 * sizeof(Fighter) + MAX_PROJECTILES * sizeof(Projectile) +

@@ -50,7 +50,7 @@ TEST_CASE("GameState has no implicit padding") {
     // The desync test hashes this struct byte by byte across three platforms.
     // Padding bytes are uninitialized, so any implicit padding would differ
     // between machines and report a desync where behavior actually matched.
-    CHECK(sizeof(Fighter) == 15 * sizeof(int32_t));
+    CHECK(sizeof(Fighter) == 17 * sizeof(int32_t));
     CHECK(sizeof(Projectile) == 8 * sizeof(int32_t));
     CHECK(sizeof(GameState) == 2 * sizeof(Fighter) + MAX_PROJECTILES * sizeof(Projectile) +
                                    8 * sizeof(int32_t) + sizeof(RngState));

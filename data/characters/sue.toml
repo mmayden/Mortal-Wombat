@@ -31,7 +31,7 @@
 #  the antagonist; that is a hint, not a decision, and nothing here depends on
 #  it.
 
-schema_version = 2
+schema_version = 3
 
 [character]
 id           = "sue"
@@ -268,6 +268,8 @@ recovery         = 20
 damage           = 9
 hitstun          = 20
 blockstun        = 14
+knockdown = "hard"          # A sweep. Hard knockdown -- the convention nearly every 2D fighter shares,
+# and it is slow enough (9 startup, 20 recovery) to be a real commitment.
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
 [[moves.crouch_heavy_kick.hitboxes]]
@@ -334,6 +336,8 @@ damage    = 6
 hitstun   = 18
 blockstun = 12
 
+knockdown = "hard"          # Hard knockdown. The slowest thing in the moveset at 12 startup and 24
+# recovery, so it earns the cleaner setup (ADR 0026).
 [[moves.special.hitboxes]]
 frames = [13, 16]
 x = 20

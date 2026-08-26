@@ -86,6 +86,21 @@ struct HitboxSpan {
 // than silently dropping boxes.
 inline constexpr int32_t MAX_HITBOXES_PER_MOVE = 4;
 
+// What a move does to a standing opponent when it connects. ADR 0026.
+//
+// Hard knockdowns are the reward for landing something harder to land, which is
+// what gives "go for the knockdown" a gradient instead of a switch. The
+// assignment follows the convention almost every 2D fighter shares: sweeps and
+// the special knock down hard, everything else on the ground does not, and any
+// clean hit on an AIRBORNE fighter is a soft knockdown regardless of the move
+// (handled in sim.cpp, since it is a property of the defender's state rather
+// than of the attack).
+enum class KnockdownKind : int32_t {
+    None = 0,
+    Soft,  // The defender chooses when to rise.
+    Hard,  // Fixed timing; the attacker gets the cleaner setup.
+};
+
 struct MoveData {
     int32_t startup;
     int32_t active;
@@ -97,6 +112,8 @@ struct MoveData {
 
     // Replaces the character's default hurtbox for this move's duration.
     // Empty (w or h <= 0) means the default applies.
+    KnockdownKind knockdown;
+
     Box hurtbox_override;
 
     HitboxSpan hitboxes[MAX_HITBOXES_PER_MOVE];
