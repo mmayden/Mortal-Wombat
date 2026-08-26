@@ -20,7 +20,7 @@ using ds::sim::MoveId;
 // this and updating tools/framedata_editor/ in the same commit (AGENTS.md
 // rule 5) -- a schema change that lands in only one consumer produces files the
 // other cannot read, with no build error to catch it.
-constexpr int64_t SUPPORTED_SCHEMA_VERSION = 3;
+constexpr int64_t SUPPORTED_SCHEMA_VERSION = 4;
 
 // Table key for each MoveId, in enum order. The loader and the editor both
 // address moves by these strings, so they are part of the schema contract.
@@ -172,6 +172,28 @@ bool load_move(const toml::table& table, const char* key, MoveData& out, std::st
     if (out.damage < 0 || out.hitstun < 0 || out.blockstun < 0) {
         error = prefix + ": damage, hitstun and blockstun must be >= 0 (rule 3)";
         return false;
+    }
+
+    // Attack height. Optional and defaulting to mid, because most moves are
+    // mid and spelling it on all fourteen would be noise.
+    out.height = ds::sim::AttackHeight::Mid;
+    if (const toml::node* node = table.get("height")) {
+        const std::optional<std::string> word = node->value<std::string>();
+        if (!word.has_value()) {
+            error = prefix + ".height: must be a string -- mid, low or overhead";
+            return false;
+        }
+        if (*word == "mid") {
+            out.height = ds::sim::AttackHeight::Mid;
+        } else if (*word == "low") {
+            out.height = ds::sim::AttackHeight::Low;
+        } else if (*word == "overhead") {
+            out.height = ds::sim::AttackHeight::Overhead;
+        } else {
+            error =
+                prefix + ".height: unknown value '" + *word + "' -- must be mid, low or overhead";
+            return false;
+        }
     }
 
     // Knockdown. Optional and defaulting to none, because most moves do not

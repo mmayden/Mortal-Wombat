@@ -47,7 +47,7 @@ the status.** Numbering matches that list.
 | Best-of-three rounds with timer and win conditions | **done** |
 | Local versus on two gamepads | **done** — two real pads, one per player, played 2026-08-24. Button-to-action mapping still unverified (`--input-test`, PLAYTEST §0) |
 | Training mode: hitbox display, frame data readout, input display | **done** — all three on `F1` (ADR 0025) |
-| 50+ replay tests passing | **9 of 50** |
+| 50+ replay tests passing | **10 of 50** |
 | Desync CI green across three platforms | **done** |
 | **It is fun** | **unknown** — played, but the feel questions in `PLAYTEST.md` are unanswered |
 
@@ -212,6 +212,7 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Attack heights | Mid, low and overhead, with the stance required to match. Gives the knockdown loop something to threaten with |
 | Knockdown and wakeup | Soft and hard, with a timing choice on soft. `FighterState::Blocking` is now the only unreachable state |
 | Training readout | `F1` now shows state, move, frame, phase and held buttons — the other half of "I don't know what's happening" |
 | Readable attacks | The limb is the move's hitbox now, so all six buttons look different — reported as "I don't know the difference in the attacks" |

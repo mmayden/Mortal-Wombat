@@ -485,7 +485,18 @@ void resolve_hits(GameState& state, const MatchData& data) {
             // is no air blocking (ADR 0022) -- an airborne fighter's guard
             // flag is cleared on takeoff and never set while off the ground,
             // which is what makes jumping a committed gamble.
-            const bool blocked = defending.guarding != 0;
+            // Guarding is necessary but no longer sufficient: the stance has
+            // to match the height too (ADR 0028). A low must be blocked
+            // crouching, an overhead standing, a mid either way.
+            //
+            // This is what gives offence an axis. Without it, holding back
+            // answers everything and there is nothing to guess -- which is
+            // exactly the hole a knockdown loop would otherwise open into.
+            const bool crouching = defending.state == FighterState::Crouch;
+            const bool stance_covers = move.height == AttackHeight::Mid ||
+                                       (move.height == AttackHeight::Low && crouching) ||
+                                       (move.height == AttackHeight::Overhead && !crouching);
+            const bool blocked = defending.guarding != 0 && stance_covers;
 
             // A clean hit on an AIRBORNE fighter knocks down softly whatever
             // the move says, because they have nowhere to land but the floor.

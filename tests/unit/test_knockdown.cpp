@@ -187,12 +187,15 @@ TEST_CASE("The delay can only be taken once") {
     CHECK(frames == KNOCKDOWN_FRAMES + WAKEUP_DELAY_FRAMES + WAKEUP_FRAMES + 1);
 }
 
-TEST_CASE("Blocking a sweep does not knock you down") {
+TEST_CASE("Crouch-blocking a sweep does not knock you down") {
     GameState state = fighting_state();
 
-    // Player two holds back, which is blocking (ADR 0021). Back for player two
-    // is Right.
-    const InputFrame guard = held(Button::Right);
+    // Down-back: the sweep is a LOW and a standing block does not cover it
+    // (ADR 0028). Back for player two is Right.
+    //
+    // This case used to hold Right alone and passed, because height did not
+    // exist. It failing was the feature arriving.
+    const InputFrame guard = input_with(held(Button::Right), Button::Down);
     const InputPair sweep = pair_with(input_with(held(Button::HeavyKick), Button::Down), guard);
     advance_frame(state, data(), sweep, NO_INPUT);
 

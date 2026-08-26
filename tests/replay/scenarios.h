@@ -154,6 +154,28 @@ inline InputPair attack_into_block(int32_t frame) {
     return InputPair{{p1, p2}};
 }
 
+// Player one sweeps; player two holds back STANDING and is hit anyway.
+//
+// The replay tier had no coverage of attack height at all when it landed --
+// every existing scenario blocks a mid, which behaves identically before and
+// after ADR 0028, so not one recording changed. A rule no recording exercises
+// is a rule the regression net cannot see.
+//
+// What this pins down is the whole point of a low: standing through it does not
+// work. If someone later makes standing block cover everything, this is the
+// recording that notices.
+inline InputPair low_vs_standing_block(int32_t frame) {
+    InputFrame p1 = input_with(NEUTRAL, Button::Right);
+    if (frame >= APPROACH_UNTIL && frame % 30 == 0) {
+        // Down + heavy kick is the sweep, which is a low.
+        p1 = input_with(input_with(p1, Button::Down), Button::HeavyKick);
+    }
+
+    // Standing guard: back only, no down. Back for player two is Right.
+    const InputFrame p2 = frame < APPROACH_UNTIL ? NEUTRAL : input_with(NEUTRAL, Button::Right);
+    return InputPair{{p1, p2}};
+}
+
 // Both fighters close and mash high punch. Pins down trades -- that a
 // simultaneous hit lands for both, rather than the lower-indexed player
 // silently winning every exchange.
@@ -207,6 +229,8 @@ inline constexpr Scenario SCENARIOS[] = {
      &scripts::walk_in_and_punch},
     {"attack_into_block", "Player 1 attacks into a held block. No damage, blockstun.", 1357u, 420,
      &scripts::attack_into_block},
+    {"low_vs_standing_block", "Player 1 sweeps; player 2 stands and blocks, and is hit anyway.",
+     8821u, 420, &scripts::low_vs_standing_block},
     {"mutual_pressure", "Both fighters punch from close range. Trades.", 8642u, 420,
      &scripts::mutual_pressure},
     {"jump_attack", "Player 1 jumps in and attacks from the air. Fixed arcs.", 13579u, 480,
