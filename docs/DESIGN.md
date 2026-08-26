@@ -288,6 +288,15 @@ gap between its best and second-best use, and keeping that gap honest is
 permanent work, not a launch decision. One developer with no live-service patch
 cadence has to be able to audit it by hand. Which three is open.
 
+**Attacks come at three heights, and the stance must match.** A *mid* is
+blocked standing or crouching; a *low* must be blocked crouching; an *overhead*
+must be blocked standing. Crouching kicks are lows and jump attacks are
+overheads; everything else is mid.
+
+Holding back with the wrong stance is not a partial block — the defender is hit,
+for full damage. That is what makes choosing a stance a commitment, and a mixup
+is the thesis asked of the defender rather than the attacker (ADR 0028).
+
 **Knockdown is the payoff, and it comes in two grades.** A grounded fighter
 cannot be hit, which is what creates the guessing game that follows. A *soft*
 knockdown lets the defender choose when to rise — quick or delayed — so the

@@ -31,7 +31,7 @@
 #  the antagonist; that is a hint, not a decision, and nothing here depends on
 #  it.
 
-schema_version = 3
+schema_version = 4
 
 [character]
 id           = "sue"
@@ -231,6 +231,7 @@ recovery         = 10
 damage           = 4
 hitstun          = 13
 blockstun        = 9
+height    = "low"       # Crouching kicks are lows -- must be blocked crouching.
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
 [[moves.crouch_light_kick.hitboxes]]
@@ -253,6 +254,7 @@ damage    = 6
 hitstun   = 16
 blockstun = 11
 
+height    = "low"       # Crouching kicks are lows -- must be blocked crouching.
 [[moves.crouch_medium_kick.hitboxes]]
 frames = [8, 10]
 x = 17
@@ -268,6 +270,7 @@ recovery         = 20
 damage           = 9
 hitstun          = 20
 blockstun        = 14
+height    = "low"       # The sweep. Low, and a hard knockdown.
 knockdown = "hard"          # A sweep. Hard knockdown -- the convention nearly every 2D fighter shares,
 # and it is slow enough (9 startup, 20 recovery) to be a real commitment.
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
@@ -299,6 +302,9 @@ damage    = 7
 hitstun   = 16
 blockstun = 11
 
+height    = "overhead"  # Jump attacks are overheads -- must be blocked standing.
+# Universal across the genre, and the reason an opponent cannot
+# simply crouch-block forever.
 [[moves.jump_attack.hitboxes]]
 # Low and forward, NOT up at head height like the standing normals.
 #

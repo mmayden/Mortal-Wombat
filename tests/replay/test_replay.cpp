@@ -197,6 +197,28 @@ TEST_CASE("Blocking in a recording still costs the defender their turn") {
     CHECK(blockstun_frames > 0);
 }
 
+// The recording exists to prove a low is not stopped by a standing block. If it
+// ever reproduces without anybody taking damage, the height rule has quietly
+// stopped working and the recording would still pass every hash check.
+TEST_CASE("The low-vs-standing-block recording actually lands its sweeps") {
+    Replay replay;
+    std::string error;
+    REQUIRE(load_replay(replay_path("low_vs_standing_block"), replay, error) == ReplayIoStatus::Ok);
+
+    ds::sim::GameState state{};
+    ds::sim::init_state(state, replay.seed);
+    ds::sim::InputPair previous{{ds::sim::InputFrame{0u}, ds::sim::InputFrame{0u}}};
+
+    const int32_t starting_health = state.fighters[1].health;
+    for (int32_t frame = 0; frame < replay.frame_count; ++frame) {
+        const ds::sim::InputPair current = input_at_frame(replay, frame);
+        ds::sim::advance_frame(state, ds::test::shipped_match_data(), current, previous);
+        previous = current;
+    }
+
+    CHECK(state.fighters[1].health < starting_health);
+}
+
 TEST_CASE("Replaying the same recording twice gives the same result") {
     // If this fails, the sim depends on something outside GameState -- static
     // storage, uninitialized memory, or address-dependent behavior. That is a

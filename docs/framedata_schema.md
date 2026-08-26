@@ -1,6 +1,6 @@
 # Frame Data Schema
 
-> **Schema version:** 3
+> **Schema version:** 4
 > **Status:** contract — binding on both consumers
 > **Consumers:** `src/sim/` (read) and `tools/framedata_editor/` (read + write)
 
@@ -20,6 +20,7 @@ coordination failure is silent.
 | Version | Date | Change |
 |---|---|---|
 | 1 | 2026-08-22 | Initial schema |
+| 4 | 2026-08-26 | Attack heights (ADR 0028). Optional per-move `height` key: `"mid"` (the default), `"low"` or `"overhead"`. Same reasoning as v3 on the bump — a v3 reader would ignore a key that changes whether a move can be blocked. |
 | 3 | 2026-08-26 | Knockdown (ADR 0026). Optional per-move `knockdown` key: `"none"` (the default), `"soft"` or `"hard"`. A v2 file loads unchanged in meaning — every move simply causes no knockdown — but the version still bumps, because a v2 *reader* would silently ignore a key that changes what a move does. |
 | 2 | 2026-08-26 | Six attack buttons (ADR 0021). Four new required move keys per character — `medium_punch`, `medium_kick` and their crouching variants — and `low_`/`high_` renamed to `light_`/`heavy_` throughout. A v1 file no longer loads. |
 
@@ -56,7 +57,7 @@ ADR 0002 makes that a desync.
 ## Top-level document
 
 ```toml
-schema_version = 3
+schema_version = 4
 
 [character]
 id           = "george"
@@ -107,6 +108,22 @@ a typo would otherwise leave a character silently missing a move.
 | `special` | Special |
 
 **All fourteen are required.** A file missing one fails to load.
+
+### `height` — optional, per move
+
+`"mid"` (the default), `"low"` or `"overhead"`. ADR 0028.
+
+A **mid** is blocked standing or crouching, a **low** must be blocked crouching,
+an **overhead** must be blocked standing. Holding back with the wrong stance is
+not a partial block — the defender is hit for full damage.
+
+There is deliberately no `"high"`. It is the most confused word in the genre's
+vocabulary, since in most games a "high" attack is still blockable crouching.
+
+The shipped assignment is the convention nearly every 2D fighter shares:
+crouching **kicks** are lows, the `jump_attack` is an overhead, everything else
+including crouching *punches* is mid. The distinction is the limb, not the
+stance.
 
 ### `knockdown` — optional, per move
 

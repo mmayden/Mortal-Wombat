@@ -95,6 +95,19 @@ inline constexpr int32_t MAX_HITBOXES_PER_MOVE = 4;
 // clean hit on an AIRBORNE fighter is a soft knockdown regardless of the move
 // (handled in sim.cpp, since it is a property of the defender's state rather
 // than of the attack).
+// How a move must be blocked. ADR 0028.
+//
+// The three-way split every 2D fighter uses, with the names the genre uses for
+// them. "High" is deliberately absent: it is the most confused word in the
+// vocabulary -- in most games a high attack is still blockable crouching, so
+// the functional categories are these three and calling one of them "high"
+// would invite exactly the wrong guess.
+enum class AttackHeight : int32_t {
+    Mid = 0,   // Blockable standing or crouching. The default, and most moves.
+    Low,       // Must be blocked CROUCHING. Sweeps and crouching kicks.
+    Overhead,  // Must be blocked STANDING. Jump attacks.
+};
+
 enum class KnockdownKind : int32_t {
     None = 0,
     Soft,  // The defender chooses when to rise.
@@ -112,6 +125,7 @@ struct MoveData {
 
     // Replaces the character's default hurtbox for this move's duration.
     // Empty (w or h <= 0) means the default applies.
+    AttackHeight height;
     KnockdownKind knockdown;
 
     Box hurtbox_override;
