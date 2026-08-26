@@ -33,6 +33,17 @@ constexpr float BODY_WIDTH = 32.0f;
 constexpr float BODY_HEIGHT = 140.0f;
 constexpr float CROUCH_HEIGHT = 80.0f;
 
+// A fighter on the floor. Short and wide, because "lying down" is a shape
+// before it is anything else, and the shape is what reads at a glance.
+//
+// Until this existed a knocked-down fighter was drawn at FULL STANDING HEIGHT
+// with no tint -- identical to someone standing still. Knockdowns were working
+// perfectly and were completely invisible, reported as "it doesn't seem like
+// knockdowns are happening". That is the third time the simulation has done
+// something the picture did not show.
+constexpr float DOWNED_HEIGHT = 34.0f;
+constexpr float DOWNED_WIDTH = 108.0f;
+
 constexpr float NOTCH_WIDTH = 6.0f;
 constexpr float NOTCH_HEIGHT = 10.0f;
 
@@ -40,7 +51,25 @@ constexpr float NOTCH_HEIGHT = 10.0f;
 // state-independent until frame data exists to describe it — deliberately, so
 // that nothing here has to be unlearned when real boxes arrive.
 float body_height_for(const ds::sim::Fighter& fighter) {
-    return fighter.state == ds::sim::FighterState::Crouch ? CROUCH_HEIGHT : BODY_HEIGHT;
+    switch (fighter.state) {
+        case ds::sim::FighterState::Crouch:
+            return CROUCH_HEIGHT;
+        case ds::sim::FighterState::Knockdown:
+            return DOWNED_HEIGHT;
+        case ds::sim::FighterState::Wakeup:
+            // Halfway up. The rise is invulnerable and brief, and showing it as
+            // a distinct shape is what tells an attacker their window is
+            // closing rather than already gone.
+            return (DOWNED_HEIGHT + BODY_HEIGHT) * 0.5f;
+        default:
+            return BODY_HEIGHT;
+    }
+}
+
+// Lying down is wider than standing. Height alone would read as a very short
+// fighter rather than a horizontal one.
+float body_width_for(const ds::sim::Fighter& fighter) {
+    return fighter.state == ds::sim::FighterState::Knockdown ? DOWNED_WIDTH : BODY_WIDTH;
 }
 
 // Feedback colours. Chosen to stay readable against both player colours rather
@@ -157,6 +186,14 @@ void placeholder_fighter_sprites(const ds::sim::Fighter& fighter,
         case FighterState::Lose:
             body = blend(body, DOWNED, 0.5f);
             break;
+        case FighterState::Knockdown:
+            body = blend(body, DOWNED, 0.55f);
+            break;
+        case FighterState::Wakeup:
+            // Lighter than the knockdown: getting up is nearly over, and the
+            // difference is the cue an attacker is timing against.
+            body = blend(body, DOWNED, 0.28f);
+            break;
         default:
             break;
     }
@@ -164,7 +201,8 @@ void placeholder_fighter_sprites(const ds::sim::Fighter& fighter,
     // Offsets are relative to the ground point, between the feet, with -y up
     // (ARCHITECTURE.md 3). The renderer converts to screen space; the manifest
     // never sees a pixel.
-    sprite_list_push(out, untextured(-BODY_WIDTH * 0.5f, -height, BODY_WIDTH, height, body));
+    const float width = body_width_for(fighter);
+    sprite_list_push(out, untextured(-width * 0.5f, -height, width, height, body));
 
     // The limb is the move's own hitbox, drawn.
     //

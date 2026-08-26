@@ -80,15 +80,15 @@ h = 20
 # light and heavy of the same limb -- halfway between two guesses is
 # no more of a guess than either, and DESIGN.md 4.4 calls all of these
 # starting points to tune. Check it in ds_framedata_viewer, not here.
-startup   = 5
-active    = 2
-recovery  = 12
+startup   = 7
+active    = 3
+recovery  = 14
 damage    = 5
 hitstun   = 15
 blockstun = 10
 
 [[moves.medium_punch.hitboxes]]
-frames = [6, 7]
+frames = [8, 10]
 x = 17
 y = -115
 w = 34
@@ -96,15 +96,15 @@ h = 22
 
 [moves.heavy_punch]
 input     = "HP"
-startup   = 7
+startup   = 11
 active    = 3
-recovery  = 16
+recovery  = 20
 damage    = 8
 hitstun   = 18
 blockstun = 12
 
 [[moves.heavy_punch.hitboxes]]
-frames = [8, 10]
+frames = [12, 14]
 x = 18
 y = -120
 w = 38
@@ -132,15 +132,15 @@ h = 22
 # light and heavy of the same limb -- halfway between two guesses is
 # no more of a guess than either, and DESIGN.md 4.4 calls all of these
 # starting points to tune. Check it in ds_framedata_viewer, not here.
-startup   = 7
+startup   = 9
 active    = 3
-recovery  = 15
+recovery  = 17
 damage    = 6
 hitstun   = 16
 blockstun = 11
 
 [[moves.medium_kick.hitboxes]]
-frames = [8, 10]
+frames = [10, 12]
 x = 17
 y = -81
 w = 39
@@ -148,15 +148,15 @@ h = 24
 
 [moves.heavy_kick]
 input     = "HK"
-startup   = 9
+startup   = 13
 active    = 4
-recovery  = 20
+recovery  = 24
 damage    = 9
 hitstun   = 20
 blockstun = 14
 
 [[moves.heavy_kick.hitboxes]]
-frames = [10, 13]
+frames = [14, 17]
 x = 18
 y = -116
 w = 44
@@ -171,9 +171,9 @@ h = 26
 
 [moves.crouch_light_punch]
 input            = "D+LP"
-startup          = 4
-active           = 2
-recovery         = 8
+startup   = 4
+active    = 2
+recovery  = 8
 damage           = 3
 hitstun          = 12
 blockstun        = 8
@@ -192,15 +192,15 @@ h = 18
 # light and heavy of the same limb -- halfway between two guesses is
 # no more of a guess than either, and DESIGN.md 4.4 calls all of these
 # starting points to tune. Check it in ds_framedata_viewer, not here.
-startup   = 5
-active    = 2
-recovery  = 12
+startup   = 7
+active    = 3
+recovery  = 14
 damage    = 5
 hitstun   = 15
 blockstun = 10
 
 [[moves.crouch_medium_punch.hitboxes]]
-frames = [6, 7]
+frames = [8, 10]
 x = 17
 y = -68
 w = 31
@@ -208,16 +208,16 @@ h = 20
 
 [moves.crouch_heavy_punch]
 input            = "D+HP"
-startup          = 7
-active           = 3
-recovery         = 16
+startup   = 11
+active    = 3
+recovery  = 20
 damage           = 8
 hitstun          = 18
 blockstun        = 12
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
 [[moves.crouch_heavy_punch.hitboxes]]
-frames = [8, 10]
+frames = [12, 14]
 x = 18
 y = -74
 w = 34
@@ -225,9 +225,9 @@ h = 22
 
 [moves.crouch_light_kick]
 input            = "D+LK"
-startup          = 5
-active           = 3
-recovery         = 10
+startup   = 5
+active    = 3
+recovery  = 10
 damage           = 4
 hitstun          = 13
 blockstun        = 9
@@ -247,16 +247,16 @@ h = 20
 # light and heavy of the same limb -- halfway between two guesses is
 # no more of a guess than either, and DESIGN.md 4.4 calls all of these
 # starting points to tune. Check it in ds_framedata_viewer, not here.
-startup   = 7
+startup   = 9
 active    = 3
-recovery  = 15
+recovery  = 17
 damage    = 6
 hitstun   = 16
 blockstun = 11
 
 height    = "low"       # Crouching kicks are lows -- must be blocked crouching.
 [[moves.crouch_medium_kick.hitboxes]]
-frames = [8, 10]
+frames = [10, 12]
 x = 17
 y = -28
 w = 42
@@ -264,9 +264,9 @@ h = 22
 
 [moves.crouch_heavy_kick]
 input            = "D+HK"
-startup          = 9
-active           = 4
-recovery         = 20
+startup   = 13
+active    = 4
+recovery  = 24
 damage           = 9
 hitstun          = 20
 blockstun        = 14
@@ -276,7 +276,7 @@ knockdown = "hard"          # A sweep. Hard knockdown -- the convention nearly e
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
 [[moves.crouch_heavy_kick.hitboxes]]
-frames = [10, 13]
+frames = [14, 17]
 x = 18
 y = -34
 w = 46

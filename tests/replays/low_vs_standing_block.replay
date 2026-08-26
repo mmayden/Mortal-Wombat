@@ -29,21 +29,21 @@ input 390 0x020A 0x0008
 input 391 0x0008 0x0008
 
 # Full state hash at intervals, so a divergence reports its first frame.
-checkpoint 30 0x175ADCBB9BF96D1B
-checkpoint 60 0x60DFB3E2850D3EFF
-checkpoint 90 0x79117C9D8E648A06
-checkpoint 120 0x84BFAED5FB846DCD
-checkpoint 150 0x2204392A0502673B
-checkpoint 180 0x177DC00865A2B769
-checkpoint 210 0x13A8F80C3301F112
-checkpoint 240 0x038AF084EA12F272
-checkpoint 270 0x897DFFDF3A7ED008
-checkpoint 300 0x86262B09AEAC09A0
-checkpoint 330 0xEAFD2251742F4FE6
-checkpoint 360 0xD2593F65F321BEE0
-checkpoint 390 0x3BBE173031AAF731
-checkpoint 420 0x4CD85D96BB7ABA8E
+checkpoint 30 0x724B13D7FB91C728
+checkpoint 60 0x82CAEE09A41A2764
+checkpoint 90 0x6FCCDACB231F497D
+checkpoint 120 0x91C4FF6D66CE82FF
+checkpoint 150 0x2FD973E9B92123C1
+checkpoint 180 0x03314F3E1AFAB742
+checkpoint 210 0x0A4C0EA26B3F1DE4
+checkpoint 240 0x63A77F36774300B4
+checkpoint 270 0x0FABA7127A3D159E
+checkpoint 300 0xF5B46C2EB2240303
+checkpoint 330 0xE541251F561AB05C
+checkpoint 360 0xFBBCA34F495D9B7A
+checkpoint 390 0x9DFFB3E10954DA12
+checkpoint 420 0x6958113776734EF2
 
 # Visible-state hash after the final frame. Excludes RNG position
 # so that a render-side effect drawing a number cannot fail this.
-final 0x0A5AA8983A2AAA54
+final 0xACC4B43DE285F658

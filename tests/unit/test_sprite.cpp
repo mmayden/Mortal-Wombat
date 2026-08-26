@@ -210,3 +210,46 @@ TEST_CASE("The limb extends through startup and retracts through recovery") {
         CHECK(late.w < live.w);
     }
 }
+
+// Reported from a playtest as "it doesn't seem like knockdowns are happening".
+// They were happening perfectly. body_height_for knew only about crouching, so
+// a fighter on the floor was drawn at full standing height with no tint --
+// identical to one standing still.
+//
+// Third time the simulation has done something the picture did not show, after
+// the jump attack and the six identical attack limbs.
+TEST_CASE("A knocked-down fighter is drawn lying down") {
+    const MatchData& data = ds::test::shipped_match_data();
+    const CharacterData& character = data.characters[0];
+
+    Fighter standing{};
+    reset_fighter(standing, 0);
+    standing.state = FighterState::Idle;
+
+    Fighter downed = standing;
+    downed.state = FighterState::Knockdown;
+
+    Fighter rising = standing;
+    rising.state = FighterState::Wakeup;
+
+    auto body_of = [&](const Fighter& fighter) {
+        SpriteList sprites{};
+        placeholder_fighter_sprites(fighter, character, 0, sprites);
+        REQUIRE(sprites.count > 0);
+        return sprites.quads[0];  // The body is drawn first.
+    };
+
+    const auto up = body_of(standing);
+    const auto down = body_of(downed);
+    const auto mid = body_of(rising);
+
+    // Lying down is a SHAPE before it is anything else: short and wide. Height
+    // alone would read as a very small fighter rather than a horizontal one.
+    CHECK(down.height < up.height * 0.5f);
+    CHECK(down.width > up.width);
+
+    // Getting up is visibly between the two, which is the cue an attacker times
+    // against -- their window is closing, not already gone.
+    CHECK(mid.height > down.height);
+    CHECK(mid.height < up.height);
+}
