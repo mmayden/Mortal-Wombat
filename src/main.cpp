@@ -205,6 +205,11 @@ int main(int argc, char** argv) {
     // rolled back (ARCHITECTURE.md 3).
     platform.show_debug = options.debug;
 
+    // Render-side only. What a player pressed a second ago cannot change the
+    // outcome of the match, so it is not in GameState and is not rolled back
+    // (ARCHITECTURE.md 3). ADR 0021's input history is a different thing.
+    ds::render::InputHistory input_history[2]{};
+
     ds::render::Camera camera{};
 
     ds::sim::GameState state{};
@@ -268,6 +273,14 @@ int main(int argc, char** argv) {
                 ds::platform::recorder_frame(*recorder, current_input, state);
             }
 
+            // Pushed per SIMULATION frame, never per render frame: a frame
+            // count that counted render frames would read differently on every
+            // machine and be wrong by a factor of ten on a fast one.
+            for (int32_t i = 0; i < 2; ++i) {
+                ds::render::input_history_push(input_history[i], current_input.players[i],
+                                               state.frame);
+            }
+
             accumulator -= FRAME_NS;
         }
 
@@ -278,7 +291,7 @@ int main(int argc, char** argv) {
 
         ds::render::camera_update(camera, previous_state, state, alpha);
         ds::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
-                               state, alpha, platform.show_debug, current_input);
+                               state, alpha, platform.show_debug, current_input, input_history);
         ds::platform::present(platform);
         ++frames_rendered;
 
@@ -296,7 +309,7 @@ int main(int argc, char** argv) {
         // hitbox look inactive on the frame it connected.
         ds::render::camera_update(camera, previous_state, state, 0.0f);
         ds::render::draw_frame(platform.renderer, manifest, match_data, camera, previous_state,
-                               state, 0.0f, platform.show_debug, current_input);
+                               state, 0.0f, platform.show_debug, current_input, input_history);
 
         if (!ds::platform::save_screenshot(platform, options.screenshot)) {
             ds::platform::shutdown(platform);

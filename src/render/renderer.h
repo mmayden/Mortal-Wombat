@@ -11,6 +11,7 @@
 #pragma once
 
 #include "render/camera.h"
+#include "render/input_history.h"
 #include "render/sprite.h"
 #include "sim/framedata.h"
 #include "sim/input.h"
@@ -38,6 +39,6 @@ namespace ds::render {
 void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
                 const ds::sim::MatchData& data, const Camera& camera,
                 const ds::sim::GameState& previous, const ds::sim::GameState& current, float alpha,
-                bool show_debug, ds::sim::InputPair inputs);
+                bool show_debug, ds::sim::InputPair inputs, const InputHistory (&history)[2]);
 
 }  // namespace ds::render

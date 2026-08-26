@@ -19,6 +19,7 @@
 
 #include <SDL3/SDL.h>
 
+#include "render/input_history.h"
 #include "sim/framedata.h"
 #include "sim/input.h"
 #include "sim/state.h"
@@ -32,6 +33,7 @@ namespace ds::render {
 // there to make it drawable would be exactly the mistake the boundary exists to
 // prevent.
 void draw_readout(SDL_Renderer* renderer, const ds::sim::MatchData& data,
-                  const ds::sim::GameState& state, ds::sim::InputPair inputs);
+                  const ds::sim::GameState& state, ds::sim::InputPair inputs,
+                  const InputHistory (&history)[2]);
 
 }  // namespace ds::render

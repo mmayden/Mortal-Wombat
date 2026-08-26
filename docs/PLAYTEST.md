@@ -8,10 +8,12 @@ where a term is needed it is explained here or in
 build\debug\bin\divided_states.exe
 ```
 
-**Press `F1` first.** It turns on the collision boxes *and* a readout for each
-player: what they are doing, which move is out, which frame of it, and whether
-that frame can actually hit. If you ever cannot tell what just happened, `F1`
-will tell you. `ESC` quits; controls are in `AGENTS.md`.
+**Press `F1` first.** It turns on the collision boxes, a readout for each
+player — what they are doing, which move is out, which frame of it, and whether
+that frame can actually hit — and a list of your recent inputs down each side,
+newest at the bottom, with how many frames each was held.
+
+If you ever cannot tell what just happened, `F1` will tell you. `ESC` quits; controls are in `AGENTS.md`.
 
 **If something looks wrong, record it.**
 
