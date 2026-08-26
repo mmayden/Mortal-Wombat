@@ -76,9 +76,10 @@ to guess at — two camera defects were chased by guessing before this existed.
 Drop the file into `tests/replays/`, add its name to the scenario list, and a
 bug someone found by playing becomes a regression test.
 
-`F1` toggles the whole diagnostic layer: hitboxes, and a per-player readout
-showing state, the current move with its frame count and phase, that move's
-frame data, and which buttons are held. That is all three training-mode lines
+`F1` toggles the whole diagnostic layer: hitboxes, a per-player readout showing
+state, the current move with its frame count and phase and that move's frame
+data, and a scrolling list of recent inputs down each side. A held input is one
+row with a frame count, so it stays on screen until the next one arrives. That is all three training-mode lines
 in `DESIGN.md` §6. Text is drawn with a built-in 5x7 bitmap font rather than
 Dear ImGui — ADR 0025 says why, and what would change it.
 

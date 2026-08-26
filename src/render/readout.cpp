@@ -29,6 +29,10 @@ constexpr float MARGIN = 4.0f;
 // the only way a layout gets reviewed.
 constexpr float PANEL_TOP = 38.0f;
 
+// Narrow enough to sit in the screen margin beside the fighters rather than
+// over them. A row is at most "D LP HK 12", which fits.
+constexpr float HISTORY_W = 62.0f;
+
 void fill(SDL_Renderer* renderer, float x, float y, float w, float h, SDL_Color color) {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
@@ -67,16 +71,61 @@ void draw_one(SDL_Renderer* renderer, const CharacterData& character, const Figh
     draw_text(renderer, x + 3.0f, y + PANEL_H - LINE - 2.0f, lines.inputs, SCALE, TEXT);
 }
 
+// The scrolling list, newest at the bottom so the eye lands on the most recent
+// input without scanning -- the arrangement every training mode uses.
+//
+// A held input is one row with a frame count, not one row per frame. That is
+// what makes the list readable, and what makes an input stay on screen until
+// the next one arrives.
+void draw_history(SDL_Renderer* renderer, const InputHistory& history, float x, float top) {
+    constexpr int32_t VISIBLE = 14;
+
+    const int32_t shown = history.count < VISIBLE ? history.count : VISIBLE;
+    if (shown <= 0) {
+        return;
+    }
+
+    // Sized to its contents and kept narrow. The first version was a fixed
+    // 150x130 slab that sat over both fighters -- caught by screenshotting it,
+    // which is the only way a layout gets reviewed. A diagnostic that hides the
+    // thing being diagnosed is worse than no diagnostic.
+    const float height = static_cast<float>(shown) * LINE + 4.0f;
+    fill(renderer, x, top, HISTORY_W, height, PANEL);
+    const int32_t first = history.count - shown;
+
+    for (int32_t i = 0; i < shown; ++i) {
+        const InputHistoryEntry& entry = input_history_at(history, first + i);
+
+        // Newest row bright, older ones dim, so "what did I just press" is
+        // answerable without reading.
+        const bool newest = (first + i) == history.count - 1;
+        const SDL_Color color = newest ? TEXT : DIM;
+
+        const float row_y = top + 2.0f + static_cast<float>(i) * LINE;
+        const float used =
+            draw_text(renderer, x + 3.0f, row_y, input_history_label(entry.buttons), SCALE, color);
+
+        // Frames held. This is the number that turns "I pressed back" into
+        // "I held back for forty frames".
+        draw_text(renderer, x + 6.0f + used, row_y, std::to_string(entry.frames_held), SCALE, DIM);
+    }
+}
+
 }  // namespace
 
 void draw_readout(SDL_Renderer* renderer, const MatchData& data, const GameState& state,
-                  InputPair inputs) {
+                  InputPair inputs, const InputHistory (&history)[2]) {
     const float right = static_cast<float>(SCREEN_WIDTH) - PANEL_W - MARGIN;
 
     // Each panel sits on its own player's side, so the reader never has to work
     // out which column belongs to them.
     draw_one(renderer, data.characters[0], state.fighters[0], inputs.players[0], MARGIN, PANEL_TOP);
     draw_one(renderer, data.characters[1], state.fighters[1], inputs.players[1], right, PANEL_TOP);
+
+    const float history_top = PANEL_TOP + PANEL_H + 4.0f;
+    draw_history(renderer, history[0], MARGIN, history_top);
+    draw_history(renderer, history[1], static_cast<float>(SCREEN_WIDTH) - HISTORY_W - MARGIN,
+                 history_top);
 }
 
 }  // namespace ds::render
