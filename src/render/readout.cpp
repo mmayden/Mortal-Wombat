@@ -16,7 +16,17 @@ constexpr SDL_Color DIM{140, 148, 162, 255};
 constexpr SDL_Color STARTUP{235, 200, 90, 255};
 constexpr SDL_Color ACTIVE{240, 90, 90, 255};
 constexpr SDL_Color RECOVERY{120, 150, 210, 255};
-constexpr SDL_Color PANEL{12, 14, 20, 220};
+// Translucent, not merely dark. At 220 alpha these panels were effectively
+// solid, and two cases nobody had screenshotted went straight behind them: a
+// fighter at the apex of a jump reaches y=10, well above the readout at y=38,
+// and a fighter pinned against the left wall sits at x=0..32 underneath the
+// input list at x=4..66.
+//
+// Both were measured rather than seen, because the only screenshot taken was
+// the easy case -- standing fighters, mid-stage, one row of history. A
+// diagnostic overlay that hides the thing being diagnosed is the defect this
+// file has now had three times.
+constexpr SDL_Color PANEL{12, 14, 20, 130};
 
 constexpr float SCALE = 1.0f;
 constexpr float LINE = 9.0f;
