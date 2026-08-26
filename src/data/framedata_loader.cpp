@@ -2,6 +2,8 @@
 
 #include <cstring>
 #include <fstream>
+#include <optional>
+#include <string>
 
 #include <toml++/toml.hpp>
 
@@ -18,7 +20,7 @@ using ds::sim::MoveId;
 // this and updating tools/framedata_editor/ in the same commit (AGENTS.md
 // rule 5) -- a schema change that lands in only one consumer produces files the
 // other cannot read, with no build error to catch it.
-constexpr int64_t SUPPORTED_SCHEMA_VERSION = 2;
+constexpr int64_t SUPPORTED_SCHEMA_VERSION = 3;
 
 // Table key for each MoveId, in enum order. The loader and the editor both
 // address moves by these strings, so they are part of the schema contract.
@@ -170,6 +172,33 @@ bool load_move(const toml::table& table, const char* key, MoveData& out, std::st
     if (out.damage < 0 || out.hitstun < 0 || out.blockstun < 0) {
         error = prefix + ": damage, hitstun and blockstun must be >= 0 (rule 3)";
         return false;
+    }
+
+    // Knockdown. Optional and defaulting to none, because most moves do not
+    // knock down and requiring the line on all fourteen would be noise that
+    // people stop reading.
+    //
+    // Spelled rather than numbered: "hard" says what it means at the point of
+    // use, where a 2 would send the reader to a header to find out. The words
+    // are the schema (docs/framedata_schema.md).
+    out.knockdown = ds::sim::KnockdownKind::None;
+    if (const toml::node* node = table.get("knockdown")) {
+        const std::optional<std::string> word = node->value<std::string>();
+        if (!word.has_value()) {
+            error = prefix + ".knockdown: must be a string -- none, soft or hard";
+            return false;
+        }
+        if (*word == "none") {
+            out.knockdown = ds::sim::KnockdownKind::None;
+        } else if (*word == "soft") {
+            out.knockdown = ds::sim::KnockdownKind::Soft;
+        } else if (*word == "hard") {
+            out.knockdown = ds::sim::KnockdownKind::Hard;
+        } else {
+            error =
+                prefix + ".knockdown: unknown value '" + *word + "' -- must be none, soft or hard";
+            return false;
+        }
     }
 
     // Rule 8. Cancels are UNDECIDED, not cut -- the old cut list that excluded

@@ -115,6 +115,20 @@ inline constexpr int32_t JUMP_STARTUP_FRAMES = 3;
 // rule rather than making an empty jump cheaper than an attacking one.
 inline constexpr int32_t LANDING_FRAMES = 4;
 
+// NEEDS A DECISION: no design document specifies any of these. ADR 0026 settles
+// the SHAPE of knockdown and wakeup and says nothing about how long they take,
+// which is a feel question and cannot be answered from a desk.
+//
+// KNOCKDOWN_FRAMES is how long a fighter is on the floor and untouchable.
+// WAKEUP_FRAMES is the rise, during which they are invulnerable but cannot act
+// -- that window is what stops a perfectly-timed attack hitting someone with no
+// option at all. WAKEUP_DELAY_FRAMES is what holding down adds on a soft
+// knockdown, and it has to be long enough that an attacker cannot simply cover
+// both timings with one move, or the choice is not a choice.
+inline constexpr int32_t KNOCKDOWN_FRAMES = 40;
+inline constexpr int32_t WAKEUP_FRAMES = 12;
+inline constexpr int32_t WAKEUP_DELAY_FRAMES = 20;
+
 // Horizontal speed of a forward or backward jump, as a multiple of the
 // character's walk speed in that direction.
 //

@@ -43,7 +43,7 @@ the status.** Numbering matches that list.
 | | Status |
 |---|---|
 | Two characters with the full v1 moveset | **13 of 14** — all six buttons standing and crouching, plus the jump attack. The special exists as data but has no input to trigger it |
-| Block, hitstun, blockstun, knockdown, wakeup all correct | **partial** — knockdown and wakeup are unbuilt |
+| Block, hitstun, blockstun, knockdown, wakeup all correct | **done** — knockdown and wakeup landed 2026-08-26 (ADR 0026) |
 | Best-of-three rounds with timer and win conditions | **done** |
 | Local versus on two gamepads | **done** — two real pads, one per player, played 2026-08-24. Button-to-action mapping still unverified (`--input-test`, PLAYTEST §0) |
 | Training mode: hitbox display, frame data readout, input display | **done** — all three on `F1` (ADR 0025) |
@@ -150,65 +150,7 @@ reported nothing wrong with it either.
 `--record session.replay` captures what you did, and the file replays exactly.
 - every hitbox coordinate in `data/characters/*.toml`
 
-### 2. `tools/framedata_editor/`
-
-The stack decision says build this **before** authoring content. That advice was
-overrun — every hitbox in `data/characters/` was hand-written to reach the first
-connecting hit — and the cost has already been paid once.
-
-The jump attack shipped with its hitbox at standing-punch height, floating above
-the opponent's head for its entire arc. It could not hit anyone from any range
-at any timing. Nobody could see that, because the numbers are plausible in a
-text file and the geometry is only obvious when drawn. A visual editor is not a
-convenience here; it is the thing that makes frame data reviewable at all.
-
-Pure tooling, no sim contact, cannot desync anything — the best parallel-agent
-task in the project. Blocked on nothing.
-
-Worth doing before any real balance pass, and before authoring the special.
-
----
-
-### 3. Implement the ADR 0021 control scheme
-
-Six attack buttons, hold back to block, and an input buffer in `GameState`. One
-coherent change to the input layer and the block condition at hit resolution
-— plus **eight new move definitions**, because medium punch and medium kick do
-not exist in `MoveId`, in the schema, or in either character's TOML.
-
-That is why the editor comes first. It invalidates every replay recording, which
-is expected and gets re-recorded in the same commit (rule 8).
-
-`src/sim/**` is a human-led zone (AGENTS rule 1), so this one needs direction,
-not initiative.
-
----
-
-### 4. Knockdown and wakeup
-
-**The design is settled (ADR 0026); this is the implementation.** Two of the
-sixteen states in `DESIGN.md` §4.2 are unreachable without it, and it is a named
-line in the v1 definition of done.
-
-The research calls it the engine — it is what makes landing one hit worth more
-than the damage it dealt. Soft knockdowns let the defender choose quick or
-delayed rise; hard ones are fixed. A grounded fighter cannot be hit, and the
-rise itself is invulnerable.
-
-Three things it drags with it: a per-move knockdown field in the frame data
-(schema bump, both character files, rule 5), a wakeup choice in `GameState`, and
-every replay re-recorded, since it changes what happens after a hit. `src/sim`
-is human-led, so it needs direction rather than initiative (rule 1).
-
-### 5. Training mode: frame data readout and input display
-
-`F1` already draws hitboxes. The other two thirds of the DoD line need text on
-screen, which the project has no path for yet — ADR 0012 plans Dear ImGui for
-debug UI and it is not integrated. **Decide that before starting.**
-
-The console `--input-test` is the input display's ancestor and can be promoted.
-
-### 6. Readability pass  *(in scope per ADR 0017; art is not)*
+### 2. Readability pass  *(in scope per ADR 0017; art is not)*
 
 Making the game easier to *see*, without touching the art pipeline. Cheap,
 reversible, and it directly serves the playtest — feel cannot be tuned through a
@@ -221,7 +163,7 @@ clearer per-state poses, and a landing squash so the jump reads.
 **Not** sprites, atlases, Blender, or anything that pins character proportions —
 ADR 0013 owns those and they wait for the v1 definition of done.
 
-### 7. Grow the replay library toward 50
+### 3. Grow the replay library toward 50
 
 9 of 50. Cheap to add, and the highest-value regression net this project has —
 `ADR 0011` calls it the primary one. Every fixed bug should leave a recording
@@ -270,6 +212,7 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Knockdown and wakeup | Soft and hard, with a timing choice on soft. `FighterState::Blocking` is now the only unreachable state |
 | Training readout | `F1` now shows state, move, frame, phase and held buttons — the other half of "I don't know what's happening" |
 | Readable attacks | The limb is the move's hitbox now, so all six buttons look different — reported as "I don't know the difference in the attacks" |
 | Frame-data viewer | `ds_framedata_viewer` draws the hitboxes, and `test_reach` asserts every move can connect |
