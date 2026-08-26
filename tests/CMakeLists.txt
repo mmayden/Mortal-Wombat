@@ -54,7 +54,8 @@ ds_add_test_tier(unit
     unit/test_readout.cpp
     unit/test_input_history.cpp
     unit/test_knockdown.cpp
-    unit/test_attack_height.cpp)
+    unit/test_attack_height.cpp
+    unit/test_throw.cpp)
 
 # The camera is render-layer code, so the unit tier needs it linked explicitly.
 # Everything else in this tier reaches the sim through ds_sim alone.

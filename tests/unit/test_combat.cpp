@@ -204,6 +204,14 @@ TEST_CASE("Blockstun is shorter than hitstun, so blocking is the better outcome"
     // inverted, blocking would be worse than being hit and the defensive game
     // would collapse.
     for (int32_t i = 0; i < MOVE_COUNT; ++i) {
+        // The throw is exempt and has to be: it cannot be blocked at all
+        // (ADR 0029), so it carries neither stun -- its whole effect is the
+        // knockdown. "Blocking is the better outcome" is not a claim that can
+        // be made about a move you cannot block.
+        if (static_cast<MoveId>(i) == MoveId::Throw) {
+            continue;
+        }
+
         const MoveData& move = data().characters[0].moves[i];
         CAPTURE(i);
         CHECK(move.blockstun < move.hitstun);

@@ -25,7 +25,7 @@
 #  frame-data table "per character", and 4.6 cuts per-character variation. They
 #  are separate files anyway, because that is where the difference will go.
 
-schema_version = 4
+schema_version = 5
 
 [character]
 id           = "george"
@@ -344,3 +344,31 @@ x = 20
 y = -104
 w = 60
 h = 30
+
+[moves.throw]
+# Light punch + light kick together. Unblockable, which is the whole point --
+# it is the answer to a defender who crouch-blocks and waits (ADR 0029).
+#
+# Fast to start and short to reach, so it only works up close, and slow to
+# recover so a whiffed one is punished. That recovery IS the risk that makes
+# the rock-paper-scissors work: attack beats throw, throw beats block, block
+# beats attack.
+#
+# SOFT knockdown, not hard. Convention says hard, but convention also lets a
+# defender tech a throw and this game does not -- so the reward is the weaker
+# knockdown instead. Without that, a throw would loop into itself with no way
+# out. PROVISIONAL like everything else here.
+startup   = 4
+active    = 2
+recovery  = 22
+damage    = 10
+hitstun   = 0
+blockstun = 0
+knockdown = "soft"
+
+[[moves.throw.hitboxes]]
+frames = [5, 6]
+x = 14
+y = -100
+w = 22
+h = 60

@@ -64,6 +64,8 @@ std::string move_name(MoveId move) {
             return "jump attack";
         case MoveId::Special:
             return "special";
+        case MoveId::Throw:
+            return "throw";
         case MoveId::Count:
             break;
     }

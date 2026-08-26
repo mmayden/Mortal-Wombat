@@ -219,6 +219,27 @@ TEST_CASE("The low-vs-standing-block recording actually lands its sweeps") {
     CHECK(state.fighters[1].health < starting_health);
 }
 
+// A throw that got blocked would leave this recording with nobody taking
+// damage, and it would still reproduce perfectly.
+TEST_CASE("The throw-vs-block recording actually throws somebody") {
+    Replay replay;
+    std::string error;
+    REQUIRE(load_replay(replay_path("throw_vs_block"), replay, error) == ReplayIoStatus::Ok);
+
+    ds::sim::GameState state{};
+    ds::sim::init_state(state, replay.seed);
+    ds::sim::InputPair previous{{ds::sim::InputFrame{0u}, ds::sim::InputFrame{0u}}};
+
+    const int32_t starting_health = state.fighters[1].health;
+    for (int32_t frame = 0; frame < replay.frame_count; ++frame) {
+        const ds::sim::InputPair current = input_at_frame(replay, frame);
+        ds::sim::advance_frame(state, ds::test::shipped_match_data(), current, previous);
+        previous = current;
+    }
+
+    CHECK(state.fighters[1].health < starting_health);
+}
+
 TEST_CASE("Replaying the same recording twice gives the same result") {
     // If this fails, the sim depends on something outside GameState -- static
     // storage, uninitialized memory, or address-dependent behavior. That is a

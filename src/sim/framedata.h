@@ -20,8 +20,8 @@
 
 namespace ds::sim {
 
-// Fourteen moves: six standing normals, six crouching variants, a jump attack,
-// and one special. DESIGN.md 4.1 and ADR 0021.
+// Fifteen moves: six standing normals, six crouching variants, a jump attack,
+// one special, and a throw. DESIGN.md 4.1 and ADR 0021.
 //
 // The count is not asserted anywhere in prose -- it falls out of the button set,
 // which is what dissolved the old "twelve or ten moves?" discrepancy rather than
@@ -47,6 +47,12 @@ enum class MoveId : int32_t {
     CrouchHeavyKick,
     JumpAttack,
     Special,
+
+    // Appended, not inserted. Tools and tests iterate 0..Count and the TOML
+    // keys map by name, so putting a move in the middle would renumber every
+    // one after it -- a data migration wearing the clothes of a rename.
+    Throw,
+
     Count,
 };
 

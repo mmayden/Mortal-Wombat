@@ -20,15 +20,26 @@ using ds::sim::MoveId;
 // this and updating tools/framedata_editor/ in the same commit (AGENTS.md
 // rule 5) -- a schema change that lands in only one consumer produces files the
 // other cannot read, with no build error to catch it.
-constexpr int64_t SUPPORTED_SCHEMA_VERSION = 4;
+constexpr int64_t SUPPORTED_SCHEMA_VERSION = 5;
 
 // Table key for each MoveId, in enum order. The loader and the editor both
 // address moves by these strings, so they are part of the schema contract.
 constexpr const char* MOVE_KEYS[ds::sim::MOVE_COUNT] = {
-    "light_punch",        "medium_punch",      "heavy_punch",        "light_kick",
-    "medium_kick",        "heavy_kick",        "crouch_light_punch", "crouch_medium_punch",
-    "crouch_heavy_punch", "crouch_light_kick", "crouch_medium_kick", "crouch_heavy_kick",
-    "jump_attack",        "special",
+    "light_punch",
+    "medium_punch",
+    "heavy_punch",
+    "light_kick",
+    "medium_kick",
+    "heavy_kick",
+    "crouch_light_punch",
+    "crouch_medium_punch",
+    "crouch_heavy_punch",
+    "crouch_light_kick",
+    "crouch_medium_kick",
+    "crouch_heavy_kick",
+    "jump_attack",
+    "special",
+    "throw",
 };
 
 // The table above must stay the same length as the enum. Without this, adding a
