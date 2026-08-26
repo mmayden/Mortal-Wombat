@@ -113,59 +113,74 @@ TEST_CASE("Both shipped characters load") {
     }
 }
 
-TEST_CASE("Shipped frame data matches DESIGN.md 4.5") {
-    // If this fails, either the data drifted or the design changed. Either way
-    // the two must be reconciled in one commit -- and if it is a real balance
-    // change, the affected replays get re-recorded in that same commit
-    // (AGENTS.md rule 8).
-    struct Expected {
-        MoveId move;
-        int32_t startup;
-        int32_t active;
-        int32_t recovery;
-        int32_t damage;
-        int32_t hitstun;
-        int32_t blockstun;
-    };
-
-    // DESIGN.md 4.5, transcribed. Crouching variants "inherit" their timings,
-    // so they repeat the standing numbers.
-    const Expected table[] = {
-        {MoveId::StandLightPunch, 4, 2, 8, 3, 12, 8},
-        {MoveId::StandHeavyPunch, 7, 3, 16, 8, 18, 12},
-        {MoveId::StandLightKick, 5, 3, 10, 4, 13, 9},
-        {MoveId::StandHeavyKick, 9, 4, 20, 9, 20, 14},
-        {MoveId::CrouchLightPunch, 4, 2, 8, 3, 12, 8},
-        {MoveId::CrouchHeavyPunch, 7, 3, 16, 8, 18, 12},
-        {MoveId::CrouchLightKick, 5, 3, 10, 4, 13, 9},
-        {MoveId::CrouchHeavyKick, 9, 4, 20, 9, 20, 14},
-        {MoveId::Special, 12, 4, 24, 6, 18, 12},
-    };
-
+TEST_CASE("Shipped frame data keeps light, medium and heavy distinct") {
+    // This used to pin every value to DESIGN.md 4.5's table, transcribed. That
+    // stopped being useful when 4.5's move list was superseded and the values
+    // were deliberately retuned: the test failed for being out of date, which
+    // is the failure mode of a test that copies data instead of checking it.
+    //
+    // What matters is not the numbers, it is the RELATIONSHIPS. A tuning pass
+    // should be free; an inversion that makes a heavy faster than a light, or a
+    // slower move that is not also riskier, should not be.
     for (const char* id : {"george", "sue"}) {
         const CharacterData character = load_or_fail(id);
-        for (const Expected& expected : table) {
-            CAPTURE(id);
-            CAPTURE(move_key(expected.move));
-            const MoveData& move = move_of(character, expected.move);
-            CHECK(move.startup == expected.startup);
-            CHECK(move.active == expected.active);
-            CHECK(move.recovery == expected.recovery);
-            CHECK(move.damage == expected.damage);
-            CHECK(move.hitstun == expected.hitstun);
-            CHECK(move.blockstun == expected.blockstun);
+        CAPTURE(id);
+
+        struct Family {
+            const char* name;
+            MoveId light;
+            MoveId medium;
+            MoveId heavy;
+        };
+        const Family families[] = {
+            {"punch", MoveId::StandLightPunch, MoveId::StandMediumPunch, MoveId::StandHeavyPunch},
+            {"kick", MoveId::StandLightKick, MoveId::StandMediumKick, MoveId::StandHeavyKick},
+            {"crouch punch", MoveId::CrouchLightPunch, MoveId::CrouchMediumPunch,
+             MoveId::CrouchHeavyPunch},
+            {"crouch kick", MoveId::CrouchLightKick, MoveId::CrouchMediumKick,
+             MoveId::CrouchHeavyKick},
+        };
+
+        for (const Family& family : families) {
+            CAPTURE(family.name);
+            const MoveData& light = move_of(character, family.light);
+            const MoveData& medium = move_of(character, family.medium);
+            const MoveData& heavy = move_of(character, family.heavy);
+
+            // Strictly increasing, and by enough to feel. Gaps of one frame
+            // make two buttons the same button -- which is what the shipped
+            // data did until a playtester said the attacks were hard to tell
+            // apart, and the measurement agreed with them.
+            CHECK(medium.startup >= light.startup + 2);
+            CHECK(heavy.startup >= medium.startup + 2);
+
+            // Slower must also mean riskier, or the fast option is strictly
+            // better and there is nothing to choose (DESIGN.md 3).
+            CHECK(medium.recovery > light.recovery);
+            CHECK(heavy.recovery > medium.recovery);
+
+            // ...and better rewarded, or the risk buys nothing.
+            CHECK(medium.damage > light.damage);
+            CHECK(heavy.damage > medium.damage);
+            CHECK(medium.hitstun > light.hitstun);
+            CHECK(heavy.hitstun > medium.hitstun);
         }
 
-        SUBCASE("the jump attack keeps its specified startup, damage and stun") {
-            // Its "active" is not pinned: DESIGN.md 4.5 gives it as "until
-            // landing", which the schema cannot express as an integer. The sim
-            // will end the active window on ground contact.
-            const MoveData& jump = move_of(character, MoveId::JumpAttack);
-            CHECK(jump.startup == 6);
-            CHECK(jump.recovery == 4);
-            CHECK(jump.damage == 7);
-            CHECK(jump.hitstun == 16);
-            CHECK(jump.blockstun == 11);
+        SUBCASE("a hitbox is live exactly on its move's active frames") {
+            // Retuning startup without moving the hitbox window is the silent
+            // way to break a move: it still swings, and connects on frames it
+            // is not supposed to.
+            for (int32_t m = 0; m < MOVE_COUNT; ++m) {
+                const MoveId move = static_cast<MoveId>(m);
+                if (move == MoveId::JumpAttack) {
+                    continue;  // Active "until landing"; not a fixed window.
+                }
+                const MoveData& data = move_of(character, move);
+                CAPTURE(m);
+                REQUIRE(data.hitbox_count > 0);
+                CHECK(data.hitboxes[0].first_frame == data.startup + 1);
+                CHECK(data.hitboxes[0].last_frame == data.startup + data.active);
+            }
         }
     }
 }

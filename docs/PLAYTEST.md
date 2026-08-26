@@ -76,6 +76,25 @@ if somebody looks, which is the whole reason this section exists.
 
 ---
 
+## 0b. Knockdowns — how to cause one
+
+**Hold down and press heavy kick.** That is the sweep (`S`+`B` for player one),
+and it is one of only two things that knocks an opponent to the floor. The other
+is the throw — light punch and light kick together, `F`+`C`.
+
+Getting hit out of the air also knocks you down.
+
+You will know it worked: the fighter goes flat and wide on the ground, and the
+`F1` readout says `KNOCKDOWN`. If you knock someone down, they cannot be hit
+while they are there — that is deliberate. What you get instead is a free moment
+to position and time an attack for the instant they get up.
+
+**Try holding down while you are the one on the floor.** On a soft knockdown
+that delays your rise, so the attacker's timing is wrong. That guess is the
+whole point of a knockdown.
+
+---
+
 ## 1. Is attacking risky enough?
 
 > **This is the thesis question, asked in a way you can feel.** The whole design

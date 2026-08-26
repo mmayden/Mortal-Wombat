@@ -95,7 +95,11 @@ inline constexpr int32_t STAGE_RIGHT_BOUND = STAGE_WIDTH - STAGE_EDGE_MARGIN;
 // NEEDS A DECISION: both are pure pacing. DESIGN.md 2 specifies that rounds
 // exist and how they are won, but says nothing about their rhythm. 90 and 120
 // frames are 1.5 and 2 seconds.
-inline constexpr int32_t ROUND_START_FREEZE_FRAMES = 90;
+// Cut from 90 after two playtests reported the game feeling slow. The attacks
+// were never the problem -- they are faster than the genre's norm -- but a
+// second and a half of standing still before every round is dead time a player
+// feels directly, and it was always a guess nobody had judged.
+inline constexpr int32_t ROUND_START_FREEZE_FRAMES = 45;
 inline constexpr int32_t ROUND_END_FREEZE_FRAMES = 120;
 
 // Frames between pressing up and leaving the ground.

@@ -212,6 +212,7 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Feel pass 1 | Widened the light/medium/heavy spread from 1-2 frame gaps to 3-4, cut the round-start freeze in half, and made knockdowns visible |
 | Throws | Unblockable, short-ranged, not tech-able. Closes the rock-paper-scissors: attack beats throw, throw beats block, block beats attack |
 | Attack heights | Mid, low and overhead, with the stance required to match. Gives the knockdown loop something to threaten with |
 | Knockdown and wakeup | Soft and hard, with a timing choice on soft. `FighterState::Blocking` is now the only unreachable state |
