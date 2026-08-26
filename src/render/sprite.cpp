@@ -103,8 +103,9 @@ SpriteQuad untextured(float x, float y, float w, float h, Color tint) {
 
 }  // namespace
 
-void PlaceholderManifest::fighter_sprites(const ds::sim::Fighter& fighter, int32_t player_index,
-                                          SpriteList& out) const {
+void PlaceholderManifest::fighter_sprites(const ds::sim::Fighter& fighter,
+                                          const ds::sim::CharacterData& character,
+                                          int32_t player_index, SpriteList& out) const {
     using ds::sim::FighterState;
 
     out.count = 0;
@@ -174,18 +175,73 @@ void PlaceholderManifest::fighter_sprites(const ds::sim::Fighter& fighter, int32
     // never sees a pixel.
     sprite_list_push(out, untextured(-BODY_WIDTH * 0.5f, -height, BODY_WIDTH, height, body));
 
-    // A limb, so an attack is visible as motion rather than only as a colour
-    // shift. Length is fixed and does not consult frame data: this is a
-    // placeholder telling you an attack is happening, and the F1 overlay is
-    // where the real hitbox lives. Anything more here would be inventing
-    // animation the design has not specified.
+    // The limb is the move's own hitbox, drawn.
+    //
+    // It used to be a fixed 26 units for every attack, which meant all six
+    // buttons produced an identical picture -- reported directly as "I don't
+    // know the difference in the inputs or attacks". They differ enormously:
+    // light punch reaches 46 units, heavy kick 77, and a kick's box sits at
+    // knee height where a punch's sits at the shoulder. All of that was already
+    // in the data and none of it was on screen.
+    //
+    // Deriving it here rather than authoring a second set of numbers is the
+    // point. A drawn limb that is allowed to disagree with the hitbox is how
+    // the jump attack stayed invisible: the renderer and the debug overlay both
+    // showed something plausible that the simulation did not agree with.
     if (attacking) {
-        const float facing = static_cast<float>(static_cast<int32_t>(fighter.facing));
-        const float limb_y = is_kick(fighter.move_id) ? -height * 0.35f : -height * 0.72f;
-        const float limb_x = facing > 0.0f ? BODY_WIDTH * 0.5f : -BODY_WIDTH * 0.5f - LIMB_LENGTH;
+        const ds::sim::MoveData& move =
+            ds::sim::move_of(character, static_cast<ds::sim::MoveId>(fighter.move_id));
 
-        sprite_list_push(
-            out, untextured(limb_x, limb_y, LIMB_LENGTH, LIMB_THICKNESS, brighten(body, 30)));
+        // The furthest-reaching box of the move. Multi-hit moves are undecided
+        // (ADR 0018), so for now this is simply the one that defines the reach
+        // a player has to judge.
+        const ds::sim::Box* reach = nullptr;
+        for (int32_t i = 0; i < move.hitbox_count; ++i) {
+            const ds::sim::Box& box = move.hitboxes[i].box;
+            if (ds::sim::box_is_empty(box)) {
+                continue;
+            }
+            if (reach == nullptr || box.x + box.w > reach->x + reach->w) {
+                reach = &box;
+            }
+        }
+
+        if (reach != nullptr) {
+            // Extends through startup and retracts through recovery, so the
+            // wind-up is visible as motion instead of the limb appearing fully
+            // formed. Active frames are the only ones drawn at full extension,
+            // which is exactly when the hitbox is live -- the picture teaches
+            // the timing rather than merely reporting it.
+            const int32_t frame = fighter.move_frame;
+            const int32_t active_from = move.startup + 1;
+            const int32_t active_to = move.startup + move.active;
+
+            float extension = 1.0f;
+            if (frame < active_from && move.startup > 0) {
+                extension =
+                    0.35f + 0.65f * (static_cast<float>(frame) / static_cast<float>(move.startup));
+            } else if (frame > active_to && move.recovery > 0) {
+                const float done =
+                    static_cast<float>(frame - active_to) / static_cast<float>(move.recovery);
+                extension = 1.0f - 0.65f * done;
+            }
+
+            const bool live = frame >= active_from && frame <= active_to;
+
+            const float far_edge = static_cast<float>(reach->x + reach->w) * extension;
+            const float near_edge = BODY_WIDTH * 0.5f;
+            const float limb_length = far_edge - near_edge;
+
+            if (limb_length > 0.0f) {
+                const float facing = static_cast<float>(static_cast<int32_t>(fighter.facing));
+                const float limb_x = facing > 0.0f ? near_edge : -near_edge - limb_length;
+                const float limb_y = static_cast<float>(reach->y);
+                const float limb_h = static_cast<float>(reach->h);
+
+                sprite_list_push(out, untextured(limb_x, limb_y, limb_length, limb_h,
+                                                 brighten(body, live ? 70 : 20)));
+            }
+        }
     }
 
     // A guard plate on the leading edge while guarding, so the defensive stance

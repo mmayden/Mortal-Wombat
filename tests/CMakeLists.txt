@@ -49,11 +49,12 @@ ds_add_test_tier(unit
     unit/test_input_isolation.cpp
     unit/test_jump_attack_reach.cpp
     unit/test_camera.cpp
-    unit/test_reach.cpp)
+    unit/test_reach.cpp
+    unit/test_sprite.cpp)
 
 # The camera is render-layer code, so the unit tier needs it linked explicitly.
 # Everything else in this tier reaches the sim through ds_sim alone.
-target_link_libraries(ds_test_unit PRIVATE ds_render_camera)
+target_link_libraries(ds_test_unit PRIVATE ds_render_camera ds_render_sprite)
 
 # Tier 3 — smoke: boot, run 600 ticks, assert no crash and no runaway state.
 ds_add_test_tier(smoke

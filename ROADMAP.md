@@ -260,6 +260,7 @@ Newest first. Enough to orient; `git log` has the detail.
 
 | | |
 |---|---|
+| Readable attacks | The limb is the move's hitbox now, so all six buttons look different — reported as "I don't know the difference in the attacks" |
 | Frame-data viewer | `ds_framedata_viewer` draws the hitboxes, and `test_reach` asserts every move can connect |
 | Session recorder | `--record` captures a played session as a replay file, so a feel report stops being guesswork |
 | Camera, second fix | Backing away walked you off the left edge; the render layer had no tests at all |
