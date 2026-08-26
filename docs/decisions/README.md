@@ -38,6 +38,7 @@ record of what was believed, and why, is most of the value.
 | 0023 | **The ADR owns the reasoning** once a decision graduates; drawing-board keeps a pointer | [0023](0023-adr-owns-the-reasoning.md) |
 | 0024 | **The game is Divided States** — the Mortal Wombat title, cast and premise are dropped | [0024](0024-divided-states.md) |
 | 0025 | **A built-in bitmap font for the readout**, not Dear ImGui yet | [0025](0025-bitmap-font-not-imgui.md) |
+| 0026 | **Knockdown and wakeup** — soft and hard, with a timing choice on soft | [0026](0026-knockdown-and-wakeup.md) |
 
 ADRs 0001–0013 live in one file because they were decided together, as the
 project's founding stack decision. That file also carries the scope tier, the

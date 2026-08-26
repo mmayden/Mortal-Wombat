@@ -37,6 +37,7 @@ reopen it. This file keeps a pointer and nothing more (ADR 0023).
 | One fighter per side | `DESIGN.md` §2 | ADR 0022 |
 | The thesis — *"was that worth committing to?"* | `DESIGN.md` §3 | ADR 0020 |
 | Just Defend over parry; one commitment release; three meter jobs; a hard combo cap | `DESIGN.md` §4.6 | ADR 0020 |
+| Knockdown and wakeup — soft and hard, timing choice on soft | `DESIGN.md` §4.6 | ADR 0026 |
 | How to borrow from other games at all | — | ADR 0019 |
 | The Mortal Kombat II basis is dropped | — | ADR 0018 |
 
@@ -99,14 +100,14 @@ choice is made and is not reopened by tuning. What is left is arithmetic.
 
 ## Open, in decision order
 
-**Six decisions, none of them directed yet.** From the deep dive's §6, in the
-order that unblocks the most.
+**Five decisions, none of them directed yet.** From the deep dive's §6, in the
+order that unblocks the most. Decision 8 — the knockdown loop, and the biggest
+of them — left this list on 2026-08-26 (ADR 0026).
 
 | # | Decision | Why it is there |
 |---|---|---|
 | 6 | **SOCD scheme for horizontal (neutral vs last-input-wins)** | Vertical is settled and fixed. Horizontal is genuinely contested among leverless players, and last-input-wins would need input history the sim does not currently keep. |
 | 7 | **Attack heights (high / mid / low / overhead) and stance blocking** | Hold-back only pays off with a high/low axis alongside left/right. Follows directly from decision 1. |
-| 8 | **Knockdown → okizeme loop** | The deep dive calls it "the engine; everything else decorates it". Already a v1 definition-of-done line. |
 | 12 | **Movement tiers** | Loved in proportion to how *differentiated* they are, not how many there are. |
 | 13 | **Throws** | Without them, blocking has no downside — hold-back blocking is free and always available. Cut by the old cut list (§4.7), which is void. |
 | 15 | **System count audit** | Count the pairwise interactions a new player must hold in their head. |

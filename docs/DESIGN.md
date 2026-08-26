@@ -288,6 +288,17 @@ gap between its best and second-best use, and keeping that gap honest is
 permanent work, not a launch decision. One developer with no live-service patch
 cadence has to be able to audit it by hand. Which three is open.
 
+**Knockdown is the payoff, and it comes in two grades.** A grounded fighter
+cannot be hit, which is what creates the guessing game that follows. A *soft*
+knockdown lets the defender choose when to rise — quick or delayed — so the
+attacker keeps the advantage but must cover two timings. A *hard* knockdown is
+fixed, and is the reward for landing something harder to land.
+
+The rise itself is invulnerable, so a defender always gets to act. There is no
+dedicated wakeup reversal: buying out of that situation is the commitment
+release's job, priced the same as every other use of it. Rolling is deliberately
+absent for now (ADR 0026).
+
 **The combo cap is hard, not soft.** A game whose whole question is *"was that
 worth committing to?"* cannot answer *"yes, it won the round outright."* Scaling
 that merely discourages length leaves the ceiling where it was. Where the cap
