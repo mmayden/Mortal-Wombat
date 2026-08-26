@@ -172,8 +172,11 @@ TEST_CASE("A hit puts the defender in hitstun for the documented duration") {
             ++stunned_frames;
             REQUIRE(stunned_frames < 100);
         }
+        // Against the loaded value, never a literal. This line used to read
+        // `CHECK(hp.hitstun == 18)` transcribed from DESIGN.md 4.5, so a
+        // deliberate retune failed a test that was checking nothing about
+        // behaviour -- the same copy-the-data failure the frame-data test had.
         CHECK(stunned_frames == hp.hitstun);
-        CHECK(hp.hitstun == 18);  // DESIGN.md 4.5
     }
 }
 

@@ -35,13 +35,13 @@ checkpoint 150 0xB23295B171CE7339
 checkpoint 180 0x219FCC7AA51DBF26
 checkpoint 210 0x814CE22E71DA3864
 checkpoint 240 0xA86EF22CBBD5F52E
-checkpoint 270 0x6F5385D8B5E31B5D
-checkpoint 300 0xE3AE544D38699FFD
+checkpoint 270 0x315E6EDCED39DACA
+checkpoint 300 0x6589F2147FF088DA
 checkpoint 330 0x34877299EF85D021
 checkpoint 360 0xE1E22B9C10DC3045
-checkpoint 390 0x3A39A159B765C764
-checkpoint 420 0x65E309FCFA4693A4
+checkpoint 390 0xDE20580C9518BB47
+checkpoint 420 0xCC58434882076857
 
 # Visible-state hash after the final frame. Excludes RNG position
 # so that a render-side effect drawing a number cannot fail this.
-final 0x6A5071552355F8EE
+final 0xB5901013AAD08E11

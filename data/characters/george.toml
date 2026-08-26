@@ -78,8 +78,8 @@ startup   = 7
 active    = 3
 recovery  = 14
 damage    = 5
-hitstun   = 15
-blockstun = 10
+hitstun   = 20
+blockstun = 13
 
 [[moves.medium_punch.hitboxes]]
 frames = [8, 10]
@@ -94,8 +94,8 @@ startup   = 11
 active    = 3
 recovery  = 20
 damage    = 8
-hitstun   = 18
-blockstun = 12
+hitstun   = 27
+blockstun = 14
 
 [[moves.heavy_punch.hitboxes]]
 frames = [12, 14]
@@ -110,8 +110,8 @@ startup   = 5
 active    = 3
 recovery  = 10
 damage    = 4
-hitstun   = 13
-blockstun = 9
+hitstun   = 15
+blockstun = 10
 
 [[moves.light_kick.hitboxes]]
 frames = [6, 8]
@@ -130,8 +130,8 @@ startup   = 9
 active    = 3
 recovery  = 17
 damage    = 6
-hitstun   = 16
-blockstun = 11
+hitstun   = 23
+blockstun = 15
 
 [[moves.medium_kick.hitboxes]]
 frames = [10, 12]
@@ -146,8 +146,8 @@ startup   = 13
 active    = 4
 recovery  = 24
 damage    = 9
-hitstun   = 20
-blockstun = 14
+hitstun   = 32
+blockstun = 18
 
 [[moves.heavy_kick.hitboxes]]
 frames = [14, 17]
@@ -169,8 +169,8 @@ startup   = 4
 active    = 2
 recovery  = 8
 damage           = 3
-hitstun          = 12
-blockstun        = 8
+hitstun   = 12
+blockstun = 8
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
 [[moves.crouch_light_punch.hitboxes]]
@@ -190,8 +190,8 @@ startup   = 7
 active    = 3
 recovery  = 14
 damage    = 5
-hitstun   = 15
-blockstun = 10
+hitstun   = 20
+blockstun = 13
 
 [[moves.crouch_medium_punch.hitboxes]]
 frames = [8, 10]
@@ -206,8 +206,8 @@ startup   = 11
 active    = 3
 recovery  = 20
 damage           = 8
-hitstun          = 18
-blockstun        = 12
+hitstun   = 27
+blockstun = 14
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
 [[moves.crouch_heavy_punch.hitboxes]]
@@ -223,8 +223,8 @@ startup   = 5
 active    = 3
 recovery  = 10
 damage           = 4
-hitstun          = 13
-blockstun        = 9
+hitstun   = 15
+blockstun = 10
 height    = "low"       # Crouching kicks are lows -- must be blocked crouching.
 hurtbox_override = { x = -18, y = -80, w = 36, h = 80 }
 
@@ -245,8 +245,8 @@ startup   = 9
 active    = 3
 recovery  = 17
 damage    = 6
-hitstun   = 16
-blockstun = 11
+hitstun   = 23
+blockstun = 15
 
 height    = "low"       # Crouching kicks are lows -- must be blocked crouching.
 [[moves.crouch_medium_kick.hitboxes]]
@@ -262,8 +262,8 @@ startup   = 13
 active    = 4
 recovery  = 24
 damage           = 9
-hitstun          = 20
-blockstun        = 14
+hitstun   = 32
+blockstun = 18
 height    = "low"       # The sweep. Low, and a hard knockdown.
 knockdown = "hard"          # A sweep. Hard knockdown -- the convention nearly every 2D fighter shares,
 # and it is slow enough (9 startup, 20 recovery) to be a real commitment.
