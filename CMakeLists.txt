@@ -256,17 +256,31 @@ target_link_libraries(ds_render_camera
     PUBLIC ds_sim
     PRIVATE ds_warnings ds_no_exceptions)
 
+# The sprite manifest is the other SDL-free piece of the render layer: it turns
+# a fighter into a list of coloured quads and never draws anything itself.
+#
+# Split out for the same reason as the camera -- a human reported that all six
+# attack buttons looked identical, and nothing could check whether they did.
+add_library(ds_render_sprite STATIC
+    src/render/sprite.cpp)
+
+target_link_libraries(ds_render_sprite
+    PUBLIC ds_sim
+    PRIVATE ds_warnings ds_no_exceptions)
+
+target_include_directories(ds_render_sprite PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
 target_include_directories(ds_render_camera PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 add_executable(divided_states
     src/main.cpp
     src/platform/platform.cpp
     src/platform/session_recorder.cpp
-    src/render/renderer.cpp
-    src/render/sprite.cpp)
+    src/render/renderer.cpp)
 
 target_link_libraries(divided_states
-    PRIVATE ds_sim ds_data ds_render_camera ds_warnings ds_no_exceptions SDL3::SDL3)
+    PRIVATE ds_sim ds_data ds_render_camera ds_render_sprite ds_warnings ds_no_exceptions
+            SDL3::SDL3)
 
 # WIN32_EXECUTABLE is deliberately OFF: the game logs to stdout and a console
 # is wanted during development. Flip it when there is something to ship.

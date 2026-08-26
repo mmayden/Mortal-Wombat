@@ -15,6 +15,7 @@
 
 #include <cstdint>
 
+#include "sim/framedata.h"
 #include "sim/state.h"
 
 struct SDL_Texture;
@@ -79,7 +80,14 @@ public:
     // `player_index` is passed separately because it is the fighter's stable
     // identity. Anything player-specific -- colour now, character art later --
     // must key off this and never off `facing`, which flips on every cross-up.
-    virtual void fighter_sprites(const ds::sim::Fighter& fighter, int32_t player_index,
+    //
+    // `character` is here so the drawing can be DERIVED from frame data rather
+    // than guessed alongside it. Without it the limb was a fixed 26 units for
+    // every attack, so a light punch and a heavy kick looked identical while
+    // reaching 46 and 77 -- a picture that disagreed with the simulation, which
+    // is the same failure that hid the jump attack bug for weeks.
+    virtual void fighter_sprites(const ds::sim::Fighter& fighter,
+                                 const ds::sim::CharacterData& character, int32_t player_index,
                                  SpriteList& out) const = 0;
 
 protected:
@@ -91,8 +99,24 @@ protected:
 // feel identical to finished sprites while costing nothing to iterate on.
 class PlaceholderManifest final : public SpriteManifest {
 public:
-    void fighter_sprites(const ds::sim::Fighter& fighter, int32_t player_index,
-                         SpriteList& out) const override;
+    void fighter_sprites(const ds::sim::Fighter& fighter, const ds::sim::CharacterData& character,
+                         int32_t player_index, SpriteList& out) const override;
 };
+
+// The placeholder manifest's whole body, as a free function.
+//
+// PlaceholderManifest delegates to this and adds nothing. The split exists so
+// tests can call it without touching the polymorphic type: this library is
+// built -fno-rtti (ADR 0001) so it emits no typeinfo, while the test binary is
+// built with RTTI for doctest, and constructing the class across that boundary
+// leaves an undefined reference to its typeinfo at link time. Green on MSVC,
+// red on GCC and Clang, like the four before it.
+//
+// Testing the function rather than the interface is the better shape anyway --
+// building a sprite list is a pure transformation, and the virtual exists only
+// so real art can replace it later.
+void placeholder_fighter_sprites(const ds::sim::Fighter& fighter,
+                                 const ds::sim::CharacterData& character, int32_t player_index,
+                                 SpriteList& out);
 
 }  // namespace ds::render

@@ -99,7 +99,8 @@ void draw_sprite(SDL_Renderer* renderer, const SpriteQuad& quad, float origin_x,
     SDL_RenderTexture(renderer, quad.texture, &source, &destination);
 }
 
-void draw_fighter(SDL_Renderer* renderer, const SpriteManifest& manifest, const Fighter& previous,
+void draw_fighter(SDL_Renderer* renderer, const SpriteManifest& manifest,
+                  const ds::sim::CharacterData& character, const Fighter& previous,
                   const Fighter& current, int32_t player_index, float alpha, float camera,
                   bool show_debug) {
     // Interpolate position only. State, facing, and everything discrete comes
@@ -109,7 +110,7 @@ void draw_fighter(SDL_Renderer* renderer, const SpriteManifest& manifest, const 
     const float y = lerp(to_float(previous.y), to_float(current.y), alpha);
 
     SpriteList sprites{};
-    manifest.fighter_sprites(current, player_index, sprites);
+    manifest.fighter_sprites(current, character, player_index, sprites);
 
     for (int32_t i = 0; i < sprites.count; ++i) {
         draw_sprite(renderer, sprites.quads[i], x, y);
@@ -258,8 +259,8 @@ void draw_frame(SDL_Renderer* renderer, const SpriteManifest& manifest,
     draw_stage(renderer, camera);
 
     for (int32_t i = 0; i < 2; ++i) {
-        draw_fighter(renderer, manifest, previous.fighters[i], current.fighters[i], i, alpha,
-                     camera, show_debug);
+        draw_fighter(renderer, manifest, data.characters[i], previous.fighters[i],
+                     current.fighters[i], i, alpha, camera, show_debug);
     }
 
     if (show_debug) {
