@@ -40,10 +40,11 @@ InputPair scripted_input(int32_t frame) {
         p1 = input_with(p1, Button::Left);
     }
     if ((frame / 13) % 3 == 0) {
-        p1 = input_with(p1, Button::HighPunch);
+        p1 = input_with(p1, Button::HeavyPunch);
     }
+    // Back for player two is Right -- they face left -- and holding it guards.
     if ((frame / 17) % 2 == 0) {
-        p2 = input_with(p2, Button::Block);
+        p2 = input_with(p2, Button::Right);
     } else {
         p2 = input_with(p2, Button::Left);
     }

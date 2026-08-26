@@ -32,6 +32,19 @@ using ds::sim::InputPair;
 
 constexpr InputFrame NEUTRAL{0u};
 
+// Input is IGNORED during the round-start freeze: advance_frame only acts on
+// player input while round_phase is Fighting, and ROUND_START_FREEZE_FRAMES is
+// 90. A scenario that starts walking on frame 0 has not moved by frame 90.
+//
+// Every script below therefore waits it out. Getting this wrong is silent: the
+// fighters simply never close the distance and every attack whiffs, while the
+// replay still reproduces perfectly.
+inline constexpr int32_t FREEZE_FRAMES = 90;
+
+// Long enough to close from the 200-unit round-start separation to inside the
+// reach of a normal, at 1.2 units per frame.
+inline constexpr int32_t APPROACH_UNTIL = FREEZE_FRAMES + 130;
+
 inline InputPair idle(int32_t) {
     return InputPair{{NEUTRAL, NEUTRAL}};
 }
@@ -58,14 +71,18 @@ inline InputPair walk_into_wall(int32_t) {
 inline InputPair advance_versus_block(int32_t frame) {
     InputFrame p1 = input_with(NEUTRAL, Button::Right);
     if ((frame / 24) % 2 == 0) {
-        p1 = input_with(p1, Button::HighPunch);
+        p1 = input_with(p1, Button::HeavyPunch);
     }
 
-    // Player 2 blocks, and also holds back, to prove the two do not interact.
-    InputFrame p2 = input_with(NEUTRAL, Button::Block);
-    if ((frame / 40) % 3 == 0) {
-        p2 = input_with(p2, Button::Right);
-    }
+    // Player 2 guards once player one has closed, then keeps guarding. Back is
+    // Right for player two, who starts on the right facing left.
+    //
+    // This scenario used to hold block and back separately to prove they did
+    // not interact. They are the same input now, and what it pins down instead
+    // is that a guarding fighter still retreats -- the trade the design asks
+    // for is a direction, not a choice between defending and moving. Guarding
+    // only after the approach is what keeps player one able to reach at all.
+    const InputFrame p2 = frame < APPROACH_UNTIL ? NEUTRAL : input_with(NEUTRAL, Button::Right);
 
     return InputPair{{p1, p2}};
 }
@@ -91,19 +108,6 @@ inline InputPair crouch_cycle(int32_t frame) {
     return InputPair{{p1, p2}};
 }
 
-// Input is IGNORED during the round-start freeze: advance_frame only acts on
-// player input while round_phase is Fighting, and ROUND_START_FREEZE_FRAMES is
-// 90. A scenario that starts walking on frame 0 has not moved by frame 90.
-//
-// Every script below therefore waits it out. Getting this wrong is silent: the
-// fighters simply never close the distance and every attack whiffs, while the
-// replay still reproduces perfectly.
-inline constexpr int32_t FREEZE_FRAMES = 90;
-
-// Long enough to close from the 200-unit round-start separation to inside the
-// reach of a normal, at 1.2 units per frame.
-inline constexpr int32_t APPROACH_UNTIL = FREEZE_FRAMES + 130;
-
 // Player one walks in and throws high punches; player two stands still. Pins
 // down the whole hit chain: startup, active frames, box overlap, damage, and
 // hitstun.
@@ -116,22 +120,38 @@ inline InputPair walk_in_and_punch(int32_t frame) {
     if (frame < APPROACH_UNTIL) {
         p1 = input_with(p1, Button::Right);
     } else if (frame % 40 == 0) {
-        p1 = input_with(p1, Button::HighPunch);
+        p1 = input_with(p1, Button::HeavyPunch);
     }
     return InputPair{{p1, NEUTRAL}};
 }
 
-// The same approach, but player two holds block throughout. Pins down that a
-// blocked hit deals no damage -- the current behaviour, with chip damage
-// undecided -- while still applying blockstun.
+// The same approach, but player two blocks once player one is in range. Pins
+// down that a blocked hit deals no damage -- the current behaviour, with chip
+// damage undecided -- while still applying blockstun.
+//
+// Player two must NOT hold back during the approach, and that is the whole
+// lesson of hold-back blocking: back is also retreat (ADR 0021). Holding it
+// from frame zero made player two walk away at 1.0 units/frame against player
+// one's 1.2, closing the 140-unit gap at 0.2 a frame -- some seven hundred
+// frames, far past the end of this recording. The scenario went silently inert
+// and the "does a block ever happen" assertion in test_replay.cpp caught it.
 inline InputPair attack_into_block(int32_t frame) {
-    InputFrame p1 = NEUTRAL;
-    if (frame < APPROACH_UNTIL) {
-        p1 = input_with(p1, Button::Right);
-    } else if (frame % 30 == 0) {
-        p1 = input_with(p1, Button::LowKick);
+    // Player one keeps walking in for the whole recording, not just the
+    // approach. A guarding player two is retreating at 1.0 units a frame, so a
+    // stationary attacker loses ground every frame they are not moving --
+    // measured, the gap reopened from 44 units to 94 and every kick fell short
+    // of its 65-unit reach. Holding forward wins that race at 1.2 against 1.0.
+    //
+    // Pressing an attack still overrides walking: requested_move is checked
+    // before the walk branch in tick_fighter_state.
+    InputFrame p1 = input_with(NEUTRAL, Button::Right);
+    if (frame >= APPROACH_UNTIL && frame % 30 == 0) {
+        p1 = input_with(p1, Button::LightKick);
     }
-    return InputPair{{p1, input_with(NEUTRAL, Button::Block)}};
+
+    // Back for player two is Right: they start on the right, facing left.
+    const InputFrame p2 = frame < APPROACH_UNTIL ? NEUTRAL : input_with(NEUTRAL, Button::Right);
+    return InputPair{{p1, p2}};
 }
 
 // Both fighters close and mash high punch. Pins down trades -- that a
@@ -144,8 +164,8 @@ inline InputPair mutual_pressure(int32_t frame) {
         p1 = input_with(p1, Button::Right);
         p2 = input_with(p2, Button::Left);
     } else if (frame % 26 == 0) {
-        p1 = input_with(p1, Button::HighPunch);
-        p2 = input_with(p2, Button::HighPunch);
+        p1 = input_with(p1, Button::HeavyPunch);
+        p2 = input_with(p2, Button::HeavyPunch);
     }
     return InputPair{{p1, p2}};
 }
@@ -163,7 +183,7 @@ inline InputPair jump_in_and_attack(int32_t frame) {
     } else if (frame % 70 == 0) {
         p1 = input_with(input_with(p1, Button::Up), Button::Right);
     } else if (frame % 70 == 20) {
-        p1 = input_with(p1, Button::HighPunch);
+        p1 = input_with(p1, Button::HeavyPunch);
     }
     return InputPair{{p1, NEUTRAL}};
 }

@@ -1,6 +1,6 @@
 # Frame Data Schema
 
-> **Schema version:** 1
+> **Schema version:** 2
 > **Status:** contract — binding on both consumers
 > **Consumers:** `src/sim/` (read) and `tools/framedata_editor/` (read + write)
 
@@ -20,6 +20,7 @@ coordination failure is silent.
 | Version | Date | Change |
 |---|---|---|
 | 1 | 2026-08-22 | Initial schema |
+| 2 | 2026-08-26 | Six attack buttons (ADR 0021). Four new required move keys per character — `medium_punch`, `medium_kick` and their crouching variants — and `low_`/`high_` renamed to `light_`/`heavy_` throughout. A v1 file no longer loads. |
 
 ---
 
@@ -54,7 +55,7 @@ ADR 0002 makes that a desync.
 ## Top-level document
 
 ```toml
-schema_version = 1
+schema_version = 2
 
 [character]
 id           = "george"
@@ -89,34 +90,34 @@ a typo would otherwise leave a character silently missing a move.
 
 | Key | Move |
 |---|---|
-| `low_punch` | LP |
-| `high_punch` | HP |
-| `low_kick` | LK |
-| `high_kick` | HK |
-| `crouch_low_punch` | Crouching variant of LP |
-| `crouch_high_punch` | Crouching variant of HP |
-| `crouch_low_kick` | Crouching variant of LK |
-| `crouch_high_kick` | Crouching variant of HK |
+| `light_punch` | LP |
+| `medium_punch` | MP |
+| `heavy_punch` | HP |
+| `light_kick` | LK |
+| `medium_kick` | MK |
+| `heavy_kick` | HK |
+| `crouch_light_punch` | Crouching LP |
+| `crouch_medium_punch` | Crouching MP |
+| `crouch_heavy_punch` | Crouching HP |
+| `crouch_light_kick` | Crouching LK |
+| `crouch_medium_kick` | Crouching MK |
+| `crouch_heavy_kick` | Crouching HK |
 | `jump_attack` | Jump attack |
 | `special` | Special |
 
-**All ten are required.** A file missing one fails to load.
+**All fourteen are required.** A file missing one fails to load.
 
-> **This move set is out of date with the design.** `DESIGN.md` §4.1 and
-> ADR 0021 specify six attack buttons — light, medium and heavy in punch and
-> kick — so `medium_punch`, `medium_kick` and their crouching variants are
-> missing here and in both character files. Adding them is a **schema change**:
-> new required keys, so the version below gets bumped and every character file
-> updated in the same commit.
->
-> It has not been done yet because the hitbox geometry has to be *seen* to be
-> reviewed, and `ROADMAP.md` sequences `tools/framedata_editor/` ahead of it.
->
-> The older "twelve or ten moves?" ambiguity is gone: §4.5 is superseded, and
-> the count now follows from the button set rather than from prose.
+The names are **light / medium / heavy**, not low / mid / high. Attack *height*
+is a separate axis and is still undecided (`drawing-board/RULESET.md` decision
+7); these keys were `low_punch` and `high_punch` until the sixth button landed,
+at which point they would have read as "a punch that hits low".
+
+The count is not asserted anywhere in prose. It falls out of the button set —
+six buttons times two stances, plus the two that are neither — which is what
+dissolved the old "twelve or ten moves?" question rather than answering it.
 
 ```toml
-[moves.high_punch]
+[moves.heavy_punch]
 input       = "HP"
 startup     = 7                  # frames before the first active frame
 active      = 3                  # frames the hitbox is live
@@ -126,7 +127,7 @@ hitstun     = 18                 # frames the opponent is stunned on hit
 blockstun   = 12                 # frames the opponent is stunned on block
 cancel_into = []                 # reserved: the combo system is undecided
 
-[[moves.high_punch.hitboxes]]
+[[moves.heavy_punch.hitboxes]]
 frames = [8, 10]                 # inclusive frame range, 1-based within the move
 x = 20
 y = -90

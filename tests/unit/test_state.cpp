@@ -50,7 +50,7 @@ TEST_CASE("GameState has no implicit padding") {
     // The desync test hashes this struct byte by byte across three platforms.
     // Padding bytes are uninitialized, so any implicit padding would differ
     // between machines and report a desync where behavior actually matched.
-    CHECK(sizeof(Fighter) == 14 * sizeof(int32_t));
+    CHECK(sizeof(Fighter) == 15 * sizeof(int32_t));
     CHECK(sizeof(Projectile) == 8 * sizeof(int32_t));
     CHECK(sizeof(GameState) == 2 * sizeof(Fighter) + MAX_PROJECTILES * sizeof(Projectile) +
                                    8 * sizeof(int32_t) + sizeof(RngState));
@@ -167,13 +167,17 @@ TEST_CASE("Block is a button, not hold-back") {
     init_state(state, 1u);
     skip_to_fighting(state);
 
+    // Holding back guards AND retreats, which is the whole trade hold-back
+    // blocking makes (ADR 0021). This used to assert the opposite -- that
+    // block was a button and pressing back with it kept you still -- and the
+    // inversion is the behaviour change, not a broken test.
     const Fixed before = state.fighters[0].x;
-    const InputFrame back_and_block = input_with(held(Button::Left), Button::Block);
-    advance_frame(state, ds::test::shipped_match_data(), pair_with(back_and_block, NEUTRAL),
+    advance_frame(state, ds::test::shipped_match_data(), pair_with(held(Button::Left), NEUTRAL),
                   NO_INPUT);
 
-    CHECK(state.fighters[0].state == FighterState::Blocking);
-    CHECK(state.fighters[0].x == before);
+    CHECK(state.fighters[0].state == FighterState::WalkBackward);
+    CHECK(state.fighters[0].guarding != 0);
+    CHECK(state.fighters[0].x < before);
 }
 
 TEST_CASE("Fighters always face each other") {

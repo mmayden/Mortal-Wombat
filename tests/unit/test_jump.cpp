@@ -219,12 +219,12 @@ TEST_CASE("An attack in the air produces the jump attack") {
     GameState state = fighting_state();
     takeoff(state, held(Button::Up));
 
-    advance_frame(state, data(), pair_with(held(Button::HighPunch), NEUTRAL), NO_INPUT);
+    advance_frame(state, data(), pair_with(held(Button::HeavyPunch), NEUTRAL), NO_INPUT);
     CHECK(state.fighters[0].move_id == static_cast<int32_t>(MoveId::JumpAttack));
 
     SUBCASE("and only one, however much the player mashes") {
         const int32_t first_frame = state.fighters[0].move_frame;
-        advance_frame(state, data(), pair_with(held(Button::LowKick), NEUTRAL), NO_INPUT);
+        advance_frame(state, data(), pair_with(held(Button::LightKick), NEUTRAL), NO_INPUT);
         CHECK(state.fighters[0].move_id == static_cast<int32_t>(MoveId::JumpAttack));
         CHECK(state.fighters[0].move_frame == first_frame + 1);
     }
@@ -235,7 +235,7 @@ TEST_CASE("The jump attack ends on landing regardless of its frame count") {
     // schema cannot express as an integer -- so the rule lives in the sim.
     GameState state = fighting_state();
     takeoff(state, held(Button::Up));
-    advance_frame(state, data(), pair_with(held(Button::HighPunch), NEUTRAL), NO_INPUT);
+    advance_frame(state, data(), pair_with(held(Button::HeavyPunch), NEUTRAL), NO_INPUT);
     REQUIRE(state.fighters[0].move_id == static_cast<int32_t>(MoveId::JumpAttack));
 
     while (state.fighters[0].state == FighterState::Airborne) {
@@ -260,7 +260,7 @@ TEST_CASE("Landing recovery blocks action for its documented duration") {
     int32_t recovering = 0;
     while (state.fighters[0].state == FighterState::Landing) {
         // Mashing punch during recovery must produce nothing.
-        advance_frame(state, data(), pair_with(held(Button::HighPunch), NEUTRAL), NO_INPUT);
+        advance_frame(state, data(), pair_with(held(Button::HeavyPunch), NEUTRAL), NO_INPUT);
         CHECK(state.fighters[0].state != FighterState::Attack);
         ++recovering;
         REQUIRE(recovering < 60);
@@ -276,7 +276,7 @@ TEST_CASE("Jumping is deterministic") {
             const bool jump = (i % 60) == 0;
             const bool attack = (i % 60) == 20;
             const InputFrame p1 = jump     ? input_with(held(Button::Up), Button::Right)
-                                  : attack ? held(Button::HighPunch)
+                                  : attack ? held(Button::HeavyPunch)
                                            : NEUTRAL;
             advance_frame(state, data(), pair_with(p1, NEUTRAL), NO_INPUT);
         }

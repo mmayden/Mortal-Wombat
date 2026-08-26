@@ -62,14 +62,14 @@ LoadResult load_text(const std::string& body, std::string& error) {
 // thing in it, so a failure names the rule rather than the file.
 std::string valid_probe(const std::string& moves_override = "") {
     const std::string moves = moves_override.empty() ? R"(
-[moves.low_punch]
+[moves.light_punch]
 startup = 4
 active = 2
 recovery = 8
 damage = 3
 hitstun = 12
 blockstun = 8
-[[moves.low_punch.hitboxes]]
+[[moves.light_punch.hitboxes]]
 frames = [5, 6]
 x = 16
 y = -110
@@ -79,7 +79,7 @@ h = 20
                                                      : moves_override;
 
     return std::string(R"(
-schema_version = 1
+schema_version = 2
 [character]
 id = "__probe"
 display_name = "Probe"
@@ -96,7 +96,7 @@ pushbox           = { x = -14, y = -130, w = 28, h = 130 }
 )") + moves;
 }
 
-// The probe file defines only low_punch, so it always trips the missing-move
+// The probe file defines only light_punch, so it always trips the missing-move
 // rule. Tests that target a different rule assert on the message instead of the
 // status, which is why the loader's errors name their rule.
 bool mentions(const std::string& error, const char* fragment) {
@@ -131,10 +131,14 @@ TEST_CASE("Shipped frame data matches DESIGN.md 4.5") {
     // DESIGN.md 4.5, transcribed. Crouching variants "inherit" their timings,
     // so they repeat the standing numbers.
     const Expected table[] = {
-        {MoveId::StandLowPunch, 4, 2, 8, 3, 12, 8},  {MoveId::StandHighPunch, 7, 3, 16, 8, 18, 12},
-        {MoveId::StandLowKick, 5, 3, 10, 4, 13, 9},  {MoveId::StandHighKick, 9, 4, 20, 9, 20, 14},
-        {MoveId::CrouchLowPunch, 4, 2, 8, 3, 12, 8}, {MoveId::CrouchHighPunch, 7, 3, 16, 8, 18, 12},
-        {MoveId::CrouchLowKick, 5, 3, 10, 4, 13, 9}, {MoveId::CrouchHighKick, 9, 4, 20, 9, 20, 14},
+        {MoveId::StandLightPunch, 4, 2, 8, 3, 12, 8},
+        {MoveId::StandHeavyPunch, 7, 3, 16, 8, 18, 12},
+        {MoveId::StandLightKick, 5, 3, 10, 4, 13, 9},
+        {MoveId::StandHeavyKick, 9, 4, 20, 9, 20, 14},
+        {MoveId::CrouchLightPunch, 4, 2, 8, 3, 12, 8},
+        {MoveId::CrouchHeavyPunch, 7, 3, 16, 8, 18, 12},
+        {MoveId::CrouchLightKick, 5, 3, 10, 4, 13, 9},
+        {MoveId::CrouchHeavyKick, 9, 4, 20, 9, 20, 14},
         {MoveId::Special, 12, 4, 24, 6, 18, 12},
     };
 
@@ -262,14 +266,14 @@ TEST_CASE("Validation rejects a float") {
     // between two machines (ADR 0002).
     std::string error;
     const LoadResult result = load_text(valid_probe(R"(
-[moves.low_punch]
+[moves.light_punch]
 startup = 4.0
 active = 2
 recovery = 8
 damage = 3
 hitstun = 12
 blockstun = 8
-[[moves.low_punch.hitboxes]]
+[[moves.light_punch.hitboxes]]
 frames = [5, 6]
 x = 16
 y = -110
@@ -286,7 +290,7 @@ h = 20
 TEST_CASE("Validation rejects a wrong schema version") {
     std::string error;
     std::string body = valid_probe();
-    body.replace(body.find("schema_version = 1"), 18, "schema_version = 99");
+    body.replace(body.find("schema_version = 2"), 18, "schema_version = 99");
 
     const LoadResult result = load_text(body, error);
     CHECK(result == LoadResult::BadSchemaVersion);
@@ -331,7 +335,7 @@ h = 20
 TEST_CASE("Validation rejects a move with no hitbox") {
     std::string error;
     const LoadResult result = load_text(valid_probe(R"(
-[moves.low_punch]
+[moves.light_punch]
 startup = 4
 active = 2
 recovery = 8
@@ -348,14 +352,14 @@ blockstun = 8
 TEST_CASE("Validation rejects a hitbox outside the active window") {
     std::string error;
     const LoadResult result = load_text(valid_probe(R"(
-[moves.low_punch]
+[moves.light_punch]
 startup = 4
 active = 2
 recovery = 8
 damage = 3
 hitstun = 12
 blockstun = 8
-[[moves.low_punch.hitboxes]]
+[[moves.light_punch.hitboxes]]
 frames = [9, 11]
 x = 16
 y = -110
@@ -372,14 +376,14 @@ h = 20
 TEST_CASE("Validation rejects a zero-extent box") {
     std::string error;
     const LoadResult result = load_text(valid_probe(R"(
-[moves.low_punch]
+[moves.light_punch]
 startup = 4
 active = 2
 recovery = 8
 damage = 3
 hitstun = 12
 blockstun = 8
-[[moves.low_punch.hitboxes]]
+[[moves.light_punch.hitboxes]]
 frames = [5, 6]
 x = 16
 y = -110
@@ -397,7 +401,7 @@ TEST_CASE("Validation rejects a non-empty cancel_into") {
     // depending on behaviour that has not been agreed.
     std::string error;
     const LoadResult result = load_text(valid_probe(R"(
-[moves.low_punch]
+[moves.light_punch]
 startup = 4
 active = 2
 recovery = 8
@@ -405,7 +409,7 @@ damage = 3
 hitstun = 12
 blockstun = 8
 cancel_into = ["special"]
-[[moves.low_punch.hitboxes]]
+[[moves.light_punch.hitboxes]]
 frames = [5, 6]
 x = 16
 y = -110
@@ -419,7 +423,7 @@ h = 20
 }
 
 TEST_CASE("Validation reports a missing move") {
-    // The probe defines only low_punch, so a file that is otherwise perfectly
+    // The probe defines only light_punch, so a file that is otherwise perfectly
     // valid still fails -- which is the intended behaviour. A character missing
     // a move the sim can reference is not a partial character, it is a broken
     // one.

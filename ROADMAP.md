@@ -42,7 +42,7 @@ the status.** Numbering matches that list.
 
 | | Status |
 |---|---|
-| Two characters with the full v1 moveset | **9 of ≈14** — the special is unimplemented, and medium punch and medium kick do not exist yet (ADR 0021) |
+| Two characters with the full v1 moveset | **13 of 14** — all six buttons standing and crouching, plus the jump attack. The special exists as data but has no input to trigger it |
 | Block, hitstun, blockstun, knockdown, wakeup all correct | **partial** — knockdown and wakeup are unbuilt |
 | Best-of-three rounds with timer and win conditions | **done** |
 | Local versus on two gamepads | **done** — two real pads, one per player, played 2026-08-24. Button-to-action mapping still unverified (`--input-test`, PLAYTEST §0) |
@@ -94,9 +94,9 @@ implemented:
 
 | Decided | Built today |
 |---|---|
-| Six attack buttons | Four, plus a block button |
-| Hold back to block | Block is a button |
-| Two control schemes | One |
+| Six attack buttons | **done** |
+| Hold back to block | **done** |
+| Two control schemes | One — Classic only; Modern needs input history |
 | Input history in `GameState` | Only the current and previous frame |
 | Just Defend, one commitment release, three meter jobs, hard combo cap | None of it |
 

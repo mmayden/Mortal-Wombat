@@ -115,7 +115,7 @@ TEST_CASE("A punch connects and deals its documented damage") {
     GameState state = fighting_state();
     const int32_t before = state.fighters[1].health;
 
-    press(state, Button::HighPunch, 0);
+    press(state, Button::HeavyPunch, 0);
     REQUIRE(state.fighters[0].state == FighterState::Attack);
 
     // High punch has 7 frames of startup, so it cannot have hit yet.
@@ -125,7 +125,7 @@ TEST_CASE("A punch connects and deals its documented damage") {
         advance_frame(state, data(), NO_INPUT, NO_INPUT);
     }
 
-    const MoveData& hp = move_of(data().characters[0], MoveId::StandHighPunch);
+    const MoveData& hp = move_of(data().characters[0], MoveId::StandHeavyPunch);
     CHECK(state.fighters[1].health == before - hp.damage);
     CHECK(hp.damage == 8);  // DESIGN.md 4.5
 }
@@ -137,25 +137,25 @@ TEST_CASE("A hit lands exactly once, not once per active frame") {
     GameState state = fighting_state();
     const int32_t before = state.fighters[1].health;
 
-    press(state, Button::HighPunch, 0);
+    press(state, Button::HeavyPunch, 0);
     for (int32_t i = 0; i < 30; ++i) {
         advance_frame(state, data(), NO_INPUT, NO_INPUT);
     }
 
-    const MoveData& hp = move_of(data().characters[0], MoveId::StandHighPunch);
+    const MoveData& hp = move_of(data().characters[0], MoveId::StandHeavyPunch);
     CHECK(state.fighters[1].health == before - hp.damage);
 }
 
 TEST_CASE("A hit puts the defender in hitstun for the documented duration") {
     GameState state = fighting_state();
 
-    press(state, Button::HighPunch, 0);
+    press(state, Button::HeavyPunch, 0);
     while (state.fighters[1].hitstun_remaining == 0) {
         advance_frame(state, data(), NO_INPUT, NO_INPUT);
         REQUIRE(state.frame < 200);  // guard against never connecting
     }
 
-    const MoveData& hp = move_of(data().characters[0], MoveId::StandHighPunch);
+    const MoveData& hp = move_of(data().characters[0], MoveId::StandHeavyPunch);
     CHECK(state.fighters[1].state == FighterState::Hitstun);
 
     // One less than the move's hitstun, because the frame a hit lands is the
@@ -167,7 +167,7 @@ TEST_CASE("A hit puts the defender in hitstun for the documented duration") {
         int32_t stunned_frames = 1;  // the frame the hit landed
         while (state.fighters[1].hitstun_remaining > 0) {
             // Player two mashes punch throughout; none of it should come out.
-            advance_frame(state, data(), pair_with(NEUTRAL, held(Button::HighPunch)), NO_INPUT);
+            advance_frame(state, data(), pair_with(NEUTRAL, held(Button::HeavyPunch)), NO_INPUT);
             CHECK(state.fighters[1].state != FighterState::Attack);
             ++stunned_frames;
             REQUIRE(stunned_frames < 100);
@@ -183,16 +183,17 @@ TEST_CASE("Blocking prevents damage but still costs the defender their turn") {
     GameState state = fighting_state();
     const int32_t before = state.fighters[1].health;
 
-    // Player two holds block from the outset; player one attacks into it.
-    InputPair attack_into_block = pair_with(held(Button::HighPunch), held(Button::Block));
+    // Player two holds BACK from the outset, which is how blocking works now
+    // (ADR 0021). Player two faces left, so back is Right.
+    InputPair attack_into_block = pair_with(held(Button::HeavyPunch), held(Button::Right));
     advance_frame(state, data(), attack_into_block, NO_INPUT);
 
-    const InputPair keep_blocking = pair_with(NEUTRAL, held(Button::Block));
+    const InputPair keep_blocking = pair_with(NEUTRAL, held(Button::Right));
     for (int32_t i = 0; i < 12; ++i) {
         advance_frame(state, data(), keep_blocking, keep_blocking);
     }
 
-    const MoveData& hp = move_of(data().characters[0], MoveId::StandHighPunch);
+    const MoveData& hp = move_of(data().characters[0], MoveId::StandHeavyPunch);
     CHECK(state.fighters[1].health == before);
     CHECK(state.fighters[1].blockstun_remaining > 0);
     CHECK(state.fighters[1].blockstun_remaining <= hp.blockstun);
@@ -217,7 +218,7 @@ TEST_CASE("Simultaneous hits both land") {
     const int32_t p1_before = state.fighters[0].health;
     const int32_t p2_before = state.fighters[1].health;
 
-    const InputPair both_punch = pair_with(held(Button::HighPunch), held(Button::HighPunch));
+    const InputPair both_punch = pair_with(held(Button::HeavyPunch), held(Button::HeavyPunch));
     advance_frame(state, data(), both_punch, NO_INPUT);
 
     for (int32_t i = 0; i < 12; ++i) {
@@ -232,7 +233,7 @@ TEST_CASE("A move whiffs when the opponent is out of range") {
     GameState state = fighting_state(400);
     const int32_t before = state.fighters[1].health;
 
-    press(state, Button::HighPunch, 0);
+    press(state, Button::HeavyPunch, 0);
     for (int32_t i = 0; i < 30; ++i) {
         advance_frame(state, data(), NO_INPUT, NO_INPUT);
     }
@@ -245,16 +246,16 @@ TEST_CASE("An attack runs to completion before another can start") {
     // Attacks cannot currently be cancelled; a combo system is undecided.
     GameState state = fighting_state(400);
 
-    press(state, Button::HighKick, 0);
-    REQUIRE(state.fighters[0].move_id == static_cast<int32_t>(MoveId::StandHighKick));
+    press(state, Button::HeavyKick, 0);
+    REQUIRE(state.fighters[0].move_id == static_cast<int32_t>(MoveId::StandHeavyKick));
 
-    const MoveData& hk = move_of(data().characters[0], MoveId::StandHighKick);
+    const MoveData& hk = move_of(data().characters[0], MoveId::StandHeavyKick);
     const int32_t total = move_total_frames(hk);
 
     for (int32_t i = 1; i < total; ++i) {
         // Mashing low punch mid-kick must not interrupt it.
-        advance_frame(state, data(), pair_with(held(Button::LowPunch), NEUTRAL), NO_INPUT);
-        CHECK(state.fighters[0].move_id == static_cast<int32_t>(MoveId::StandHighKick));
+        advance_frame(state, data(), pair_with(held(Button::LightPunch), NEUTRAL), NO_INPUT);
+        CHECK(state.fighters[0].move_id == static_cast<int32_t>(MoveId::StandHeavyKick));
     }
 
     advance_frame(state, data(), NO_INPUT, NO_INPUT);
@@ -266,11 +267,11 @@ TEST_CASE("Holding a button produces one attack, not one per frame") {
     // rather than storing them so a rollback recomputes them correctly.
     GameState state = fighting_state(400);
 
-    const InputPair holding = pair_with(held(Button::LowPunch), NEUTRAL);
+    const InputPair holding = pair_with(held(Button::LightPunch), NEUTRAL);
     advance_frame(state, data(), holding, NO_INPUT);
     REQUIRE(state.fighters[0].state == FighterState::Attack);
 
-    const MoveData& lp = move_of(data().characters[0], MoveId::StandLowPunch);
+    const MoveData& lp = move_of(data().characters[0], MoveId::StandLightPunch);
     const int32_t total = move_total_frames(lp);
 
     for (int32_t i = 0; i < total; ++i) {
@@ -285,9 +286,9 @@ TEST_CASE("Crouching produces the crouching variant") {
     GameState state = fighting_state(400);
 
     advance_frame(state, data(),
-                  pair_with(input_with(held(Button::Down), Button::LowKick), NEUTRAL), NO_INPUT);
+                  pair_with(input_with(held(Button::Down), Button::LightKick), NEUTRAL), NO_INPUT);
 
-    CHECK(state.fighters[0].move_id == static_cast<int32_t>(MoveId::CrouchLowKick));
+    CHECK(state.fighters[0].move_id == static_cast<int32_t>(MoveId::CrouchLightKick));
 }
 
 TEST_CASE("Being hit interrupts the defender's move") {
@@ -297,10 +298,10 @@ TEST_CASE("Being hit interrupts the defender's move") {
 
     // Player two starts a slow high kick; player one interrupts with a fast
     // low punch.
-    advance_frame(state, data(), pair_with(NEUTRAL, held(Button::HighKick)), NO_INPUT);
+    advance_frame(state, data(), pair_with(NEUTRAL, held(Button::HeavyKick)), NO_INPUT);
     REQUIRE(state.fighters[1].state == FighterState::Attack);
 
-    advance_frame(state, data(), pair_with(held(Button::LowPunch), NEUTRAL), NO_INPUT);
+    advance_frame(state, data(), pair_with(held(Button::LightPunch), NEUTRAL), NO_INPUT);
     for (int32_t i = 0; i < 8; ++i) {
         advance_frame(state, data(), NO_INPUT, NO_INPUT);
     }
@@ -341,7 +342,7 @@ TEST_CASE("Damage cannot drive health below zero") {
     GameState state = fighting_state();
     state.fighters[1].health = 1;
 
-    press(state, Button::HighPunch, 0);
+    press(state, Button::HeavyPunch, 0);
     for (int32_t i = 0; i < 12; ++i) {
         advance_frame(state, data(), NO_INPUT, NO_INPUT);
     }
@@ -355,7 +356,7 @@ TEST_CASE("A KO from a real hit ends the round") {
     GameState state = fighting_state();
     state.fighters[1].health = 1;
 
-    press(state, Button::HighPunch, 0);
+    press(state, Button::HeavyPunch, 0);
     for (int32_t i = 0; i < 20; ++i) {
         advance_frame(state, data(), NO_INPUT, NO_INPUT);
     }
@@ -371,7 +372,7 @@ TEST_CASE("hit_confirm_frame is set on the hit frame and cleared after") {
     // re-simulation (ARCHITECTURE.md 1).
     GameState state = fighting_state();
 
-    press(state, Button::HighPunch, 0);
+    press(state, Button::HeavyPunch, 0);
     while (state.fighters[0].hit_confirm_frame < 0) {
         advance_frame(state, data(), NO_INPUT, NO_INPUT);
         REQUIRE(state.frame < 200);
@@ -391,8 +392,9 @@ TEST_CASE("Combat is deterministic from the same inputs") {
         for (int32_t i = 0; i < 120; ++i) {
             const bool punch = (i % 17) == 0;
             const bool block = (i % 23) == 0;
-            const InputPair input = pair_with(punch ? held(Button::HighPunch) : NEUTRAL,
-                                              block ? held(Button::Block) : held(Button::LowKick));
+            const InputPair input =
+                pair_with(punch ? held(Button::HeavyPunch) : NEUTRAL,
+                          block ? held(Button::Right) : held(Button::LightKick));
             advance_frame(state, data(), input, input);
         }
         return state;

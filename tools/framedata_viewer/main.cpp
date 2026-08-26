@@ -65,19 +65,28 @@ constexpr SDL_Color COL_GOOD{110, 210, 130, 255};
 constexpr SDL_Color COL_BAD{240, 110, 110, 255};
 
 const char* move_name(MoveId move) {
+    // No default case, deliberately. MSVC /W4 and GCC -Wswitch both warn on an
+    // unhandled enumerator, and both are errors here -- so adding a MoveId
+    // fails the build until it is named. The medium buttons shipped as
+    // "UNKNOWN" in this very function because a default silently absorbed them.
     switch (move) {
-        case MoveId::StandLowPunch: return "STAND LP";
-        case MoveId::StandHighPunch: return "STAND HP";
-        case MoveId::StandLowKick: return "STAND LK";
-        case MoveId::StandHighKick: return "STAND HK";
-        case MoveId::CrouchLowPunch: return "CROUCH LP";
-        case MoveId::CrouchHighPunch: return "CROUCH HP";
-        case MoveId::CrouchLowKick: return "CROUCH LK";
-        case MoveId::CrouchHighKick: return "CROUCH HK";
+        case MoveId::StandLightPunch: return "STAND LP";
+        case MoveId::StandMediumPunch: return "STAND MP";
+        case MoveId::StandHeavyPunch: return "STAND HP";
+        case MoveId::StandLightKick: return "STAND LK";
+        case MoveId::StandMediumKick: return "STAND MK";
+        case MoveId::StandHeavyKick: return "STAND HK";
+        case MoveId::CrouchLightPunch: return "CROUCH LP";
+        case MoveId::CrouchMediumPunch: return "CROUCH MP";
+        case MoveId::CrouchHeavyPunch: return "CROUCH HP";
+        case MoveId::CrouchLightKick: return "CROUCH LK";
+        case MoveId::CrouchMediumKick: return "CROUCH MK";
+        case MoveId::CrouchHeavyKick: return "CROUCH HK";
         case MoveId::JumpAttack: return "JUMP ATTACK";
         case MoveId::Special: return "SPECIAL";
-        default: return "UNKNOWN";
+        case MoveId::Count: break;
     }
+    return "INVALID";
 }
 
 // Which third of the move a frame falls in. This is the vocabulary in
@@ -173,7 +182,7 @@ void draw_frame(SDL_Renderer* renderer, const MatchData& data, const View& view)
     defending.x = Fixed::from_int(view.gap);
     defending.y = Fixed::from_int(GROUND_Y);
 
-    const bool crouching_attack = move >= MoveId::CrouchLowPunch && move <= MoveId::CrouchHighKick;
+    const bool crouching_attack = move >= MoveId::CrouchLightPunch && move <= MoveId::CrouchHeavyKick;
     const Box& attacker_hurt =
         crouching_attack ? attacker.crouching_hurtbox : attacker.standing_hurtbox;
     const Box& defender_hurt =
@@ -313,8 +322,8 @@ int main(int argc, char** argv) {
     // reading its source proves nothing about what appears on screen.
     if (screenshot != nullptr) {
         view.playing = false;
-        view.move_index = static_cast<int32_t>(MoveId::StandHighKick);
-        view.frame = move_of(data.characters[0], MoveId::StandHighKick).startup + 1;
+        view.move_index = static_cast<int32_t>(MoveId::StandMediumKick);
+        view.frame = move_of(data.characters[0], MoveId::StandMediumKick).startup + 1;
         view.gap = 70;
 
         draw_frame(renderer, data, view);

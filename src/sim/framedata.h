@@ -20,32 +20,31 @@
 
 namespace ds::sim {
 
-// OUT OF DATE WITH THE DESIGN, deliberately. This enumerates the four-attack
-// scheme: four standing normals, four crouching variants, a jump attack, and
-// one special.
+// Fourteen moves: six standing normals, six crouching variants, a jump attack,
+// and one special. DESIGN.md 4.1 and ADR 0021.
 //
-// DESIGN.md 4.1 and ADR 0021 specify SIX attack buttons -- light, medium and
-// heavy in punch and kick -- so medium punch and medium kick are missing here,
-// in docs/framedata_schema.md, and in both character TOMLs. Roughly eight new
-// move definitions, each needing hitbox geometry.
+// The count is not asserted anywhere in prose -- it falls out of the button set,
+// which is what dissolved the old "twelve or ten moves?" discrepancy rather than
+// answering it. Six buttons times two stances, plus the two that are neither.
 //
-// It is not fixed here because it is not an implementation detail: the geometry
-// has to be seen to be reviewed. The jump attack shipped with its hitbox at
-// standing-punch height and could not touch anyone from any range at any
-// timing, because the numbers are plausible in a text file. ROADMAP.md
-// therefore sequences tools/framedata_editor/ ahead of authoring these.
-//
-// The old "twelve or ten moves?" discrepancy in DESIGN.md 4.5 is moot -- that
-// section is superseded, and the count now follows from the button set.
+// Order is load-bearing in one place: tests and tools iterate 0..Count and the
+// TOML keys map by name, so inserting a move in the middle is a data migration,
+// not a rename. It is also the priority order for a simultaneous press
+// (sim.cpp), where lighter wins because it is the one a player can react out
+// of.
 enum class MoveId : int32_t {
-    StandLowPunch = 0,
-    StandHighPunch,
-    StandLowKick,
-    StandHighKick,
-    CrouchLowPunch,
-    CrouchHighPunch,
-    CrouchLowKick,
-    CrouchHighKick,
+    StandLightPunch = 0,
+    StandMediumPunch,
+    StandHeavyPunch,
+    StandLightKick,
+    StandMediumKick,
+    StandHeavyKick,
+    CrouchLightPunch,
+    CrouchMediumPunch,
+    CrouchHeavyPunch,
+    CrouchLightKick,
+    CrouchMediumKick,
+    CrouchHeavyKick,
     JumpAttack,
     Special,
     Count,

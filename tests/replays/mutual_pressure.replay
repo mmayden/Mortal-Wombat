@@ -15,43 +15,43 @@ frames 420
 # input <frame> <p1_buttons> <p2_buttons> -- holds until the next line
 input 0 0x0008 0x0004
 input 160 0x0000 0x0000
-input 182 0x0020 0x0020
+input 182 0x0040 0x0040
 input 183 0x0000 0x0000
-input 208 0x0020 0x0020
+input 208 0x0040 0x0040
 input 209 0x0000 0x0000
-input 234 0x0020 0x0020
+input 234 0x0040 0x0040
 input 235 0x0000 0x0000
-input 260 0x0020 0x0020
+input 260 0x0040 0x0040
 input 261 0x0000 0x0000
-input 286 0x0020 0x0020
+input 286 0x0040 0x0040
 input 287 0x0000 0x0000
-input 312 0x0020 0x0020
+input 312 0x0040 0x0040
 input 313 0x0000 0x0000
-input 338 0x0020 0x0020
+input 338 0x0040 0x0040
 input 339 0x0000 0x0000
-input 364 0x0020 0x0020
+input 364 0x0040 0x0040
 input 365 0x0000 0x0000
-input 390 0x0020 0x0020
+input 390 0x0040 0x0040
 input 391 0x0000 0x0000
-input 416 0x0020 0x0020
+input 416 0x0040 0x0040
 input 417 0x0000 0x0000
 
 # Full state hash at intervals, so a divergence reports its first frame.
-checkpoint 30 0xEB5F882BBAA9D521
-checkpoint 60 0x4EC0CE774C7E28F5
-checkpoint 90 0xDB8A80A2840E74A8
-checkpoint 120 0xA58581AA1401B4F0
-checkpoint 150 0x9C38E8A023523151
-checkpoint 180 0x4F5042802F261014
-checkpoint 210 0xA1D93D0070346DB8
-checkpoint 240 0x8175E98E7D261590
-checkpoint 270 0x2477BBFF782058AB
-checkpoint 300 0x5EF4772EA48028FF
-checkpoint 330 0x317EB3588C85FE43
-checkpoint 360 0x34A0093914AF48DF
-checkpoint 390 0xFC549B46DFEF2A36
-checkpoint 420 0x59ADEBC6CC5303B6
+checkpoint 30 0xCB45A94307AFE381
+checkpoint 60 0x148AF41FB21F59D5
+checkpoint 90 0x6317A2A59D1B0978
+checkpoint 120 0xD87FDA484992AEF0
+checkpoint 150 0x54A1C395F11769E1
+checkpoint 180 0x861C910C4731B854
+checkpoint 210 0x8E0308984AAB4A70
+checkpoint 240 0x3111EB6D596B6CF8
+checkpoint 270 0x7DEAF9B8C42FA3DB
+checkpoint 300 0x6BB57B8A6B68118F
+checkpoint 330 0x273BF0390FBC6253
+checkpoint 360 0x71C1FA3F5615B48F
+checkpoint 390 0x424011B8533774E6
+checkpoint 420 0x6E25B10E7D45CD66
 
 # Visible-state hash after the final frame. Excludes RNG position
 # so that a render-side effect drawing a number cannot fail this.
-final 0x077FC535BE065EBE
+final 0xDC0433F8C57F1EEE
