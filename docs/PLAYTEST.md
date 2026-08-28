@@ -184,7 +184,8 @@ they attack you.
 
 **Watch for:**
 
-- The wait before a round starts is **1.5 seconds**. Too long? Too short?
+- The wait before a round starts is **0.75 seconds**, halved after two
+  playtests called the game slow. Right now? Still too long?
 - After a knockout, the pose holds for **2 seconds** before the next round.
 - Fighters start about **a screen-width apart**. Does walking into range at the
   start of every round get boring?

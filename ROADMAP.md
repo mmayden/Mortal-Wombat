@@ -15,23 +15,79 @@ this file is a bug.
 
 ---
 
+## Picking this up cold
+
+**Paused 2026-08-28.** Read this section, then `## Where the project is`, then
+stop — everything else is detail you can reach for when you need it.
+
+| | |
+|---|---|
+| **What it is** | A 2D fighting game. Six buttons, hold back to block, best of three. `DESIGN.md` §1. |
+| **The one question it asks** | *"Was that worth committing to?"* Every design call resolves against it. `DESIGN.md` §3. |
+| **What runs today** | Two people can play a full match. Movement, six attack strengths, blocking with high/low, knockdown and the setup after it, throws, rounds. |
+| **What is decided but unbuilt** | Just Defend, one commitment release, three meter jobs, a hard combo cap. `DESIGN.md` §4.6. |
+| **What is still undecided** | Three ruleset decisions, none load-bearing. `drawing-board/RULESET.md`. Plus the cast, the stage and the fighters' shape — those need the author. |
+| **The blocker** | Nobody has judged whether it is any good, and testing it alone is not currently possible. |
+
+**Run it:**
+
+```
+powershell -File tools/dev.ps1 cmake --build --preset debug
+build\debugin\divided_states.exe
+```
+
+Press `F1` first — it shows hitboxes, what each fighter is doing, which frame of
+which move, and your recent inputs. Almost every question about "did that work?"
+is answerable from it.
+
+**If you change anything, run `tools/verify.ps1` before pushing.** `main` is
+protected and takes a pull request with seven passing checks, including for the
+repo owner.
+
+**Two things that will save you an hour.** The traps in `CLAUDE.md` are all real
+and all cost time once. And the honest summary of where this stands: everything
+built is defensible, nothing built is confirmed — the design has been running
+ahead of validation, and closing that gap is item 1 below rather than more
+features.
+
+---
+
 ## Where the project is
 
 The game runs and can be played by two people at one keyboard or on gamepads.
-Fighters walk, crouch, block, jump with fixed arcs, and attack with all eight
-ground normals plus a jump attack. Hits connect, deal damage, and apply hitstun
-and blockstun. Rounds resolve on KO or timeout, best of three.
+Fighters walk, crouch, block, jump with fixed arcs, and attack with all twelve
+ground normals, a jump attack and a throw. Hits connect and deal damage; attacks
+come at three heights and the defender's stance has to match; sweeps and throws
+knock down, and the loop that follows a knockdown is built. Rounds resolve on KO
+or timeout, best of three.
+
+**The mechanical design is essentially complete.** Three of the four systems
+`DESIGN.md` §4.6 names are built — heights, knockdown and throws — and the
+fourth group (Just Defend, the commitment release, meter, the combo cap) is
+decided but unbuilt. Three ruleset decisions remain open, none of them
+load-bearing.
 
 The verification layer is complete and is ahead of the game: determinism is
 proven byte-identical across Linux, Windows and macOS, and proven unchanged
 between debug and release.
 
-**It has been played, but not yet judged.** Sessions on 2026-08-24 covered
-keyboard, one pad and two, and found a real camera defect that no test had
-caught. What none of them produced is a verdict on *feel* -- whether attacking
-is risky enough, whether jumping is worth it, whether blocking is worth doing.
+**It has been played, but not yet judged, and that gap has widened.** Sessions
+across 2026-08-24 to 08-26 covered keyboard, one pad and two, and found four
+real defects no test had caught — a camera that dragged the view, six attack
+buttons that drew one identical limb, invisible knockdowns, and a strength
+spread so narrow that light and medium were the same move.
+
+Every one of those was reported as *"is this working?"*, and every one was real.
+**Playtesting has the best defect-finding rate of anything in this project.**
+
+What none of them produced is a verdict on *feel* — whether attacking is risky
+enough, whether jumping is worth it, whether blocking is worth doing.
 `docs/PLAYTEST.md` asks those, and question 1 is the thesis in a form a person
-can feel. That is still the gate everything below eventually runs into.
+can feel.
+
+**The honest state of it:** three interacting systems landed on 2026-08-26 and
+none has been judged. Everything built is defensible; nothing built is
+confirmed.
 
 ---
 
@@ -137,8 +193,15 @@ Specifically unvalidated, all in the `PROVISIONAL` block of
 `src/sim/constants.h` or noted beside their code:
 
 - jump distance (1.8× walk speed) and jump startup (3 frames)
-- round-start separation (200 units) and the round freezes (90 / 120 frames)
+- round-start separation (200 units) and the round freezes (45 / 120 frames)
 - camera edge margin (90 units)
+- knockdown, rise and wakeup-delay durations (40 / 12 / 20 frames)
+- every frame value in `data/characters/*.toml`, twice retuned and never felt
+
+**The single biggest obstacle is that you need two people.** Testing the mixup
+game — knockdown, high/low, throws — against a stationary opponent is not
+possible. A training dummy with a few settable behaviours is the unblocker and
+is item 2 below.
 
 **Answered so far:** hit feedback is readable — the character lights up on a
 hit, confirmed in play. That lowers the priority of extra hit effects in the
@@ -150,7 +213,29 @@ reported nothing wrong with it either.
 `--record session.replay` captures what you did, and the file replays exactly.
 - every hitbox coordinate in `data/characters/*.toml`
 
-### 2. Readability pass  *(in scope per ADR 0017; art is not)*
+### 2. A training dummy  *(the unblocker for everything above)*
+
+**You cannot test this game alone**, and that is now the binding constraint.
+Knockdown, the high/low guess and throws are all *interactions*, and a
+stationary opponent cannot participate in one. Every playtest so far has been a
+person pressing buttons at a statue.
+
+A dummy with settable behaviour fixes it: stand, block everything, block
+standing only (so a sweep gets through), block at random, attack back, jump.
+That is enough to feel okizeme, to find out whether a blocked heavy really is
+punishable, and to see whether the throw is too strong.
+
+Architecturally it is clean and cannot break anything: **the dummy is an input
+source**, producing `InputFrame`s from what it can see. It never writes
+`GameState`, so the sim boundary holds and determinism is untouched. It belongs
+beside the platform layer's keyboard and pad, not below the line.
+
+Not a CPU opponent. That is a bigger thing and it wants a balanced game first,
+which this is not yet.
+
+---
+
+### 3. Readability pass  *(in scope per ADR 0017; art is not)*
 
 Making the game easier to *see*, without touching the art pipeline. Cheap,
 reversible, and it directly serves the playtest — feel cannot be tuned through a
@@ -163,9 +248,9 @@ clearer per-state poses, and a landing squash so the jump reads.
 **Not** sprites, atlases, Blender, or anything that pins character proportions —
 ADR 0013 owns those and they wait for the v1 definition of done.
 
-### 3. Grow the replay library toward 50
+### 4. Grow the replay library toward 50
 
-9 of 50. Cheap to add, and the highest-value regression net this project has —
+11 of 50. Cheap to add, and the highest-value regression net this project has —
 `ADR 0011` calls it the primary one. Every fixed bug should leave a recording
 behind. The rule that makes them worth having: a recording must *assert on the
 thing it is named after*, or it reproduces perfectly and proves nothing.

@@ -78,12 +78,18 @@ compiler warning (the `is_trivial_v` assertions in `state.h` exist because
 
 ## Traps that have already cost time
 
-**Input is ignored for the first 90 frames.** `advance_frame` only acts on
-player input while `round_phase` is `Fighting`, and the round-start freeze is 90
-frames. A test or scenario that starts walking at frame 0 has not moved by frame
-90 — and this fails *silently*: the fighters simply never close, every attack
-whiffs, and the replay reproduces it perfectly forever. `tests/replay/scenarios.h`
-waits it out via `FREEZE_FRAMES`.
+**Input is ignored during the round-start freeze.** `advance_frame` only acts on
+player input while `round_phase` is `Fighting`. The freeze is
+`ROUND_START_FREEZE_FRAMES` — 45 at the time of writing, halved from 90 after
+playtests called the game slow, and it will move again.
+
+A test or scenario that starts walking at frame 0 has not moved when it expects
+to, and this fails *silently*: the fighters never close, every attack whiffs, and
+the replay reproduces it perfectly forever. `tests/replay/scenarios.h` waits it
+out via `FREEZE_FRAMES`.
+
+**Read the constant, never the number.** This paragraph said "90 frames" for
+weeks after the constant became 45.
 
 **Re-record replays in the same commit as the change that invalidated them.**
 
@@ -124,6 +130,48 @@ jump attacks for exactly the same reason the sim was — so the one tool that
 should have caught the bug instead reproduced it, and looked correct doing so.
 A debug view derived from the same wrong premise as the code is worse than none:
 it actively confirms the mistake.
+
+**The renderer does not know when the simulation grows. This has cost four
+bugs.**
+
+Every time a new state or property lands in `src/sim/`, nothing forces the
+render layer to account for it, and the simulation is perfectly happy either
+way. The result is a feature that works and is invisible, which reads to a
+player as a feature that does not work:
+
+| The sim did | The picture showed |
+|---|---|
+| jump attack hitbox at head height | a normal-looking swing |
+| six attack buttons reaching 46–77 units | one identical 26-unit limb |
+| a fighter helpless on the floor | someone standing normally |
+| a fighter guarding | nothing, until the guard flag was drawn |
+
+Each was reported as *"is this even working?"* — three of them by the person
+playing. **When you add a `FighterState` or a `Fighter` field, ask what it looks
+like before asking whether it works.** `tests/unit/test_sprite.cpp` is where that
+belongs, and a test walking every state and asserting it draws distinguishably
+would have caught all four.
+
+**A test that copies data is not testing anything.**
+
+Two were found in one afternoon: `CHECK(hp.hitstun == 18)` and a whole
+transcription of the old frame-data table. Both failed a *deliberate* retune,
+which is the tell — the data changed, the behaviour was correct, and the test
+objected on principle to the data being different from its copy of the data.
+
+Assert **relationships**, not values. "Hitting buys a turn", "a heavy is more
+punishable than a light", "medium startup is at least two frames above light" —
+those survive tuning and catch the inversions that matter. A tuning pass should
+be free; only a broken relationship should cost anything.
+
+**Exhaustive switches are a build error on GCC and Clang, and a warning MSVC
+does not give.**
+
+Removing `default:` from a `switch` over an enum makes adding an enumerator fail
+the build — on two of the three compilers. MSVC stayed silent when `MoveId::Throw`
+was added, and a *test* caught the readout printing `?`. The technique is still
+worth using and CI still catches it; just do not describe it as a guarantee when
+developing on Windows.
 
 **Never name a header after a standard C header.** `src/` is on the include
 path for every target and every dependency built through it. A header briefly
@@ -167,6 +215,10 @@ The single rule everything resolves against:
 
 Two sections used to live here that belong elsewhere, and keeping local copies
 is precisely how four documents ended up disagreeing about what was built.
+
+**Start with [`ROADMAP.md`](ROADMAP.md)'s "Picking this up cold" section.** It
+is written for exactly the situation of arriving here with no memory of the
+project, which includes arriving as a fresh session of me.
 
 **State of the build → [`ROADMAP.md`](ROADMAP.md).** What works, what does not,
 and what is unvalidated. One of those is worth repeating because it is a trap
