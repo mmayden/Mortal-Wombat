@@ -184,11 +184,73 @@ change of this kind. Four attack buttons with hold-back
 blocking is exactly the King of Fighters layout, which is the family this
 project has now chosen.
 
-## Four things this game has decided to have
+## Three things this game now HAS
 
-The design has settled on four systems. **What each one *is* lives in
-`DESIGN.md` §4.6; every number in them is still open.** Here is what the names
-mean.
+Built and playable. Unlike the four below, these are not plans -- you can press
+them.
+
+### Attack heights, and why your stance matters
+
+Every attack is one of three things, and **holding back is not enough on its
+own -- you have to be in the right stance too.**
+
+| | You must block | Which moves |
+|---|---|---|
+| **Mid** | standing or crouching, either | most attacks |
+| **Low** | crouching | crouching kicks, including the sweep |
+| **Overhead** | standing | jump attacks |
+
+Guarding in the wrong stance is not a partial block. You are hit, for full
+damage.
+
+This is what stops one defensive choice answering everything. Crouch-block and a
+jump-in gets you; stand-block and a sweep gets you. **Neither is safe**, so you
+have to guess -- and guessing is the game.
+
+### Knockdown, and the moment after it
+
+Sweeps (crouch + heavy kick), throws, and any clean hit while you are in the air
+put you on the floor.
+
+**You cannot be hit while you are down.** That sounds like mercy and is the
+opposite: the attacker stops trying to damage you and starts *setting up* for
+the moment you get back up. They know roughly when that is, so they position
+themselves and time an attack to land the instant you become hittable. You have
+to guess what is coming.
+
+The genre calls that **okizeme**, and it is why landing one hit is worth more
+than the damage it did.
+
+Your counter: on a *soft* knockdown you can **hold down to get up later**, which
+makes their timing wrong. A *hard* knockdown -- from a sweep or the special --
+takes that away, which is the reward for landing the harder move.
+
+### Throws
+
+**Light punch and light kick together.** A throw cannot be blocked at all.
+
+That is the entire reason it exists. Without it a defender could crouch-block
+and simply wait, and there would be no way in.
+
+It is paid for by being short-ranged, slow to recover, and useless against
+someone in the air:
+
+```
+attacking  beats  throwing   (you hit them before it lands)
+throwing   beats  blocking   (unblockable)
+blocking   beats  attacking  (that is what blocking is)
+```
+
+Many games let you escape a throw by pressing throw back. This one does not --
+the answer is to hit them, or to jump.
+
+---
+
+## Four things this game has decided to have but not built
+
+The design has settled on four more systems, and **none of them is built yet.**
+What each one *is* lives in `DESIGN.md` §4.6; every number in them is still
+open. Here is what the names mean.
 
 ### Meter
 

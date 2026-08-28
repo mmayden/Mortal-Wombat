@@ -133,7 +133,7 @@ stance.
 
 Spelled rather than numbered, because `knockdown = "hard"` says what it means at
 the point of use where a `2` would send the reader to a header. Optional because
-most moves do not knock down, and requiring the line on all fourteen would be
+most moves do not knock down, and requiring the line on all fifteen would be
 noise people stop reading.
 
 A **soft** knockdown lets the defender choose when to rise; a **hard** one is

@@ -192,7 +192,7 @@ The failure mode to look for is a test that passes regardless of behaviour.
   passes forever.
 - A new replay scenario: does anything **assert on what it exercises**? A combat
   recording whose attacks whiff reproduces perfectly and proves nothing. This
-  has happened — input is ignored for the first 90 frames of a round, so a
+  has happened — input is ignored for the first 45 frames of a round, so a
   scenario that walks in from frame 0 never closes the distance.
 - A test using invented frame data rather than the shipped
   `data/characters/*.toml` — it proves the code works on data that will never
